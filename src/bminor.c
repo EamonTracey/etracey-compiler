@@ -63,9 +63,11 @@ int encode_file(const char *path) {
             return -1;
     }
 
-    // Re-encode the decoded string and print to stdout.
+    // Re-encode the decoded string.
     char reenc[520];
     string_encode(dec, reenc);
+
+    fprintf(stdout, "%s\n", dec);
     fprintf(stdout, "%s\n", reenc);
 
     return 0;
