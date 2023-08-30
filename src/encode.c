@@ -132,9 +132,6 @@ int string_encode(const char *s, char *es) {
         } else if (*s == 92) {
             *es++ = '\\';
             *es++ = '\\';
-        } else if (*s == 39) {
-            *es++ = '\\';
-            *es++ = '\'';
         } else if (*s == 34) {
             *es++ = '\\';
             *es++ = '"';
