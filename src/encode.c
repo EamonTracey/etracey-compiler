@@ -88,6 +88,9 @@ int string_decode(const char *es, char *s) {
                     return ENC_HEX;
                 char val = val1 * 16 + val2;
                 *s++ = val;
+                break;
+            default:
+                return ENC_CODE;
             }
         } else {
             *s++ = *es++;

@@ -58,6 +58,9 @@ int encode_file(const char *path) {
         case ENC_HEX:
             fprintf(stderr, "error: hex backslash code must be of valid form \\0xHH.\n");
             return -1;
+        case ENC_CODE:
+            fprintf(stderr, "error: invalid backslash code, use only a, b, e, f, n, r, t, v, \\, ', \", 0xHH.\n");
+            return -1;
     }
 
     // Re-encode the decoded string.
