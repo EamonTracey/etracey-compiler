@@ -148,8 +148,8 @@ int string_encode(const char *s, char *es) {
             *es++ = '\\';
             *es++ = '0';
             *es++ = 'x';
-            int val1 = *s >> 4;
-            int val2 = *s & 0x0f;
+            char val1 = (unsigned char)*s >> 4;
+            char val2 = *s & 0x0f;
             *es++ = val_to_hex(val1);
             *es++ = val_to_hex(val2);
         }
