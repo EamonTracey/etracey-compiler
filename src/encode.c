@@ -2,13 +2,22 @@
 
 #include "encode.h"
 
-int hex_to_val(char hex) {
+char hex_to_val(char hex) {
     if ('0' <= hex && hex <= '9')
-        return (int)hex - 48;
+        return hex - 48;
     else if ('A' <= hex && hex <= 'F')
-        return (int)hex - 55;
+        return hex - 55;
     else if ('a' <= hex && hex <= 'f')
-        return (int)hex - 87;
+        return hex - 87;
+    else
+        return -1;
+}
+
+char val_to_hex(char hex) {
+    if (0 <= hex && hex <= 9)
+        return hex + 48;
+    else if (10 <= hex && hex <= 15)
+        return hex + 87;
     else
         return -1;
 }
@@ -71,15 +80,13 @@ int string_decode(const char *es, char *s) {
             case '0':
                 if (*es++ != 'x')
                     return ENC_HEX;
-                int val1 = hex_to_val(*es++);
+                char val1 = hex_to_val(*es++);
                 if (val1 == -1)
                     return ENC_HEX;
-                int val2 = hex_to_val(*es++);
+                char val2 = hex_to_val(*es++);
                 if (val2 == -1)
                     return ENC_HEX;
-                int val = val1 * 16 + val2;
-                if (val < 32 || val > 126)
-                    return ENC_HEXPRINT;
+                char val = val1 * 16 + val2;
                 *s++ = val;
             }
         } else {
@@ -138,7 +145,13 @@ int string_encode(const char *s, char *es) {
         } else if (32 <= *s && *s <= 126)
             *es++ = *s;
         else {
-            return ENC_PRINTABLE;
+            *es++ = '\\';
+            *es++ = '0';
+            *es++ = 'x';
+            int val1 = *s >> 4;
+            int val2 = *s & 0x0f;
+            *es++ = val_to_hex(val1);
+            *es++ = val_to_hex(val2);
         }
 
         ++s;
