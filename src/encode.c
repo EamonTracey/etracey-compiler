@@ -13,11 +13,11 @@ char hex_to_val(char hex) {
         return -1;
 }
 
-char val_to_hex(char hex) {
-    if (0 <= hex && hex <= 9)
-        return hex + 48;
-    else if (10 <= hex && hex <= 15)
-        return hex + 87;
+char val_to_hex(char val) {
+    if (0 <= val && val <= 9)
+        return val + 48;
+    else if (10 <= val && val <= 15)
+        return val + 87;
     else
         return -1;
 }
