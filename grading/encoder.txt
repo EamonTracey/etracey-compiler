@@ -1,0 +1,968 @@
+=====STUDENT TESTS=====
+====Good Tests====
+===[good0.bminor Input]===
+""
+
+===[good0.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good0.bminor Output]===
+
+""
+
+
+
+
+===[good10.bminor Input]===
+"\r"
+
+===[good10.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good10.bminor Output]===
+
+"\r"
+
+
+
+
+===[good11.bminor Input]===
+"\t"
+
+===[good11.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good11.bminor Output]===
+	
+"\t"
+
+
+
+
+===[good12.bminor Input]===
+"\v"
+
+===[good12.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good12.bminor Output]===
+
+"\v"
+
+
+
+
+===[good13.bminor Input]===
+"\\"
+
+===[good13.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good13.bminor Output]===
+\
+"\\"
+
+
+
+
+===[good14.bminor Input]===
+"\'"
+
+===[good14.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good14.bminor Output]===
+'
+"'"
+
+
+
+
+===[good15.bminor Input]===
+"\""
+
+===[good15.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good15.bminor Output]===
+"
+"\""
+
+
+
+
+===[good16.bminor Input]===
+"\a\b\e\f\n\r\t\v"
+
+===[good16.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good16.bminor Output]===
+
+
+	
+"\a\b\e\f\n\r\t\v"
+
+
+
+
+===[good17.bminor Input]===
+"'"
+
+===[good17.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good17.bminor Output]===
+'
+"'"
+
+
+
+
+===[good18.bminor Input]===
+" !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+
+===[good18.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good18.bminor Output]===
+ !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~
+" !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+
+
+
+
+===[good19.bminor Input]===
+"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
+===[good19.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good19.bminor Output]===
+000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
+
+
+
+===[good1.bminor Input]===
+"\0x00"
+
+===[good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good1.bminor Output]===
+
+""
+
+
+
+
+===[good20.bminor Input]===
+"                                                                                                                                                                                                                                                               "
+
+===[good20.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good20.bminor Output]===
+                                                                                                                                                                                                                                                               
+"                                                                                                                                                                                                                                                               "
+
+
+
+
+===[good21.bminor Input]===
+"\0x01\0x02\0x03\0x04\0x05\0x06\0x07\0x08\0x09\0x0a\0x0b\0x0c\0x0d\0x0e\0x0f\0x10\0x11\0x12\0x13\0x14\0x15\0x16\0x17\0x18\0x19\0x1a\0x1b\0x1c\0x1d\0x1e\0x1f\0x20\0x21\0x22\0x23\0x24\0x25\0x26\0x27\0x28\0x29\0x2a\0x2b\0x2c\0x2d\0x2e\0x2f\0x30\0x31\0x32\0x33\0x34\0x35\0x36\0x37\0x38\0x39\0x3a\0x3b\0x3c\0x3d\0x3e\0x3f\0x40\0x41\0x42\0x43\0x44\0x45\0x46\0x47\0x48\0x49\0x4a\0x4b\0x4c\0x4d\0x4e\0x4f\0x50\0x51\0x52\0x53\0x54\0x55\0x56\0x57\0x58\0x59\0x5a\0x5b\0x5c\0x5d\0x5e\0x5f\0x60\0x61\0x62\0x63\0x64\0x65\0x66\0x67\0x68\0x69\0x6a\0x6b\0x6c\0x6d\0x6e\0x6f\0x70\0x71\0x72\0x73\0x74\0x75\0x76\0x77\0x78\0x79\0x7a\0x7b\0x7c\0x7d\0x7e\0x7f\0x80\0x81\0x82\0x83\0x84\0x85\0x86\0x87\0x88\0x89\0x8a\0x8b\0x8c\0x8d\0x8e\0x8f\0x90\0x91\0x92\0x93\0x94\0x95\0x96\0x97\0x98\0x99\0x9a\0x9b\0x9c\0x9d\0x9e\0x9f\0xa0\0xa1\0xa2\0xa3\0xa4\0xa5\0xa6\0xa7\0xa8\0xa9\0xaa\0xab\0xac\0xad\0xae\0xaf\0xb0\0xb1\0xb2\0xb3\0xb4\0xb5\0xb6\0xb7\0xb8\0xb9\0xba\0xbb\0xbc\0xbd\0xbe\0xbf\0xc0\0xc1\0xc2\0xc3\0xc4\0xc5\0xc6\0xc7\0xc8\0xc9\0xca\0xcb\0xcc\0xcd\0xce\0xcf\0xd0\0xd1\0xd2\0xd3\0xd4\0xd5\0xd6\0xd7\0xd8\0xd9\0xda\0xdb\0xdc\0xdd\0xde\0xdf\0xe0\0xe1\0xe2\0xe3\0xe4\0xe5\0xe6\0xe7\0xe8\0xe9\0xea\0xeb\0xec\0xed\0xee\0xef\0xf0\0xf1\0xf2\0xf3\0xf4\0xf5\0xf6\0xf7\0xf8\0xf9\0xfa\0xfb\0xfc\0xfd\0xfe\0xff"
+
+===[good21.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good21.bminor Output]===
+
+
+
+
+===[good22.bminor Input]===
+"\0xaa \0xAA \n eamon \"\"       \0xfF \0x1a"
+
+===[good22.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good22.bminor Output]===
+
+
+
+
+===[good2.bminor Input]===
+"Hello, world!\n"
+
+===[good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good2.bminor Output]===
+Hello, world!
+
+"Hello, world!\n"
+
+
+
+
+===[good3.bminor Input]===
+"\0x48\0x65\0x6c\0x6c\0x6f\0x2c\0x20\0x77\0x6f\0x72\0x6c\0x64\0x21"
+
+===[good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good3.bminor Output]===
+Hello, world!
+"Hello, world!"
+
+
+
+
+===[good4.bminor Input]===
+"\"\\Word!@#$%^&*()\\\""
+
+===[good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good4.bminor Output]===
+"\Word!@#$%^&*()\"
+"\"\\Word!@#$%^&*()\\\""
+
+
+
+
+===[good5.bminor Input]===
+"\a"
+
+===[good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good5.bminor Output]===
+
+"\a"
+
+
+
+
+===[good6.bminor Input]===
+"\b"
+
+===[good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good6.bminor Output]===
+
+"\b"
+
+
+
+
+===[good7.bminor Input]===
+"\e"
+
+===[good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good7.bminor Output]===
+
+"\e"
+
+
+
+
+===[good8.bminor Input]===
+"\f"
+
+===[good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good8.bminor Output]===
+
+"\f"
+
+
+
+
+===[good9.bminor Input]===
+"\n"
+
+===[good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good9.bminor Output]===
+
+
+"\n"
+
+
+
+
+====Bad Tests====
+===[bad0.bminor Input]===
+"bminor
+
+===[bad0.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad0.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad10.bminor Input]===
+"\0x2q"
+
+===[bad10.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad10.bminor Output]===
+
+error: hex backslash code must be of valid form \0xHH.
+
+
+
+===[bad11.bminor Input]===
+"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
+===[bad11.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad11.bminor Output]===
+
+error: string must be at most 255 characters.
+
+
+
+===[bad12.bminor Input]===
+"Red said, "hat?!""
+
+===[bad12.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad12.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===[bad13.bminor Input]===
+"\\\\\\\\\"
+
+===[bad13.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad13.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad14.bminor Input]===
+"\x23"
+
+===[bad14.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad14.bminor Output]===
+
+error: invalid backslash code, use only a, b, e, f, n, r, t, v, \, ', ", 0xHH.
+
+
+
+===[bad15.bminor Input]===
+"Happy 😀!"
+
+===[bad15.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad15.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad16.bminor Input]===
+"£¢∞"
+
+===[bad16.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad16.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad17.bminor Input]===
+"¡"
+
+===[bad17.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad17.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad18.bminor Input]===
+"15 ÷ 3 = 15"
+
+===[bad18.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad18.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad19.bminor Input]===
+"new
+line"
+
+===[bad19.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad19.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad1.bminor Input]===
+bminor"
+
+===[bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad1.bminor Output]===
+
+error: string literal must begin with quotation mark.
+
+
+
+===[bad20.bminor Input]===
+" "
+===[bad20.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad20.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad21.bminor Input]===
+"	
+
+"
+===[bad21.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad21.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad2.bminor Input]===
+"trail"ing
+
+===[bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad2.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===[bad3.bminor Input]===
+"""
+
+===[bad3.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad3.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===[bad4.bminor Input]===
+"\"
+
+===[bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad4.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad5.bminor Input]===
+"\q"
+
+===[bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad5.bminor Output]===
+
+error: invalid backslash code, use only a, b, e, f, n, r, t, v, \, ', ", 0xHH.
+
+
+
+===[bad6.bminor Input]===
+"\1"
+
+===[bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad6.bminor Output]===
+
+error: invalid backslash code, use only a, b, e, f, n, r, t, v, \, ', ", 0xHH.
+
+
+
+===[bad7.bminor Input]===
+"\0z12"
+
+===[bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad7.bminor Output]===
+
+error: hex backslash code must be of valid form \0xHH.
+
+
+
+===[bad8.bminor Input]===
+"\0Xff"
+
+===[bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad8.bminor Output]===
+
+error: hex backslash code must be of valid form \0xHH.
+
+
+
+===[bad9.bminor Input]===
+"\0xp1"
+
+===[bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad9.bminor Output]===
+
+error: hex backslash code must be of valid form \0xHH.
+
+
+
+=====HIDDEN TESTS=====
+====Good Tests====
+===[good2.bminor Input]===
+"The droghte \a of March hath per\0x5Ed to \0x22 the roote\n"
+
+
+===[good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good2.bminor Output]===
+The droghte  of March hath per^d to " the roote
+
+"The droghte \a of March hath per^d to \" the roote\n"
+
+
+
+
+===[good1.bminor Input]===
+"Whan that Aprill with his shoures soote"
+
+
+===[good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good1.bminor Output]===
+Whan that Aprill with his shoures soote
+"Whan that Aprill with his shoures soote"
+
+
+
+
+===[good10.bminor Input]===
+"That slepen al the nyght with open ye\n(So priketh hem Nature in hir corages),\nThanne longen folk to goon on pilgrimages,\nAnd palmeres for to seken straunge strondes,\n To ferne halwes, kowthe in sondry londes;\t And specially from every shires ende."
+
+
+===[good10.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good10.bminor Output]===
+That slepen al the nyght with open ye
+(So priketh hem Nature in hir corages),
+Thanne longen folk to goon on pilgrimages,
+And palmeres for to seken straunge strondes,
+ To ferne halwes, kowthe in sondry londes;	 And specially from every shires ende.
+"That slepen al the nyght with open ye\n(So priketh hem Nature in hir corages),\nThanne longen folk to goon on pilgrimages,\nAnd palmeres for to seken straunge strondes,\n To ferne halwes, kowthe in sondry londes;\t And specially from every shires ende."
+
+
+
+
+===[good3.bminor Input]===
+"And bathed  \bevery veyne in swich licour"
+
+
+===[good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good3.bminor Output]===
+And bathed  every veyne in swich licour
+"And bathed  \bevery veyne in swich licour"
+
+
+
+
+===[good4.bminor Input]===
+"Of which vertu engendred is the flour\e"
+
+
+===[good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good4.bminor Output]===
+Of which vertu engendred is the flour
+"Of which vertu engendred is the flour\e"
+
+
+
+
+===[good5.bminor Input]===
+"\fWhan Zephirus eek with his sweete breeth"
+
+
+===[good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good5.bminor Output]===
+Whan Zephirus eek with his sweete breeth
+"\fWhan Zephirus eek with his sweete breeth"
+
+
+
+
+===[good6.bminor Input]===
+"Inspired hath in \nevery\nholt\nand\nheeth\rheeth"
+
+
+===[good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good6.bminor Output]===
+Inspired hath in 
+every
+holt
+and
+heeth
+heeth
+"Inspired hath in \nevery\nholt\nand\nheeth\rheeth"
+
+
+
+
+===[good7.bminor Input]===
+"The tendre croppes, \t and the yonge sonne"
+
+
+===[good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good7.bminor Output]===
+The tendre croppes, 	 and the yonge sonne
+"The tendre croppes, \t and the yonge sonne"
+
+
+
+
+===[good8.bminor Input]===
+"Hath in the Ram his half \\ \'cours\' yronne,"
+
+
+===[good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good8.bminor Output]===
+Hath in the Ram his half \ 'cours' yronne,
+"Hath in the Ram his half \\ 'cours' yronne,"
+
+
+
+
+===[good9.bminor Input]===
+"And smale \"foweles\" maken melodye,\v"
+
+
+===[good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good9.bminor Output]===
+And smale "foweles" maken melodye,
+"And smale \"foweles\" maken melodye,\v"
+
+
+
+
+====Bad Tests====
+===[bad10.bminor Input]===
+"The chambres and the stables weren wyde, And wel we weren esed atte beste. And shortly, whan the sonne was to reste, So hadde I spoken with hem everichon That I was of hir felaweshipe anon, And made forward erly for to ryse, To take oure wey ther as I yow devyse. This is over 255 bytes"
+
+
+===[bad10.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad10.bminor Output]===
+
+error: string must be at most 255 characters.
+
+
+
+===[bad2.bminor Input]===
+"In \0xfg Southwerk at the tabard as I lay"
+
+
+===[bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad2.bminor Output]===
+
+error: hex backslash code must be of valid form \0xHH.
+
+
+
+===[bad3.bminor Input]===
+"
+
+
+===[bad3.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad3.bminor Output]===
+
+error: string literal must contain only printable characters and backslash codes.
+
+
+
+===[bad1.bminor Input]===
+Bifil that seson on a day
+
+===[bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad1.bminor Output]===
+
+error: string literal must begin with quotation mark.
+
+
+
+===[bad4.bminor Input]===
+"To Caunterbury with ful devout corage \c \d \g \h \i \j \k \l \m \o \p \q \s \u \w \x \y \z"
+
+
+===[bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad4.bminor Output]===
+
+error: invalid backslash code, use only a, b, e, f, n, r, t, v, \, ', ", 0xHH.
+
+
+
+===[bad5.bminor Input]===
+"At nyght was come "into that hostelrye"
+
+
+===[bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad5.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===[bad6.bminor Input]===
+"Wel nyne and twenty \~in a compaignye"
+
+
+===[bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad6.bminor Output]===
+
+error: invalid backslash code, use only a, b, e, f, n, r, t, v, \, ', ", 0xHH.
+
+
+
+===[bad7.bminor Input]===
+"Of sondry folk, by aventure yfalle" \n\n
+
+
+===[bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad7.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===[bad8.bminor Input]===
+\n "In felaweshipe, and pilgrimes were they alle,"
+
+
+===[bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad8.bminor Output]===
+
+error: string literal must begin with quotation mark.
+
+
+
+===[bad9.bminor Input]===
+"That toward Caunterbuty \" wolden "" ryde."
+===[bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad9.bminor Output]===
+
+error: string literal must end with quotation mark.
+
+
+
+===== SUMMARIZED ENCODER RESULTS =====
+{
+  "student_tests": {
+    "Good": {
+      "correct": 23,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 23,
+      "incorrect": 0
+    }
+  },
+  "hidden_tests": {
+    "Good": {
+      "correct": 10,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 10,
+      "incorrect": 0
+    }
+  }
+}
+Encoder Project Grade
+---------------------------------
+
+GitHub Usage (2/2 points)
+----------------------------------------------
+Good stuff here
+
+Makefile (5/5 points)
+----------------------------------------------
+Looks as it should
+
+Return Code (8/8 points)
+----------------------------------------------
+Works as intended
+
+General Structure (15/15 points)
+----------------------------------------------
+I think that even though your main program is very short, it does the job it should do really well and exactly as it should
+
+Student Tests (20/20 points)
+------------------------------------------
+A whopping 23 good and bad test cases!!! This shows your commitment to creating a well tested program, and I commend you for going to this level
+
+Hidden Tests (20/20 points)
+------------------------------------------
+Nice work passing all of the hidden tests, didn't even break a sweat
+
+Coding Style (10/10 points)
+------------------------------------------
+You should break encode_file into another file or encode.c, I would reccomend keeping bminor.c to be only the main program to keep your sanity for future assignments.
+
+Total (80/80 Points)
+------------------------------------------
