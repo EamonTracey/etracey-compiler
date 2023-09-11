@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Werror -Iinclude
 
-bminor: src/bminor.c src/encode.c
+bminor: src/bminor.c src/encode.c src/options.c
 	$(CC) $(CFLAGS) $^ -o bminor
 
 .PHONY: test
