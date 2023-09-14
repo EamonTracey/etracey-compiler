@@ -56,9 +56,10 @@ while { return TOKEN_WHILE; }
 \/\/[^\n]*\n { return TOKEN_COMMENT_SINGLE; }
 \/\*(\*+[^*/]|[^*])*\*+\/ { return TOKEN_COMMENT_MULTI; }
 
--?[0-9]+ { return TOKEN_INTEGER_LITERAL; }
--?([0-9]*\.[0-9]+|[0-9]+(e|E)-?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
-%{ /*NEED STRING AND CHARACTER LITERALS */ %}
+(\+|-)?[0-9]+ { return TOKEN_INTEGER_LITERAL; }
+(\+|-)?([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
+\"[^"]*\" { return TOKEN_STRING_LITERAL; }
+'[^']*' { return TOKEN_CHAR_LITERAL; }
 
 [_a-zA-Z][_a-zA-Z0-9]* { return TOKEN_IDENTIFIER; }
 

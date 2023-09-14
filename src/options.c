@@ -1,65 +1,13 @@
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "encode.h"
+#include "error.h"
 #include "options.h"
 #include "scanner.h"
 #include "token.h"
 
-const char *token_strs[] = {
-    "",
-    "ARRAY",
-    "AUTO",
-    "BOOLEAN",
-    "CHAR",
-    "ELSE",
-    "FALSE",
-    "FLOAT",
-    "FOR",
-    "FUNCTION",
-    "IF",
-    "INTEGER",
-    "PRINT",
-    "RETURN",
-    "STRING",
-    "TRUE",
-    "VOID",
-    "WHILE",
-    "INCREMENT",
-    "DECREMENT",
-    "NOT",
-    "EXPONENTIATION",
-    "MULTIPLICATION",
-    "DIVISION",
-    "MODULO",
-    "ADDITION",
-    "SUBTRACTION",
-    "LESSER",
-    "LESSER_EQUAL",
-    "GREATER",
-    "GREATER_EQUAL",
-    "EQUALITY",
-    "INEQUALITY",
-    "AND",
-    "OR",
-    "ASSIGNMENT",
-    "BRACE_OPEN",
-    "BRACE_CLOSE",
-    "PAREN_OPEN",
-    "PAREN_CLOSE",
-    "BRACK_OPEN",
-    "BRACK_CLOSE",
-    "COLON",
-    "SEMICOLON",
-    "COMMA",
-    "COMMENT_SINGLE",
-    "COMMENT_MULTI",
-    "INTEGER_LITERAL",
-    "FLOAT_LITERAL",
-    "STRING_LITERAL",
-    "CHAR_LITERAL",
-    "IDENTIFIER"
-};
 int encode_file(const char *path) {
     char line[2048];
 
@@ -80,30 +28,11 @@ int encode_file(const char *path) {
     
     char dec[256];
     int ret;
-    switch (ret = string_decode(line, dec)) {
-        case 0:
-            break;
-        case ENC_BQUOTE:
-            fprintf(stderr, "error: string literal must begin with quotation mark.\n");
-            return -1;
-        case ENC_PRINTABLE:
-            fprintf(stderr, "error: string literal must contain only printable characters and backslash codes.\n");
-            return -1;
-        case ENC_LENGTH:
-            fprintf(stderr, "error: string must be at most 255 characters.\n");
-            return -1;
-        case ENC_TRAIL:
-            fprintf(stderr, "error: string literal must end with quotation mark.\n");
-            return -1;
-        case ENC_HEX:
-            fprintf(stderr, "error: hex backslash code must be of valid form \\0xHH.\n");
-            return -1;
-        case ENC_CODE:
-            fprintf(stderr, "error: invalid backslash code, use only a, b, e, f, n, r, t, v, \\, ', \", 0xHH.\n");
-            return -1;
+    if ((ret = string_decode(line, dec)) != 0) {
+        fprintf(stderr, "encode error: %s\n", strencerr[ret]);
+        return -1;
     }
 
-    // Re-encode the decoded string.
     char reenc[2048];
     string_encode(dec, reenc);
 
@@ -120,10 +49,47 @@ int scan_file(const char *path) {
         return -1;
     }
 
+    long int bmint;
+    double bmfloat;
+    char bmstring[2048];
+    int ret;
+    char errmsg[2048];
+
     int token;
     while ((token = yylex()) > 0) {
-        fprintf(stdout, "%s %d\n", token_strs[token], token);
+        switch (token) {
+        case TOKEN_INTEGER_LITERAL:
+            if ((ret = integer_decode(yytext, &bmint)) == 0)
+                fprintf(stdout, "%s %ld\n", tokstr[token], bmint);
+            else {
+                snprintf(errmsg, 2048, intencerr[ret], yytext);
+                fprintf(stderr, "scan error: %s\n", errmsg);
+                return -1;
+            }
+            break;
+        case TOKEN_FLOAT_LITERAL:
+            if ((ret = float_decode(yytext, &bmfloat)) == 0)
+                fprintf(stdout, "%s %lf\n", tokstr[token], bmfloat);
+            else {
+                snprintf(errmsg, 2048, floatencerr[ret], yytext);
+                fprintf(stderr, "scan error: %s\n", errmsg);
+                return -1;
+            }
+            break;
+        case TOKEN_STRING_LITERAL:
+            if ((ret = string_decode(yytext, bmstring)) == 0)
+                fprintf(stdout, "%s %s\n", tokstr[token], bmstring);
+            else {
+                fprintf(stderr, "scan error: %s\n", strencerr[ret]);
+                return -1;
+            }
+            break;
+        default:
+            fprintf(stdout, "%s\n", tokstr[token]);
+        }
     }
+
+    fclose(yyin);
 
     return 0;
 }

@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Werror -Iinclude -Wno-unused-function
 
-bminor: src/bminor.c src/encode.c src/options.c src/scanner.c
+bminor: src/*.c src/scanner.c
 	$(CC) $(CFLAGS) $^ -o bminor
 
 src/scanner.c: src/scanner.flex

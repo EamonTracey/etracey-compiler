@@ -1,43 +1,44 @@
-#include <stdio.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
 
 #include "encode.h"
+#include "error.h"
 
-int hex_to_val(char hex) {
-    if ('0' <= hex && hex <= '9')
-        return hex - 48;
-    else if ('A' <= hex && hex <= 'F')
-        return hex - 55;
-    else if ('a' <= hex && hex <= 'f')
-        return hex - 87;
-    else
-        return -1;
+int integer_decode(const char *einteger, long int *integer) {
+   *integer = strtol(einteger, NULL, 10); 
+
+    if (errno == ERANGE)
+        return *integer == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
+
+   return 0;
 }
 
-int val_to_hex(int val) {
-    if (0 <= val && val <= 9)
-        return val + 48;
-    else if (10 <= val && val <= 15)
-        return val + 87;
-    else
-        return -1;
+int float_decode(const char *efloat, double *float64) {
+   *float64 = strtod(efloat, NULL); 
+
+   if (errno == ERANGE)
+       return *float64 == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
+
+   return 0;
 }
 
 int string_decode(const char *es, char *s) {
     // Ensure the string begins with a quotation mark.
     if (*es++ != '"')
-        return ENC_BQUOTE;
+        return ERROR_STRENC_BQUOTE;
 
     // Iterate through each character until an ending quotation mark.
     int length = 0;
     while (*es != '"') {
         // Strings must not be longer than 255 characters.
         if (++length > 255)
-            return ENC_LENGTH;
+            return ERROR_STRENC_LENGTH;
 
         // String literals must contain only printable characters.
         // Non-printable characters must use backslash codes.
         if (*es < 32 || *es > 126)
-            return ENC_PRINTABLE;
+            return ERROR_STRENC_PRINTABLE;
 
         // If the character is a backslash, parse backslash code.
         // Otherwise, copy character value.
@@ -79,18 +80,18 @@ int string_decode(const char *es, char *s) {
                 break;
             case '0':
                 if (*es++ != 'x')
-                    return ENC_HEX;
+                    return ERROR_STRENC_HEX;
                 int val1 = hex_to_val(*es++);
                 if (val1 == -1)
-                    return ENC_HEX;
+                    return ERROR_STRENC_HEX;
                 int val2 = hex_to_val(*es++);
                 if (val2 == -1)
-                    return ENC_HEX;
+                    return ERROR_STRENC_HEX;
                 char val = (char)(val1 * 16 + val2);
                 *s++ = val;
                 break;
             default:
-                return ENC_CODE;
+                return ERROR_STRENC_CODE;
             }
         } else {
             *s++ = *es++;
@@ -100,7 +101,7 @@ int string_decode(const char *es, char *s) {
 
     // The character after the ending quotation mark must be NUL.
     if (*++es != '\0')
-        return ENC_TRAIL;
+        return ERROR_STRENC_TRAIL;
 
     *s = '\0';
 
@@ -113,7 +114,7 @@ int string_encode(const char *s, char *es) {
     int length = 0;
     while (*s != '\0') {
         if (++length > 255)
-            return ENC_LENGTH;
+            return ERROR_STRENC_LENGTH;
 
         if (*s == 7) {
             *es++ = '\\';
@@ -164,4 +165,24 @@ int string_encode(const char *s, char *es) {
     *es = '\0';
 
     return 0;
+}
+
+int hex_to_val(int hex) {
+    if ('0' <= hex && hex <= '9')
+        return hex - 48;
+    else if ('A' <= hex && hex <= 'F')
+        return hex - 55;
+    else if ('a' <= hex && hex <= 'f')
+        return hex - 87;
+    else
+        return -1;
+}
+
+int val_to_hex(int val) {
+    if (0 <= val && val <= 9)
+        return val + 48;
+    else if (10 <= val && val <= 15)
+        return val + 87;
+    else
+        return -1;
 }

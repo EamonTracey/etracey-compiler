@@ -64,4 +64,6 @@
 /* Identifier. */
 #define TOKEN_IDENTIFIER 51
 
+extern char *tokstr[];
+
 #endif

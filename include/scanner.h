@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 extern FILE *yyin;
-
+extern char *yytext;
 extern int yylex();
 
 #endif
