@@ -3,7 +3,63 @@
 
 #include "encode.h"
 #include "options.h"
+#include "scanner.h"
+#include "token.h"
 
+const char *token_strs[] = {
+    "",
+    "ARRAY",
+    "AUTO",
+    "BOOLEAN",
+    "CHAR",
+    "ELSE",
+    "FALSE",
+    "FLOAT",
+    "FOR",
+    "FUNCTION",
+    "IF",
+    "INTEGER",
+    "PRINT",
+    "RETURN",
+    "STRING",
+    "TRUE",
+    "VOID",
+    "WHILE",
+    "INCREMENT",
+    "DECREMENT",
+    "NOT",
+    "EXPONENTIATION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "MODULO",
+    "ADDITION",
+    "SUBTRACTION",
+    "LESSER",
+    "LESSER_EQUAL",
+    "GREATER",
+    "GREATER_EQUAL",
+    "EQUALITY",
+    "INEQUALITY",
+    "AND",
+    "OR",
+    "ASSIGNMENT",
+    "BRACE_OPEN",
+    "BRACE_CLOSE",
+    "PAREN_OPEN",
+    "PAREN_CLOSE",
+    "BRACK_OPEN",
+    "BRACK_CLOSE",
+    "COLON",
+    "SEMICOLON",
+    "COMMA",
+    "COMMENT_SINGLE",
+    "COMMENT_MULTI",
+    "INTEGER_LITERAL",
+    "FLOAT_LITERAL",
+    "STRING_LITERAL",
+    "CHAR_LITERAL",
+    "IDENTIFIER"
+};
 int encode_file(const char *path) {
     char line[2048];
 
@@ -58,5 +114,16 @@ int encode_file(const char *path) {
 }
 
 int scan_file(const char *path) {
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stderr, "error: failed to open file \"%s\".\n", path);
+        return -1;
+    }
+
+    int token;
+    while ((token = yylex()) > 0) {
+        fprintf(stdout, "%s %d\n", token_strs[token], token);
+    }
+
     return 0;
 }
