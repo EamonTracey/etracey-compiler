@@ -7,6 +7,13 @@
 #define ERROR_FLOATENC_UNDERFLOW 1
 #define ERROR_FLOATENC_OVERFLOW 2
 
+#define ERROR_CHARENC_BQUOTE 1
+#define ERROR_CHARENC_EQUOTE 2
+#define ERROR_CHARENC_PRINTABLE 3
+#define ERROR_CHARENC_TRAIL 4
+#define ERROR_CHARENC_HEX 5
+#define ERROR_CHARENC_CODE 6
+
 #define ERROR_STRENC_BQUOTE 1
 #define ERROR_STRENC_PRINTABLE 2
 #define ERROR_STRENC_LENGTH 3
@@ -19,6 +26,7 @@
 
 extern const char *intencerr[];
 extern const char *floatencerr[];
+extern const char *charencerr[];
 extern const char *strencerr[];
 extern const char *scanerr[];
 

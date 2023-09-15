@@ -5,22 +5,99 @@
 #include "encode.h"
 #include "error.h"
 
-int integer_decode(const char *einteger, long int *integer) {
-   *integer = strtol(einteger, NULL, 10); 
+int integer_decode(const char *eint, long int *bmint) {
+   *bmint = strtol(eint, NULL, 10); 
 
     if (errno == ERANGE)
-        return *integer == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
+        return *bmint == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
 
    return 0;
 }
 
-int float_decode(const char *efloat, double *float64) {
-   *float64 = strtod(efloat, NULL); 
+int float_decode(const char *efloat, double *bmfloat) {
+   *bmfloat = strtod(efloat, NULL); 
 
    if (errno == ERANGE)
-       return *float64 == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
+       return *bmfloat == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
 
    return 0;
+}
+
+int char_decode(const char *echar, char *bmchar) {
+    // Ensure the character begins with a single quotation mark.
+    if (*echar++ != '\'')
+        return ERROR_CHARENC_BQUOTE;
+
+    // Character literals must contain only a printable.
+    // Non-printable characters must use backslash codes.
+    if (*echar < 32 || *echar > 126)
+        return ERROR_CHARENC_PRINTABLE;
+
+    // If the character is a backslash, parse backslash code.
+    // Otherwise, copy character value.
+    if (*echar == '\\') {
+        ++echar;
+        switch (*echar++) {
+        case 'a':
+            *bmchar = 7;
+            break;
+        case 'b':
+            *bmchar = 8;
+            break;
+        case 'e':
+            *bmchar = 27;
+            break;
+        case 'f':
+            *bmchar = 12;
+            break;
+        case 'n':
+            *bmchar = 10;
+            break;
+        case 'r':
+            *bmchar = 13;
+            break;
+        case 't':
+            *bmchar = 9;
+            break;
+        case 'v':
+            *bmchar = 11;
+            break;
+        case '\\':
+            *bmchar = 92;
+            break;
+        case '\'':
+            *bmchar = 39;
+            break;
+        case '"':
+            *bmchar = 34;
+            break;
+        case '0':
+            if (*echar++ != 'x')
+                return ERROR_CHARENC_HEX;
+            int val1 = hex_to_val(*echar++);
+            if (val1 == -1)
+                return ERROR_CHARENC_HEX;
+            int val2 = hex_to_val(*echar++);
+            if (val2 == -1)
+                return ERROR_CHARENC_HEX;
+            char val = val1 * 16 + val2;
+            *bmchar = val;
+            break;
+        default:
+            return ERROR_CHARENC_CODE;
+        }
+    } else {
+        *bmchar = *echar++;
+    }
+
+    // The character after the ending quotation mark must be NUL.
+    if (*echar++ != '\'')
+        return ERROR_CHARENC_EQUOTE;
+
+    if (*echar != '\0')
+        return ERROR_CHARENC_TRAIL;
+
+    return 0;
 }
 
 int string_decode(const char *es, char *s) {
@@ -87,7 +164,7 @@ int string_decode(const char *es, char *s) {
                 int val2 = hex_to_val(*es++);
                 if (val2 == -1)
                     return ERROR_STRENC_HEX;
-                char val = (char)(val1 * 16 + val2);
+                char val = val1 * 16 + val2;
                 *s++ = val;
                 break;
             default:

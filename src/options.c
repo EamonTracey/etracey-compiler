@@ -49,11 +49,13 @@ int scan_file(const char *path) {
         return -1;
     }
 
-    long int bmint;
-    double bmfloat;
-    char bmstring[2048];
     int ret;
     char errmsg[2048];
+
+    long int bmint;
+    double bmfloat;
+    char bmchar;
+    char bmstring[2048];
 
     int token;
     while ((token = yylex()) > 0) {
@@ -76,6 +78,14 @@ int scan_file(const char *path) {
                 return -1;
             }
             break;
+        case TOKEN_CHAR_LITERAL:
+            if ((ret = char_decode(yytext, &bmchar)) == 0)
+                fprintf(stdout, "%s %c\n", tokstr[token], bmchar);
+            else {
+                fprintf(stderr, "scan error: %s\n", charencerr[ret]);
+                return -1;
+            }
+            break;            
         case TOKEN_STRING_LITERAL:
             if ((ret = string_decode(yytext, bmstring)) == 0)
                 fprintf(stdout, "%s %s\n", tokstr[token], bmstring);

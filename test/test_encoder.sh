@@ -4,8 +4,8 @@ GREEN="\e[32m"
 RED="\e[31m"
 NOCOLOR="\e[0m"
 
-echo "Testing good encode cases..."
-for testfile in test/encode/good*.bminor
+echo "Testing good encoder cases..."
+for testfile in test/encoder/good*.bminor
 do
 	if ./bminor --encode $testfile > $testfile.out 2>&1
 	then
@@ -15,8 +15,8 @@ do
 	fi
 done
 
-echo "Testing bad encode cases..."
-for testfile in test/encode/bad*.bminor
+echo "Testing bad encoder cases..."
+for testfile in test/encoder/bad*.bminor
 do
 	if ./bminor --encode $testfile > $testfile.out 2>&1
 	then
