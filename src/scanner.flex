@@ -4,7 +4,7 @@
 
 %%
 
-[ \t\n]+ /* Ignore whitespace. */
+[ \t\r\n]+ /* Ignore whitespace. */
 
 array { return TOKEN_ARRAY; }
 auto { return TOKEN_AUTO; }
@@ -58,8 +58,8 @@ while { return TOKEN_WHILE; }
 
 (\+|-)?[0-9]+ { return TOKEN_INTEGER_LITERAL; }
 (\+|-)?([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
-'[^']*' { return TOKEN_CHAR_LITERAL; }
-\"[^"]*\" { return TOKEN_STRING_LITERAL; }
+'\\''|'[^']*' { return TOKEN_CHAR_LITERAL; }
+\"(\\\"|[^"])*\" { return TOKEN_STRING_LITERAL; }
 
 [_a-zA-Z][_a-zA-Z0-9]* { 
     if (yyleng > 255)
@@ -69,6 +69,8 @@ while { return TOKEN_WHILE; }
 }
 
 . { return TOKEN_INVALID; }
+[0-9][_a-zA-Z0-9]*[_a-zA-Z][_a-zA-Z0-9]* { return TOKEN_IDENTN; }
+\/\*([^/*]|\*[^/])* { return TOKEN_UNTCOM; }
 
 %%
 

@@ -18,7 +18,7 @@ done
 echo "Testing bad scanner cases..."
 for testfile in test/scanner/bad*.bminor
 do
-	if ./bminor --scanner $testfile > $testfile.out 2>&1
+	if ./bminor --scan $testfile > $testfile.out 2>&1
 	then
         echo -e "${RED}FAIL${NOCOLOR}: $testfile"
 	else

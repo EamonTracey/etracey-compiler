@@ -1,0 +1,4 @@
+dothing: function void (n: int) = {
+    helper();
+    return;
+}

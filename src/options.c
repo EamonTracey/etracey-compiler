@@ -104,6 +104,12 @@ int scan_file(const char *path) {
             snprintf(errmsg, 2048, scanerr[ERROR_SCAN_INVALID], yytext);
             fprintf(stderr, "scan error: %s\n", errmsg);
             return -1;
+        case TOKEN_IDENTN:
+            fprintf(stderr, "scan error: %s\n", scanerr[ERROR_SCAN_IDENTN]);
+            return -1;
+        case TOKEN_UNTCOM:
+            fprintf(stderr, "scan error: %s\n", scanerr[ERROR_SCAN_UNTCOM]);
+            return -1;
         default:
             fprintf(stdout, "%s\n", tokstr[token]);
         }

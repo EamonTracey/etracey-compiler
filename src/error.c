@@ -35,5 +35,7 @@ const char *strencerr[] = {
 const char *scanerr[] = {
     "",
     "identifier must not exceed 255 characters.",
-    "invalid token %s."
+    "invalid token %s.",
+    "identifier must start with an underscore or letter.",
+    "multiline comment must be terminated."
 };

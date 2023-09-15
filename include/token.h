@@ -67,6 +67,8 @@
 /* Catch invalid tokens. */
 #define TOKEN_IDENTL 52
 #define TOKEN_INVALID 53
+#define TOKEN_IDENTN 54
+#define TOKEN_UNTCOM 55
 
 extern char *tokstr[];
 
