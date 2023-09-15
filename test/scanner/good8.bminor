@@ -1,0 +1,12 @@
+// watch out for comments.
+
+/**/
+      /***/
+
+/*
+this is a
+comment as     
+   well
+*/
+
+x: integer /*embedded*/ = /*comment*/ 3;

@@ -1,14 +1,13 @@
 #ifndef ENCODE_H
 #define ENCODE_H
 
-#define ENC_BQUOTE 1
-#define ENC_PRINTABLE 2
-#define ENC_LENGTH 3
-#define ENC_TRAIL 4
-#define ENC_HEX 5
-#define ENC_CODE 6
+int integer_decode(const char *, long int *);
+int float_decode(const char *, double *);
+int char_decode(const char *, char *);
+int string_decode(const char *, char *);
+int string_encode(const char *, char *);
 
-int string_decode(const char *es, char *s);
-int string_encode(const char *s, char *es);
+int hex_to_val(int hex);
+int val_to_hex(int val);
 
 #endif

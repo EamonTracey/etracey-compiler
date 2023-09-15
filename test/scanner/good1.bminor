@@ -1,0 +1,9 @@
+a: integer = -00;
+b: float = +45.3;
+c: float = -3e100;
+d: boolean = false;
+e: boolean = true;
+f: char = 'a';
+g: char = '\0x00';
+h: char = '\r';
+i: string = "Hello, world!\n"
