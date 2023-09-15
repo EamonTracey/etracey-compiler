@@ -58,11 +58,15 @@
 /* Literals. */
 #define TOKEN_INTEGER_LITERAL 47
 #define TOKEN_FLOAT_LITERAL 48
-#define TOKEN_STRING_LITERAL 49
-#define TOKEN_CHAR_LITERAL 50
+#define TOKEN_CHAR_LITERAL 49
+#define TOKEN_STRING_LITERAL 50
 
 /* Identifier. */
 #define TOKEN_IDENTIFIER 51
+
+/* Catch invalid tokens. */
+#define TOKEN_IDENTL 52
+#define TOKEN_INVALID 53
 
 extern char *tokstr[];
 

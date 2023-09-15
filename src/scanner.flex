@@ -58,10 +58,17 @@ while { return TOKEN_WHILE; }
 
 (\+|-)?[0-9]+ { return TOKEN_INTEGER_LITERAL; }
 (\+|-)?([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
-\"[^"]*\" { return TOKEN_STRING_LITERAL; }
 '[^']*' { return TOKEN_CHAR_LITERAL; }
+\"[^"]*\" { return TOKEN_STRING_LITERAL; }
 
-[_a-zA-Z][_a-zA-Z0-9]* { return TOKEN_IDENTIFIER; }
+[_a-zA-Z][_a-zA-Z0-9]* { 
+    if (yyleng > 255)
+        return TOKEN_IDENTL;
+
+    return TOKEN_IDENTIFIER;
+}
+
+. { return TOKEN_INVALID; }
 
 %%
 

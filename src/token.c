@@ -48,7 +48,7 @@ const char *tokstr[] = {
     "COMMENT_MULTI",
     "INTEGER_LITERAL",
     "FLOAT_LITERAL",
-    "STRING_LITERAL",
     "CHAR_LITERAL",
+    "STRING_LITERAL",
     "IDENTIFIER"
 };

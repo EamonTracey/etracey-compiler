@@ -21,3 +21,9 @@ const char *strencerr[] = {
     "hex backslash code must be of valid form \\0xHH.",
     "error: invalid backslash code, use only a, b, e, f, n, r, t, v, \\, ', \", 0xHH."
 };
+
+const char *scanerr[] = {
+    "",
+    "identifier must not exceed 255 characters.",
+    "invalid token %s."
+};

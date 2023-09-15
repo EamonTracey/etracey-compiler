@@ -14,8 +14,12 @@
 #define ERROR_STRENC_HEX 5
 #define ERROR_STRENC_CODE 6
 
+#define ERROR_SCAN_IDENTL 1
+#define ERROR_SCAN_INVALID 2
+
 extern const char *intencerr[];
 extern const char *floatencerr[];
 extern const char *strencerr[];
+extern const char *scanerr[];
 
 #endif
