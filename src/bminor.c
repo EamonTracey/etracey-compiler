@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
         return encode_file(argv[2]) == -1 ? EXIT_FAILURE : EXIT_SUCCESS;
     else if (!strcmp(argv[1], "--scan"))
         return scan_file(argv[2]) == -1 ? EXIT_FAILURE : EXIT_SUCCESS;
+    else if (!strcmp(argv[1], "--parse"))
+        return parse_file(argv[2]) == -1 ? EXIT_FAILURE : EXIT_SUCCESS;
     else {
         fprintf(stderr, "error: unknown option \"%s\".\n", argv[1]);
         return EXIT_FAILURE;

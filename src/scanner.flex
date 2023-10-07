@@ -1,10 +1,12 @@
 %{
-#include "token.h"
+#include "parser.h"
 %}
 
 %%
 
 [ \t\r\n]+ /* Ignore whitespace. */
+\/\/[^\n]*\n /* Ignore single-line comments. */
+\/\*(\*+[^*/]|[^*])*\*+\/ /* Ignore multi-line comments. */
 
 array { return TOKEN_ARRAY; }
 auto { return TOKEN_AUTO; }
@@ -53,11 +55,9 @@ while { return TOKEN_WHILE; }
 ; { return TOKEN_SEMICOLON; }
 , { return TOKEN_COMMA; }
 
-\/\/[^\n]*\n { return TOKEN_COMMENT_SINGLE; }
-\/\*(\*+[^*/]|[^*])*\*+\/ { return TOKEN_COMMENT_MULTI; }
 
-(\+|-)?[0-9]+ { return TOKEN_INTEGER_LITERAL; }
-(\+|-)?([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
+[0-9]+ { return TOKEN_INTEGER_LITERAL; }
+([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+) { return TOKEN_FLOAT_LITERAL; }
 '\\''|'[^']*' { return TOKEN_CHAR_LITERAL; }
 \"(\\\"|[^"])*\" { return TOKEN_STRING_LITERAL; }
 

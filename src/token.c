@@ -1,5 +1,4 @@
 const char *tokstr[] = {
-    "",
     "ARRAY",
     "AUTO",
     "BOOLEAN",

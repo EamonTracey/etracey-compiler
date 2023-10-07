@@ -1,11 +1,14 @@
 CC=gcc
 CFLAGS=-Wall -Werror -Iinclude -Wno-unused-function
 
-bminor: src/*.c src/scanner.c
+bminor: src/*.c src/scanner.c src/parser.c
 	$(CC) $(CFLAGS) $^ -o bminor
 
 src/scanner.c: src/scanner.flex
-	flex -osrc/scanner.c $^
+	flex -osrc/scanner.c src/scanner.flex
+
+src/parser.c: src/parser.bison
+	bison --defines=include/parser.h --output=src/parser.c -v src/parser.bison
 
 .PHONY: test
 test: bminor test/test_all.sh
