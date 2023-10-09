@@ -121,7 +121,8 @@ expr6: expr6 TOKEN_EXPONENTIATION expr7
      | expr7
      ;
 
-expr7: TOKEN_SUBTRACTION expr8
+expr7: TOKEN_ADDITION expr8
+     | TOKEN_SUBTRACTION expr8
      | TOKEN_NOT expr8
      | expr8
      ;
