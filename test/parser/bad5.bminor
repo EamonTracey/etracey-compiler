@@ -1,0 +1,7 @@
+v: void = {
+    if (true)
+    else if (true)
+    else (true)
+    else (true)
+    0;
+}

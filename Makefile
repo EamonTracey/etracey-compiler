@@ -26,5 +26,8 @@ test-scanner: bminor test/test_scanner.sh
 clean:
 	rm -f bminor
 	rm -f src/scanner.c
+	rm -f src/parser.c
+	rm -f src/parser.output
+	rm -f include/parser.h
 	rm -f test/encoder/*.out
 	rm -f test/scanner/*.out

@@ -1,0 +1,14 @@
+x: array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   function function function void () () ();
+
+y: void = {1, 2, 3, 4, 5};
+z: void = {return;}
