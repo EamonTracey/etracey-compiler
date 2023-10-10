@@ -228,7 +228,7 @@ if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt
 
 /* If statement which may not dangle. */
 if_closed: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_closed TOKEN_ELSE stmt_closed
-              ;
+         ;
 
 /* For statement which may dangle. */
 for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN stmt
@@ -236,7 +236,7 @@ for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOL
 
 /* For statement which may not dangle. */
 for_closed: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN stmt_closed
-               ;
+          ;
 
 /* Statement which may not dangle. */
 stmt_closed: simple_stmt
