@@ -5,7 +5,6 @@
 #include "constants.h"
 #include "encode.h"
 #include "parser.h"
-#include "scanner.h"
 
 extern FILE *yyin;
 extern char *yytext;
