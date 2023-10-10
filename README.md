@@ -1,7 +1,7 @@
-# BMinor
+# B-Minor
 
 ### Build and Test
-This BMinor compiler currently supports encoding and scanning.
+This B-Minor compiler currently supports encoding, scanning, and parsing.
 ```sh
 make test
 ./bminor --encode <FILE>
@@ -9,4 +9,8 @@ make test
 ```sh
 make test
 ./bminor --scan <FILE>
+```
+```sh
+make test
+./bminor --parse <FILE>
 ```
