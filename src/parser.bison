@@ -223,11 +223,11 @@ simple_stmt: decl
 
 /* If statement which may dangle. */
 if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt
-       | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN closed_stmt TOKEN_ELSE stmt
+       | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_closed TOKEN_ELSE stmt
        ;
 
 /* If statement which may not dangle. */
-closed_if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN closed_stmt TOKEN_ELSE closed_stmt
+if_closed: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_closed TOKEN_ELSE stmt_closed
               ;
 
 /* For statement which may dangle. */
@@ -235,13 +235,13 @@ for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOL
         ;
 
 /* For statement which may not dangle. */
-closed_for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN closed_stmt
+for_closed: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN stmt_closed
                ;
 
 /* Statement which may not dangle. */
-closed_stmt: simple_stmt
-           | closed_if_stmt
-           | closed_for_stmt
+stmt_closed: simple_stmt
+           | if_closed
+           | for_closed
            ;
 
 /* Statement sequence. */
