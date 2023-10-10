@@ -21,11 +21,6 @@
 #define ERROR_STRENC_HEX 5
 #define ERROR_STRENC_CODE 6
 
-#define ERROR_SCAN_IDENTL 1
-#define ERROR_SCAN_INVALID 2
-#define ERROR_SCAN_IDENTN 3
-#define ERROR_SCAN_UNTCOM 4
-
 extern const char *tokstr[];
 extern const char *intencerr[];
 extern const char *floatencerr[];
