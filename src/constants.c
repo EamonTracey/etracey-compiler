@@ -1,4 +1,12 @@
-#include "error.h"
+const char *tokstr[] = {
+    "ARRAY", "AUTO", "BOOLEAN", "CHAR", "ELSE", "FALSE","FLOAT",
+    "FOR", "FUNCTION", "IF", "INTEGER", "PRINT", "RETURN", "STRING",
+    "TRUE", "VOID", "WHILE", "INC", "DEC", "NOT", "EXP",
+    "MULT", "DIV", "MOD", "PLUS", "MINUS", "LT", "LTE",
+    "GT","GTE", "EQ", "NOTEQ", "AND", "OR", "ASSIGN",
+    "LBRACE", "RBRACE", "LPAREN", "RPAREN", "LBRACK", "RBRACK", "COLON",
+    "SEMICOLON", "COMMA", "INTEGERLIT", "FLOATLIT", "CHARLIT", "STRINGLIT", "IDENT"
+};
 
 const char *intencerr[] = {
     "",
@@ -30,12 +38,4 @@ const char *strencerr[] = {
     "string literal must end with quotation mark.",
     "hex backslash code must be of valid form \\0xHH.",
     "invalid backslash code, use only a, b, e, f, n, r, t, v, \\, ', \", 0xHH."
-};
-
-const char *scanerr[] = {
-    "",
-    "identifier must not exceed 255 characters.",
-    "invalid token %s.",
-    "identifier must start with an underscore or letter.",
-    "multiline comment must be terminated."
 };

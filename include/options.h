@@ -3,5 +3,6 @@
 
 int encode_file(const char *);
 int scan_file(const char *);
+int parse_file(const char *);
 
 #endif
