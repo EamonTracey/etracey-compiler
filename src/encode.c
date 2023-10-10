@@ -2,8 +2,8 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include "constants.h"
 #include "encode.h"
-#include "error.h"
 
 int integer_decode(const char *eint, long int *bmint) {
    *bmint = strtol(eint, NULL, 10); 

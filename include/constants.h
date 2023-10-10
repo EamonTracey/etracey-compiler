@@ -1,5 +1,5 @@
-#ifndef ERROR_H
-#define ERROR_H
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #define ERROR_INTENC_UNDERFLOW 1
 #define ERROR_INTENC_OVERFLOW 2
@@ -26,6 +26,7 @@
 #define ERROR_SCAN_IDENTN 3
 #define ERROR_SCAN_UNTCOM 4
 
+extern const char *tokstr[];
 extern const char *intencerr[];
 extern const char *floatencerr[];
 extern const char *charencerr[];

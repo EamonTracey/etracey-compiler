@@ -1,71 +1,67 @@
 /* Keywords. */
-%token TOKEN_ARRAY 
-%token TOKEN_AUTO 
-%token TOKEN_BOOLEAN 
-%token TOKEN_CHAR 
-%token TOKEN_ELSE 
-%token TOKEN_FALSE 
-%token TOKEN_FLOAT 
-%token TOKEN_FOR 
-%token TOKEN_FUNCTION 
-%token TOKEN_IF 
-%token TOKEN_INTEGER 
-%token TOKEN_PRINT 
-%token TOKEN_RETURN 
-%token TOKEN_STRING 
-%token TOKEN_TRUE 
-%token TOKEN_VOID 
-%token TOKEN_WHILE 
+%token TOKEN_ARRAY
+%token TOKEN_AUTO
+%token TOKEN_BOOLEAN
+%token TOKEN_CHAR
+%token TOKEN_ELSE
+%token TOKEN_FALSE
+%token TOKEN_FLOAT
+%token TOKEN_FOR
+%token TOKEN_FUNCTION
+%token TOKEN_IF
+%token TOKEN_INTEGER
+%token TOKEN_PRINT
+%token TOKEN_RETURN
+%token TOKEN_STRING
+%token TOKEN_TRUE
+%token TOKEN_VOID
+%token TOKEN_WHILE
 
 /* Operators. */
-%token TOKEN_INCREMENT 
-%token TOKEN_DECREMENT 
-%token TOKEN_NOT 
-%token TOKEN_EXPONENTIATION 
-%token TOKEN_MULTIPLICATION 
-%token TOKEN_DIVISION 
-%token TOKEN_MODULO 
-%token TOKEN_ADDITION 
-%token TOKEN_SUBTRACTION 
-%token TOKEN_LESSER 
-%token TOKEN_LESSER_EQUAL 
-%token TOKEN_GREATER 
-%token TOKEN_GREATER_EQUAL 
-%token TOKEN_EQUALITY 
-%token TOKEN_INEQUALITY 
-%token TOKEN_AND 
-%token TOKEN_OR 
-%token TOKEN_ASSIGNMENT 
+%token TOKEN_INC
+%token TOKEN_DEC
+%token TOKEN_NOT
+%token TOKEN_EXP
+%token TOKEN_MULT
+%token TOKEN_DIV
+%token TOKEN_MOD
+%token TOKEN_PLUS
+%token TOKEN_MINUS
+%token TOKEN_LT
+%token TOKEN_LTE
+%token TOKEN_GT
+%token TOKEN_GTE
+%token TOKEN_EQ
+%token TOKEN_NOTEQ
+%token TOKEN_AND
+%token TOKEN_OR
+%token TOKEN_ASSIGN
 
 /* Punctuation. */
-%token TOKEN_BRACE_OPEN 
-%token TOKEN_BRACE_CLOSE 
-%token TOKEN_PAREN_OPEN 
-%token TOKEN_PAREN_CLOSE 
-%token TOKEN_BRACK_OPEN 
-%token TOKEN_BRACK_CLOSE 
-%token TOKEN_COLON 
-%token TOKEN_SEMICOLON 
-%token TOKEN_COMMA 
-
-/* Comments. */
-%token TOKEN_COMMENT_SINGLE 
-%token TOKEN_COMMENT_MULTI 
+%token TOKEN_LBRACE
+%token TOKEN_RBRACE
+%token TOKEN_LPAREN
+%token TOKEN_RPAREN
+%token TOKEN_LBRACK
+%token TOKEN_RBRACK
+%token TOKEN_COLON
+%token TOKEN_SEMICOLON
+%token TOKEN_COMMA
 
 /* Literals. */
-%token TOKEN_INTEGER_LITERAL 
-%token TOKEN_FLOAT_LITERAL 
-%token TOKEN_CHAR_LITERAL 
-%token TOKEN_STRING_LITERAL 
+%token TOKEN_INTEGERLIT
+%token TOKEN_FLOATLIT
+%token TOKEN_CHARLIT
+%token TOKEN_STRINGLIT
 
 /* Identifier. */
-%token TOKEN_IDENTIFIER 
+%token TOKEN_IDENT
 
 /* Catch invalid tokens. */
-%token TOKEN_IDENTL 
-%token TOKEN_INVALID 
-%token TOKEN_IDENTN 
-%token TOKEN_UNTCOM
+%token TOKEN_INVALID_LONG
+%token TOKEN_INVALID_NUMIDENT
+%token TOKEN_INVALID_OPENCOM
+%token TOKEN_INVALID_ANY
 
 %{
 
@@ -73,148 +69,206 @@
 
 extern char *yytext;
 extern int yylex();
-extern int yyerror( char *str );
+extern void yyerror(char const *);
 
 %}
 
 %%
 
-
-program: decllist { return 0; }
+/* A B-Minor file is a sequence of declarations. Empty files are valid. */
+program: decl_seq { return 0; }
        |
        ;
 
 /* Expressions. */
-expr0: expr0 TOKEN_ASSIGNMENT expr1
+
+/* Top-level expression. */
+expr: expr0
+    ;
+
+/* Assignment operator. */
+expr0: expr0 TOKEN_ASSIGN expr1
      | expr1
      ;
 
+/* Or operator. */
 expr1: expr1 TOKEN_OR expr2
      | expr2
      ;
 
+/* And operator. */
 expr2: expr2 TOKEN_AND expr3
      | expr3
      ;
 
-expr3: expr3 TOKEN_LESSER expr4
-     | expr3 TOKEN_LESSER_EQUAL expr4
-     | expr3 TOKEN_GREATER expr4
-     | expr3 TOKEN_GREATER_EQUAL expr4
-     | expr3 TOKEN_EQUALITY expr4
-     | expr3 TOKEN_INEQUALITY expr4
+/* Less-than, less-than-or-equal, greater-than, greater-than-or-equal, equal-to, not-equal-to operators. */
+expr3: expr3 TOKEN_LT expr4
+     | expr3 TOKEN_LTE expr4
+     | expr3 TOKEN_GT expr4
+     | expr3 TOKEN_GTE expr4
+     | expr3 TOKEN_EQ expr4
+     | expr3 TOKEN_NOTEQ expr4
      | expr4
      ;
 
-expr4: expr4 TOKEN_ADDITION expr5
-     | expr4 TOKEN_SUBTRACTION expr5
+/* Addition and subtraction operators. */
+expr4: expr4 TOKEN_PLUS expr5
+     | expr4 TOKEN_MINUS expr5
      | expr5
      ;
 
-expr5: expr5 TOKEN_MULTIPLICATION expr6
-     | expr5 TOKEN_DIVISION expr6
-     | expr5 TOKEN_MODULO expr6
+/* Multiplication, division, and modulo operators. */
+expr5: expr5 TOKEN_MULT expr6
+     | expr5 TOKEN_DIV expr6
+     | expr5 TOKEN_MOD expr6
      | expr6
      ;
 
-expr6: expr6 TOKEN_EXPONENTIATION expr7
+/* Exponentiation operator. */
+expr6: expr6 TOKEN_EXP expr7
      | expr7
      ;
 
-expr7: TOKEN_ADDITION expr8
-     | TOKEN_SUBTRACTION expr8
+/* Unary-positive, unary-negative, and logical-not operators */
+expr7: TOKEN_PLUS expr8
+     | TOKEN_MINUS expr8
      | TOKEN_NOT expr8
      | expr8
      ;
 
-expr8: expr9 TOKEN_INCREMENT
-     | expr9 TOKEN_DECREMENT
+/* Increment and decrement operators. */
+expr8: expr9 TOKEN_INC
+     | expr9 TOKEN_DEC
      | expr9
      ;
 
-expr9: TOKEN_PAREN_OPEN expr0 TOKEN_PAREN_CLOSE
-     | TOKEN_IDENTIFIER TOKEN_BRACK_OPEN expr0 TOKEN_BRACK_CLOSE
-     | TOKEN_IDENTIFIER TOKEN_PAREN_OPEN optexprlist TOKEN_PAREN_CLOSE
-     | expratom
+/* Paranthetical grouping, subscripting, and function calls. */
+expr9: TOKEN_LPAREN expr TOKEN_RPAREN
+     | expr9 TOKEN_LBRACK expr TOKEN_RBRACK
+     | TOKEN_IDENT TOKEN_LPAREN expr_seq_opt TOKEN_RPAREN
+     | expr_atom
      ;
 
-expratom: TOKEN_INTEGER_LITERAL
-        | TOKEN_FLOAT_LITERAL
-        | TOKEN_CHAR_LITERAL
-        | TOKEN_STRING_LITERAL
-        | TOKEN_IDENTIFIER
-        | TOKEN_TRUE
-        | TOKEN_FALSE
-        | TOKEN_BRACE_OPEN exprlist TOKEN_BRACE_CLOSE
-        ;
-
-optexpr: expr0
-       |
-       ;
-
-exprlist: expr0 TOKEN_COMMA exprlist
-        | expr0
-        ;
-
-optexprlist: exprlist
-           |
-           ; 
-
-/* Types. */
-type: TOKEN_INTEGER
-    | TOKEN_FLOAT
-    | TOKEN_BOOLEAN
-    | TOKEN_CHAR
-    | TOKEN_STRING
-    | TOKEN_VOID
-    | TOKEN_ARRAY TOKEN_BRACK_OPEN optexpr TOKEN_BRACK_CLOSE type
-    | TOKEN_FUNCTION type TOKEN_PAREN_OPEN optparamlist TOKEN_PAREN_CLOSE
-    ;
-
-param: TOKEN_IDENTIFIER TOKEN_COLON type
-     ;
-
-paramlist: param TOKEN_COMMA paramlist
-         | param
+/* Atomic expressions. */
+expr_atom: TOKEN_IDENT
+         | TOKEN_INTEGERLIT
+         | TOKEN_FLOATLIT
+         | TOKEN_CHARLIT
+         | TOKEN_STRINGLIT
+         | TOKEN_TRUE
+         | TOKEN_FALSE
+         | TOKEN_LBRACE expr_seq TOKEN_RBRACE
          ;
 
-optparamlist: paramlist
-            | 
+/* Optional expression. */
+expr_opt: expr
+        |
+        ;
+
+/* Comma-separated expression sequence. */
+expr_seq: expr TOKEN_COMMA expr_seq
+        | expr
+        ;
+
+/* Optional expression sequence. */
+expr_seq_opt: expr_seq
+            |
             ;
 
+/* Types. */
 
-/* Statements. */
-stmt: decl
-    | expr0 TOKEN_SEMICOLON
-    | TOKEN_IF TOKEN_PAREN_OPEN expr0 TOKEN_PAREN_CLOSE stmt
-    | TOKEN_FOR TOKEN_PAREN_OPEN optexpr TOKEN_SEMICOLON optexpr TOKEN_SEMICOLON optexpr TOKEN_PAREN_CLOSE stmt
-    | TOKEN_PRINT optexprlist TOKEN_SEMICOLON
-    | TOKEN_RETURN optexpr TOKEN_SEMICOLON
-    | TOKEN_BRACE_OPEN optstmtlist TOKEN_BRACE_CLOSE
+/* Top-level type. */
+type: type_atom
+    | TOKEN_VOID
+    | TOKEN_ARRAY TOKEN_LBRACK expr_opt TOKEN_RBRACK type
+    | TOKEN_FUNCTION type TOKEN_LPAREN param_seq_opt TOKEN_RPAREN
     ;
 
-stmtlist: stmt stmtlist
+/* Atomic types. */
+type_atom: TOKEN_INTEGER
+         | TOKEN_FLOAT
+         | TOKEN_BOOLEAN
+         | TOKEN_CHAR
+         | TOKEN_STRING
+
+/* Parameter. */
+param: TOKEN_IDENT TOKEN_COLON type
+     ;
+
+/* Comma-separated parameter sequence. */
+param_seq: param TOKEN_COMMA param_seq
+          | param
+          ;
+
+/* Optional parameter sequence. */
+param_seq_opt: param_seq
+              |
+              ;
+
+/* Statements. */
+
+/* Top-level statement. */
+stmt: simple_stmt
+    | if_stmt
+    | for_stmt
+    ;
+
+/* Simple statement. */
+simple_stmt: decl
+           | expr TOKEN_SEMICOLON
+           | TOKEN_RETURN expr_opt TOKEN_SEMICOLON
+           | TOKEN_PRINT expr_seq_opt TOKEN_SEMICOLON
+           | TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
+           ;
+
+/* If statement which may dangle. */
+if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt
+       | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN closed_stmt TOKEN_ELSE stmt
+       ;
+
+/* If statement which may not dangle. */
+closed_if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN closed_stmt TOKEN_ELSE closed_stmt
+              ;
+
+/* For statement which may dangle. */
+for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN stmt
+        ;
+
+/* For statement which may not dangle. */
+closed_for_stmt: TOKEN_FOR TOKEN_LPAREN expr_opt TOKEN_SEMICOLON expr_opt TOKEN_SEMICOLON expr_opt TOKEN_RPAREN closed_stmt
+               ;
+
+/* Statement which may not dangle. */
+closed_stmt: simple_stmt
+           | closed_if_stmt
+           | closed_for_stmt
+           ;
+
+/* Statement sequence. */
+stmt_seq: stmt stmt_seq
         | stmt
         ;
 
-optstmtlist: stmtlist
-           |
-           ;
+/* Optional statement sequence. */
+stmt_seq_opt: stmt_seq
+            |
+            ;
 
 /* Declarations. */
-decl: TOKEN_IDENTIFIER TOKEN_COLON type TOKEN_SEMICOLON
-    | TOKEN_IDENTIFIER TOKEN_COLON type TOKEN_ASSIGNMENT expr0 TOKEN_SEMICOLON
-    | TOKEN_IDENTIFIER TOKEN_COLON type TOKEN_ASSIGNMENT TOKEN_BRACE_OPEN optstmtlist TOKEN_BRACE_CLOSE
+
+/* Top-level declaration. */
+decl: TOKEN_IDENT TOKEN_COLON type TOKEN_SEMICOLON
+    | TOKEN_IDENT TOKEN_COLON type TOKEN_ASSIGN expr TOKEN_SEMICOLON
+    | TOKEN_IDENT TOKEN_COLON type TOKEN_ASSIGN TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
     ;
 
-decllist: decl decllist
+/* Declaration sequence. */
+decl_seq: decl decl_seq
         | decl
         ;
 
 %%
 
-int yyerror(char *str)
-{
-	printf("parse error: %s\n",str);
-	return 0;
+void yyerror(char const *s) {
+    fprintf(stderr, "parse error: %s.\n", s);
 }
