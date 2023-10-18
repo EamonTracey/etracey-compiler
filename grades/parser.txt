@@ -1,0 +1,1319 @@
+=====STUDENT TESTS=====
+====Good Tests====
+===[good0.bminor Input]===
+
+===[good0.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good1.bminor Input]===
+// Empty file.
+
+===[good1.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good10.bminor Input]===
+/* A C-style comment */
+a:integer=5; // A C++ style comment
+
+x: integer;
+y: integer = 123;
+f: float = 45.67;
+b: boolean = false;
+c: char    = 'q';
+s: string  = "hello bminor\n";
+
+a: array [5] integer;
+
+a: array [5] integer = {1,2,3,4,5};
+
+x: integer = 65;
+y: char = 'A';
+
+f: integer = 0;
+
+writechar: function void ( c: char );
+a: integer = 65;
+
+b: array [2] boolean = {true,false};
+x: integer = 0;
+
+x: integer = 0;
+y: float = x;  // error: integer types can not be implicitly converted to float
+
+b: boolean;
+x: integer = 3;
+y: integer = 5;
+
+f: integer = 0;
+
+c: char = 'a';
+
+q: void = {
+// An arithmetic expression statement.
+y = m*x + b;
+
+// A return statement.
+return (f-32)*5/9;
+
+// An if-else statement.
+if( temp>100 ) {
+    print "It's really hot!\n";
+} else if( temp>70 ) {
+    print "It's pretty warm.\n";
+} else {
+    print "It's not too bad.\n";
+}
+
+// A for loop statement.
+for( i=0; i<100; i++ ) {
+    print i;
+}
+}
+
+square: function integer ( x: integer ) = {
+	return x^2;
+}
+
+printarray: function void ( a: array [] integer ) = {
+	i: integer;
+	for( i=0;i<array_length(a);i++) {
+		print a[i], "\n";
+	}
+}
+
+puts: function void ( s: string );
+
+main: function integer () = {
+	puts("hello world");
+}
+
+main: function integer ( argc: integer, argv: array [] string ) = {
+        puts("hello world");
+for(i=0;i<10;i++) print i;
+if(a) x=y; else z=w;
+}
+
+===[good10.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good11.bminor Input]===
+t: void = {1};
+t: void = {1;}
+
+===[good11.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good12.bminor Input]===
+x: float = !(!(!true));
+x: array[1^2^3^4^5^6^7^8^9%1+!2+-3] boolean;
+q: function integer (v:function integer());
+
+===[good12.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good2.bminor Input]===
+/* Empty file. */
+
+===[good2.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good3.bminor Input]===
+main: function integer (argc: integer, argv: array [] string) = {
+    print "Hello, world!\n";
+    return 0;
+}
+
+===[good3.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good4.bminor Input]===
+a: integer = 0;
+b: float = 0.0;
+c: char = '0';
+d: string = "0";
+
+x: integer = "string?";
+b: function array [] array [5 * 2 / -x] function void (n: boolean) () = {"", '!', !true};
+
+q: void;
+r: integer;
+s: array [10] float;
+t: function void ();
+
+===[good4.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good5.bminor Input]===
+is_even: function boolean (n: integer) = {
+    if (n % 2 == 0)
+        return true;
+    return false;
+}
+
+===[good5.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good6.bminor Input]===
+loop: void = {
+    i: integer;
+    for (i = 0; i < 10; i++)
+        print i, "\n";
+
+    for (;;) {}
+}
+
+===[good6.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good7.bminor Input]===
+val: char = true;
+
+control: array[]integer = {
+    if (0 && 0 || +0 * -0 == !0 % 0 ^ 0 / 0)
+        do_this();
+    else if (condition(val)) {
+        for (;;) for (;;) for (;;) {}if (true) for (;;) {} else if (false) 5+ +5; else that();
+    }
+
+else if (condition(valll)) whoa(); else if (wow()) {whoa(1- -1);}
+                                                             else
+        what();
+    
+    if (!true) print; else print a, 'b', 3, +59e+3, "\n";
+}
+
+===[good7.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good8.bminor Input]===
+x: void = f(
+    a[0] + a[1][2][3][4][f("" + 9 - -3.8)]
+    / (((((
+
+
+
+
+
+-999999^-7.7
+)))
+
+
+
+
+
+
+))
+);
+
+u: boolean = 5/5/5/5/5/5/5/5/**//5/5/5/5/5/5/5/5;
+
+c: function void () = {
+    print this/*, that*/, other;
+    return;
+    return 3;
+    return "s";
+    return a[a];
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+    if (true)
+{{{{{{{{{{{}}}}}}}}}}}
+}
+
+===[good8.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good9.bminor Input]===
+x: array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   array []
+   function function function void () () ();
+
+y: void = {1, 2, 3, 4, 5};
+z: void = {return;}
+
+===[good9.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+====Bad Tests====
+===[bad0.bminor Input]===
+0;
+
+===[bad0.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad1.bminor Input]===
+main: function integer () {}
+
+===[bad1.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad10.bminor Input]===
+p: function void (argc, argv);
+
+===[bad10.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad11.bminor Input]===
+main function integer () = {
+    return 0
+}
+
+===[bad11.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad12.bminor Input]===
+x: function void (1);
+
+===[bad12.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad2.bminor Input]===
+main: function integer () = {
+    ;
+}
+
+===[bad2.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad3.bminor Input]===
+x: float = ((3);
+
+===[bad3.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad4.bminor Input]===
+q: void = {
+    if () else (false) {}
+}
+
+===[bad4.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad5.bminor Input]===
+v: void = {
+    if (true)
+    else if (true)
+    else (true)
+    else (true)
+    0;
+}
+
+===[bad5.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad6.bminor Input]===
+r: void = {
+    for (;)
+}
+
+===[bad6.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad7.bminor Input]===
+q: array [5] = {1, 2, 3, 4, 5};
+
+===[bad7.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad8.bminor Input]===
+w: void = {
+    print this that, other;
+}
+
+===[bad8.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad9.bminor Input]===
+x: function (argc: integer);
+
+===[bad9.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+=====HIDDEN TESTS=====
+====Good Tests====
+===[good1.bminor Input]===
+/* A program is a sequence of declarations */
+/* Try a variety of variable declarations. */
+
+n: integer;
+m: integer = 20;
+
+b: boolean;
+c: boolean = true;
+s: string;
+t: string = "hello\n";
+d: char;
+e: char = 'x';
+
+x: array [] string;
+y: array [] string = { "a", "b", "c" };
+z: array [] array [] string = { {"a","b","c"}, {"x","y","z"} };
+
+g: array [3] string;
+h: array [3] string = { "a", "b", "c" };
+i: array [2] array [3] string = { {"a","b","c"}, {"x","y","z"} };
+
+===[good1.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good10.bminor Input]===
+/* Try accesssing arrays of various sizes; */
+
+a: array [10] integer = {100,200,300,400,500,600,700,800,900};
+b: array [10] integer;
+c: array [10] array [10] integer;
+
+testfunc: function void () = {
+    i: integer;
+    j: integer;
+
+    for(i=0;i<10;i++) {
+        b[i] = a[i] * 10;
+    }
+
+    for(i=0;i<5;i++) {
+        b[i*2] = a[i] + b[i];
+    }
+
+    for(j=0;j<10;i++) {
+        for(i=0;i<10;i++) {
+            c[i][j] = i*j;
+        }
+    }
+
+    for(j=0;j<10;i++) {
+        for(i=0;i<10;i++) {
+            print c[i][j];
+            print " ";
+        }
+        print "\n";
+    }
+}
+
+===[good10.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good11.bminor Input]===
+
+/* Try locally declared array lengths */
+
+
+testfunc: function void (x: integer, y: integer) = {
+    i: integer;
+    j: integer;
+
+    a: array [10] integer = {100,200,300,400,500,600,700,800,900};
+    b: array [x] integer;
+    c: array [x] array [y] integer;
+
+    for(i=0;i<10;i++) {
+        b[i] = a[i] * 10;
+    }
+
+    for(i=0;i<5;i++) {
+        b[i*2] = a[i] + b[i];
+    }
+
+    for(j=0;j<10;i++) {
+        for(i=0;i<10;i++) {
+            c[i][j] = i*j;
+        }
+    }
+
+    for(j=0;j<10;i++) {
+        for(i=0;i<10;i++) {
+            print c[i][j];
+            print " ";
+        }
+        print "\n";
+    }
+}
+
+===[good11.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good12.bminor Input]===
+
+/* single statement ifs */
+
+x: integer = 65;
+s: string = "hello";
+b: boolean = false;
+
+min: function integer ( a: integer, b: integer ) =
+{
+	if(a > b) return a;
+	else return b;
+}
+
+testfunc: function void ( z: integer ) =
+{
+	print "minimum", min(10, 5), "\n";
+}
+
+===[good12.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good13.bminor Input]===
+/* string format expr */
+
+x: integer = 65;
+s: string = "hello";
+b: boolean = false;
+
+min: function integer ( a: integer, b: integer ) =
+{
+	if(a > b) return a;
+	else return b;
+}
+
+testfunc: function void ( z: integer ) =
+{
+	print "minimum", min(10, 5), "\n", z=10, z==10;
+}
+	
+
+===[good13.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good14.bminor Input]===
+
+/* returning various expressions */
+
+testfunc: function void ( x: integer, y:integer, z:integer ) = {
+	return x;
+	return "hello";
+	return x = 10;
+	return x == 10;
+	return x > 5;
+	return testfunc(x, y, z);
+}
+
+===[good14.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good15.bminor Input]===
+
+
+/* code blocks */
+
+testfunc: function void ( x: integer, y:integer, z:integer ) = {
+	{
+		return x;
+		return "hello";
+		return x = 10;
+	}
+	{
+		return x == 10;
+		{
+			return x > 5;
+			return testfunc(x, y, z);
+		}
+	}
+}
+
+===[good15.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good2.bminor Input]===
+/* Function prototypes are declarations without bodies. */
+
+ComputeAscii: function char ( c: char );
+
+GetLength: function integer ( s: string, i: integer );
+
+/* Function body has some code in it */
+
+GetArea: function integer ( width: integer, height: integer ) =
+{
+	return width * height;
+}
+
+===[good2.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good3.bminor Input]===
+/* A function contains a sequence of statements */
+/* Some of those statements can be decls */
+
+simplefunc: function void () = {
+     x: integer;
+     y: integer = 20;
+     s: string = "hello world";
+}
+
+===[good3.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good4.bminor Input]===
+/* A function contains a sequence of statements */
+/* Try decls and stmts and exprs together. */
+
+simplefunc: function boolean ( x: integer, y: integer ) = {
+
+     // A declaration
+     z: integer = x * y;
+
+     // An expression with a semicolon
+     z = 16 + x / y;
+
+     // Print statement
+     print "input is: ", x, " and ", y, "\n";
+
+     // Simple if-else statement
+     if( x < y ) {
+         return true;
+     } else {
+         return false;
+     }
+
+}
+
+===[good4.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good5.bminor Input]===
+/* A function contains a sequence of statements */
+/* Try decls and stmts and exprs together. */
+/* Add some float */
+
+simplefunc: function boolean ( x: integer, y: integer ) = {
+
+     // A declaration
+     z: integer = x * y;
+	
+     // A float declaration
+     q: float = 10e9;
+     
+     // another float
+     v: float = 2.10e2;
+
+     // a float operation
+     return v;
+
+}
+
+===[good5.bminor Output]===
+TEST NOT PASSED
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[good6.bminor Input]===
+/* Try several variations of for-loops */
+
+simplefunc: function void (r: integer, s: integer, t: integer ) = {
+
+    i: integer;
+
+    for( i=0; i<r; i++ ) {
+        print i,"\n";
+    }
+
+    i=0;
+    for( ; i<s; i++ ) {
+        print i,"\n";
+    }
+
+    i=0;
+    for( ; i<r; ) {
+        print i,"\n";
+        i++;
+    }
+
+    for(;;) print "forever!\n";
+}
+
+===[good6.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good7.bminor Input]===
+/* Test various nestings of if-else statements */
+
+testit: function boolean ( x: integer, y: integer ) = {
+
+	/* If statement without braces */
+	if( x<y ) print "less\n"; else print "low\n";
+
+	/* If statement with braces */
+	if( x<y ) { print "less\n"; } else { print "low\n"; }
+
+	/* This statement should print nothing */
+        if(20<10) if(10<20) print "incorrect!"; else print "dangling else!";
+
+	/* statements and decls inside of if-else */
+
+        if( x>y ) {
+              i: integer;
+              for(i=0;i<x;i++) print i, "\n";
+        } else {
+              i: integer;
+              for(i=0;i<y;i++) print i, "\n";
+        }
+
+	/* A decl can come after a few statements */
+	i: integer;
+
+	/* try the other way around */
+	for(i=0;i<x;i++) {
+              if( i<x ) print "small"; else print "large";
+        }
+
+        return true;
+}
+
+===[good7.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good8.bminor Input]===
+/* Now try some expressions */
+
+x: integer = 65;
+s: string = "hello";
+b: boolean = false;
+
+min: function integer ( a: integer, b: integer ) =
+{
+	if( a<b ) return a; else return b;
+}
+
+testfunc: function void ( z: integer ) =
+{
+	// Nested integer operators.
+	y: integer = x*(x*10 + 55%6 + z/10);
+	print "y: ", y, "\n";
+
+	// Nested boolean operations.
+	c: boolean = ( x<100 && y>200 ) || !(b=true);
+	print "c: ", c, "\n";
+
+	// Boolean operations on strings?
+	d: boolean = (s == "goodbye");
+	print "d: ", d, "\n";
+
+	// Can we stack up assignments?
+	z = y = x;
+
+	a: array [100] integer;
+
+	// Function calls and array accesses:
+	y = min(a[10],a[20]);
+}
+
+===[good8.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+===[good9.bminor Input]===
+/* Check for minimum use of parentheses. */
+
+testfunc: function void ( x: integer, y:integer, z:integer ) = {
+
+          r: integer;
+	  b: boolean;
+
+          // Parens required
+	  r = (x+y)/z;
+	  r = x+(y+z);
+	  b = (true||false) && (false||true);
+
+          // Parens not required
+	  r = x+(y/z);
+	  r = (x+y)+z;
+	  b = (x+y) < (x+z);
+	  b = (true&&false) || (false&&true);
+
+}
+
+===[good9.bminor Output]===
+Success!
+
+parse successful.
+
+
+return code: 0
+
+
+====Bad Tests====
+===[bad1.bminor Input]===
+/* A program is a not an expression at the top level */
+
+x = 5;
+
+
+===[bad1.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad10.bminor Input]===
+/* Unbalanced braces */
+
+main:function integer ( x: integer ) =
+{
+	if(x<10) {
+              if(x!=23) {
+                  print "hello";
+              } else {
+                  print "goodbye";
+              }
+        print "too few braces";
+}
+
+===[bad10.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad11.bminor Input]===
+/* return return */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     y: integer = 20;
+
+     return return;
+
+}
+
+===[bad11.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad12.bminor Input]===
+/* invalid keyword usage */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     array: integer = 20;
+
+     return x + array;
+}
+
+===[bad12.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad13.bminor Input]===
+
+/* empty array initializer */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     y: integer = 20;
+	
+     p: array [5] integer = {};
+}
+
+===[bad13.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad14.bminor Input]===
+
+/* Array declaration attempt */
+
+
+simplefunc: function void () = {
+	c7: array [x] char = {'C', 'E', 'G', "Bb"};
+	d7: array [c7;] char = c7 + 1; 
+}
+
+===[bad14.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad15.bminor Input]===
+/* empty file? */
+
+
+===[bad15.bminor Output]===
+
+parse successful.
+
+
+return code: 0
+
+
+===[bad2.bminor Input]===
+/* A program is a not a sequence of statements */
+
+print "hello world";
+return 5;
+
+===[bad2.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad3.bminor Input]===
+/* Cannot have more elses than ifs */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     y: integer = 20;
+
+     if(x<y) if(y>x) else print "a"; else print "b" else print "c";
+}
+
+===[bad3.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad4.bminor Input]===
+/* For loop does need to have semis even if parts are missing */
+
+main: function void() =
+{
+        i: integer;
+	for(i=0;) print i;
+}
+
+===[bad4.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad5.bminor Input]===
+/* Print statement must separate elemnts with a comma */
+
+main:function void()
+{
+	print x y z;
+}
+
+===[bad5.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad6.bminor Input]===
+/* Function parameters must separate with a comma */
+
+main:function void( x:integer y:integer );
+
+===[bad6.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad7.bminor Input]===
+/* No invalid seqeuences of operators */
+
+main:function integer ( x:integer ) = {
+
+        return x + * 5 * - 7;
+}
+
+===[bad7.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad8.bminor Input]===
+/* Unbalanced parentheses */
+
+main:function integer( x: integer ) =
+{
+	return (x*(x+5);
+}
+
+===[bad8.bminor Output]===
+Success!
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[bad9.bminor Input]===
+/* Unbalanced braces */
+
+main:function integer ( x: integer ) =
+{
+	if(x<10) {
+              if(x!=23) {
+                  print "hello";
+              } else {
+                  print "goodbye";
+              }
+        }
+
+    }
+    print "too many braces";
+}
+
+===[bad9.bminor Output]===
+TEST NOT PASSED
+
+parse successful.
+
+
+return code: 0
+
+
+===== SUMMARIZED PARSER RESULTS =====
+{
+  "student_tests": {
+    "Good": {
+      "correct": 13,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 13,
+      "incorrect": 0
+    }
+  },
+  "hidden_tests": {
+    "Good": {
+      "correct": 14,
+      "incorrect": 1
+    },
+    "Bad": {
+      "correct": 14,
+      "incorrect": 1
+    }
+  }
+}
+
+Parser Project Grade
+-------------------
+
+General Structure: 25/25
+---------------------------------
+Overall structure is correct.
+
+Eliminating Ambiguities: 10/10
+--------------------------------------
+No shift reduce conflicts!
+
+Student Tests: 20/20
+---------------------------
+Passes all your tests.
+
+Hidden Tests: 33/35
+---------------------------
+fails 2 hidden tests, see above
+
+Code Style: 10/10
+------------------------
+grammar is well organized
+
+Total: 98/100
+------------------------------------------
