@@ -40,6 +40,15 @@ struct expr *expr_create_integer_literal(int c) {
     return expr;
 }
 
+struct expr *expr_create_float_literal(double c) {
+    struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
+
+    expr->kind = EXPR_FLOATLIT;
+    expr->float_value = c;
+
+    return expr;
+}
+
 struct expr *expr_create_boolean_literal(int c) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
 
@@ -173,7 +182,6 @@ void expr_print(struct expr *e) {
     case EXPR_FUNCCALL:
         expr_print(e->left);
         fprintf(stdout, "(");
-        expr_print(e->right);
         fprintf(stdout, ")");
         break;
     case EXPR_IDENT:
@@ -183,6 +191,7 @@ void expr_print(struct expr *e) {
         fprintf(stdout, "%d", e->literal_value);
         break;
     case EXPR_FLOATLIT:
+        fprintf(stdout, "%lf", e->float_value);
         break;
     case EXPR_CHARLIT:
         fprintf(stdout, "%c", e->literal_value);

@@ -31,14 +31,20 @@ void type_print(struct type *t) {
     case TYPE_INTEGER:
         fprintf(stdout, "integer");
         break;
+    case TYPE_FLOAT:
+        fprintf(stdout, "float");
+        break;
     case TYPE_STRING:
         fprintf(stdout, "string");
         break;
     case TYPE_ARRAY:
-        fprintf(stdout, "array TODO");
+        fprintf(stdout, "array [] ");
+        type_print(t->subtype);
         break;
     case TYPE_FUNCTION:
-        fprintf(stdout, "function TODO");
+        fprintf(stdout, "function ");
+        type_print(t->subtype);
+        fprintf(stdout, " ()");
         break;
     }
 }

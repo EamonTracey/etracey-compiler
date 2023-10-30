@@ -100,6 +100,7 @@ extern void yyerror(char const *);
 
 struct decl *ast;
 int literal_value;
+double float_value;
 
 %}
 
@@ -219,8 +220,7 @@ expr_atom: ident
          | TOKEN_INTEGERLIT
            { integer_decode(yytext, &literal_value); $$ = expr_create_integer_literal(literal_value); }
          | TOKEN_FLOATLIT
-// IMPLEMENT FLOAT
-           { $$ = expr_create_integer_literal(0); }
+           { float_decode(yytext, &float_value); $$ = expr_create_float_literal(float_value); }
          | TOKEN_CHARLIT
            { integer_decode(yytext, &literal_value); $$ = expr_create_char_literal(literal_value); }
          | TOKEN_STRINGLIT

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "expr.h"
+#include "indent.h"
 #include "stmt.h"
 #include "type.h"
 
@@ -23,6 +24,7 @@ struct decl *decl_create(char *name, struct type *type, struct expr *value, stru
 }
 
 void decl_print(struct decl *d, int indent) {
+    indent_print(indent);
     fprintf(stdout, "%s: ", d->name);
     type_print(d->type);
 

@@ -8,6 +8,7 @@ typedef enum {
     TYPE_BOOLEAN,
     TYPE_CHARACTER,
     TYPE_INTEGER,
+    TYPE_FLOAT,
     TYPE_STRING,
     TYPE_ARRAY,
     TYPE_FUNCTION,
