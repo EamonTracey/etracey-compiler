@@ -3,13 +3,20 @@
 #include <string.h>
 
 #include "constants.h"
+#include "decl.h"
 #include "encode.h"
+#include "expr.h"
 #include "parser.h"
+#include "param_list.h"
+#include "stmt.h"
+#include "type.h"
 
 extern FILE *yyin;
 extern char *yytext;
 extern int yylex();
 extern int yyparse();
+
+extern struct decl *ast;
 
 int encode_file(const char *path) {
     char line[2048];
@@ -133,6 +140,23 @@ int parse_file(const char *path) {
         return -1;
 
     fprintf(stdout, "parse successful.\n");
+    fclose(yyin);
+
+    return 0;
+}
+
+int print_file(const char *path) {
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stderr, "error: failed to open file %s.\n", path);
+        return -1;
+    }
+
+    if (yyparse() != 0)
+        return -1;
+
+    decl_print(ast, 0);
+
     fclose(yyin);
 
     return 0;

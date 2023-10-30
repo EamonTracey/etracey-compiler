@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "expr.h"
@@ -22,4 +23,20 @@ struct decl *decl_create(char *name, struct type *type, struct expr *value, stru
 }
 
 void decl_print(struct decl *d, int indent) {
+    fprintf(stdout, "%s: ", d->name);
+    type_print(d->type);
+
+    if (d->value != NULL) {
+        fprintf(stdout, " = ");
+        expr_print(d->value);
+        fprintf(stdout, ";");
+    } else if (d->code != NULL) {
+        fprintf(stdout, " {\n");
+        stmt_print(d->code, indent);
+        fprintf(stdout, "}");
+    } else {
+        fprintf(stdout, ";");
+    }
+
+    fprintf(stdout, "\n");
 }

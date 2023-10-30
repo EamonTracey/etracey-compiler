@@ -101,7 +101,7 @@ struct decl *ast;
 
 /* A B-Minor file is a sequence of declarations. Empty files are valid. */
 program: decl_seq_opt TOKEN_EOF
-         { ast = $1; }
+         { ast = $1; return 0; }
        ;
 
 /* Expressions. */
