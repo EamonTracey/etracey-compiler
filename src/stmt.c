@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "decl.h"
 #include "expr.h"
@@ -22,5 +23,36 @@ struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr,
     return stmt;
 }
 
+//typedef enum {
+//    STMT_DECL,
+//    STMT_EXPR,
+//    STMT_IF_ELSE,
+//    STMT_FOR,
+//    STMT_PRINT,
+//    STMT_RETURN,
+//    STMT_BLOCK
+//} stmt_t;
 void stmt_print(struct stmt *s, int indent) {
+    switch (s->kind) {
+    case STMT_DECL:
+        decl_print(s->decl, indent);
+        break;
+    case STMT_EXPR:
+        expr_print(s->expr);
+        fprintf(stdout, ";");
+        break;
+    case STMT_BLOCK:
+        fprintf(stdout, "{\n");
+        if (s->body != NULL)
+            stmt_print(s->body, indent + 1);
+        fprintf(stdout, "}");
+        break;
+    default:
+        break;
+    }
+
+    fprintf(stdout, "\n");
+
+    if (s->next != NULL)
+        stmt_print(s->next, indent);
 }

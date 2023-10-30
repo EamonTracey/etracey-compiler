@@ -78,7 +78,7 @@
 %type <decl> program decl decl_seq decl_seq_opt
 %type <expr> expr expr0 expr1 expr2 expr3 expr4 expr5 expr6 expr7 expr8 expr9 expr_atom expr_opt expr_seq expr_seq_opt
 %type <param_list> param param_seq param_seq_opt
-%type <stmt> stmt simple_stmt if_stmt if_closed for_stmt for_closed stmt_closed stmt_seq stmt_seq_opt
+%type <stmt> stmt simple_stmt block_stmt if_stmt if_closed for_stmt for_closed stmt_closed stmt_seq stmt_seq_opt
 %type <type> type type_atom
 %type <ident> ident
 
@@ -313,15 +313,19 @@ stmt: simple_stmt
 /* Simple statement. */
 simple_stmt: decl
              { $$ = stmt_create(STMT_DECL, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
+           | block_stmt
+             { $$ = $1; }
            | expr TOKEN_SEMICOLON
              { $$ = stmt_create(STMT_EXPR, NULL, NULL, $1, NULL, NULL, NULL, NULL); }
            | TOKEN_RETURN expr_opt TOKEN_SEMICOLON
              { $$ = stmt_create(STMT_RETURN, NULL, NULL, $2, NULL, NULL, NULL, NULL); }
            | TOKEN_PRINT expr_seq_opt TOKEN_SEMICOLON
              { $$ = stmt_create(STMT_PRINT, NULL, NULL, $2, NULL, NULL, NULL, NULL); }
-           | TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
-             { $$ = stmt_create(STMT_BLOCK, NULL, NULL, NULL, NULL, $2, NULL, NULL); }
            ;
+
+block_stmt: TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
+            { $$ = stmt_create(STMT_BLOCK, NULL, NULL, NULL, NULL, $2, NULL, NULL); }
+          ;
 
 /* If statement which may dangle. */
 if_stmt: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt
@@ -356,7 +360,7 @@ stmt_closed: simple_stmt
 
 /* Statement sequence. */
 stmt_seq: stmt stmt_seq
-          { $$ = $1; $$ = $1->next; }
+          { $$ = $1; $$->next = $2; }
         | stmt
           { $$ = $1; }
         ;
@@ -375,8 +379,8 @@ decl: ident TOKEN_COLON type TOKEN_SEMICOLON
       { $$ = decl_create($1, $3, NULL, NULL, NULL); }
     | ident TOKEN_COLON type TOKEN_ASSIGN expr TOKEN_SEMICOLON
       { $$ = decl_create($1, $3, $5, NULL, NULL); }
-    | ident TOKEN_COLON type TOKEN_ASSIGN TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
-      { $$ = decl_create($1, $3, NULL, $6, NULL); }
+    | ident TOKEN_COLON type TOKEN_ASSIGN block_stmt
+      { $$ = decl_create($1, $3, NULL, $5, NULL); }
     ;
 
 /* Declaration sequence. */
