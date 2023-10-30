@@ -4,11 +4,34 @@
 #include "symbol.h"
 
 typedef enum {
-	EXPR_ADD,
-	EXPR_SUB,
-	EXPR_MUL,
-	EXPR_DIV
-	/* many more kinds of exprs to add here */
+    EXPR_INC,
+    EXPR_DEC,
+    EXPR_NOT,
+    EXPR_EXP,
+    EXPR_MULT,
+    EXPR_DIV,
+    EXPR_MOD,
+    EXPR_PLUS,
+    EXPR_MINUS,
+    EXPR_LT,
+    EXPR_LTE,
+    EXPR_GT,
+    EXPR_GTE,
+    EXPR_EQ,
+    EXPR_NOTEQ,
+    EXPR_AND,
+    EXPR_OR,
+    EXPR_ASSIGN,
+
+    EXPR_ARRACC,
+    EXPR_FUNCCALL,
+    EXPR_IDENT,
+    EXPR_INTEGERLIT,
+    EXPR_FLOATLIT,
+    EXPR_CHARLIT,
+    EXPR_STRINGLIT,
+    EXPR_BOOLLIT,
+    EXPR_ARRAY
 } expr_t;
 
 struct expr {
@@ -20,18 +43,18 @@ struct expr {
 	/* used by various leaf exprs */
 	const char *name;
 	int literal_value;
-	const char * string_literal;
+	const char *string_literal;
 	struct symbol *symbol;
 };
 
-struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right );
+struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right);
 
-struct expr * expr_create_name( const char *n );
-struct expr * expr_create_integer_literal( int c );
-struct expr * expr_create_boolean_literal( int c );
-struct expr * expr_create_char_literal( char c );
-struct expr * expr_create_string_literal( const char *str );
+struct expr *expr_create_name(const char *n);
+struct expr *expr_create_integer_literal(int c);
+struct expr *expr_create_boolean_literal(int c);
+struct expr *expr_create_char_literal(char c);
+struct expr *expr_create_string_literal(const char *str);
 
-void expr_print( struct expr *e );
+void expr_print(struct expr *e);
 
 #endif
