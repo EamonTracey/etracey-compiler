@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "expr.h"
@@ -66,4 +67,11 @@ struct expr *expr_create_string_literal(const char *str) {
 }
 
 void expr_print(struct expr *e) {
+    switch (e->kind) {
+    case EXPR_INTEGERLIT:
+        fprintf(stdout, "%d", e->literal_value);
+        break;
+    default:
+        break;
+    }
 }

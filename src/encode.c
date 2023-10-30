@@ -5,22 +5,24 @@
 #include "constants.h"
 #include "encode.h"
 
-int integer_decode(const char *eint, long int *bmint) {
-   *bmint = strtol(eint, NULL, 10); 
+int integer_decode(const char *eint, int *bmint) {
+    long int _bmint = strtol(eint, NULL, 10); 
 
     if (errno == ERANGE)
-        return *bmint == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
+        return _bmint == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
 
-   return 0;
+    *bmint = _bmint;
+
+    return 0;
 }
 
 int float_decode(const char *efloat, double *bmfloat) {
-   *bmfloat = strtod(efloat, NULL); 
+    *bmfloat = strtod(efloat, NULL); 
 
-   if (errno == ERANGE)
-       return *bmfloat == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
+    if (errno == ERANGE)
+        return *bmfloat == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
 
-   return 0;
+    return 0;
 }
 
 int char_decode(const char *echar, char *bmchar) {

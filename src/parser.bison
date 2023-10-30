@@ -71,6 +71,8 @@
     struct param_list *param_list;
 	struct stmt *stmt;
     struct type *type;
+
+    char *ident;
 };
 
 %type <decl> program decl decl_seq decl_seq_opt
@@ -78,12 +80,15 @@
 %type <param_list> param param_seq param_seq_opt
 %type <stmt> stmt simple_stmt if_stmt if_closed for_stmt for_closed stmt_closed stmt_seq stmt_seq_opt
 %type <type> type type_atom
+%type <ident> ident
 
 %{
 
 #include <stdio.h>
+#include <string.h>
 
 #include "decl.h"
+#include "encode.h"
 #include "expr.h"
 #include "param_list.h"
 #include "stmt.h"
@@ -94,6 +99,7 @@ extern int yylex();
 extern void yyerror(char const *);
 
 struct decl *ast;
+int literal_value;
 
 %}
 
@@ -201,30 +207,30 @@ expr9: TOKEN_LPAREN expr TOKEN_RPAREN
        { $$ = $2; }
      | expr9 TOKEN_LBRACK expr TOKEN_RBRACK
        { $$ = expr_create(EXPR_ARRACC, $1, $3); }
-     | TOKEN_IDENT TOKEN_LPAREN expr_seq_opt TOKEN_RPAREN
-// IDENTIFIER
-       { $$ = expr_create(EXPR_FUNCCALL, NULL, $3); }
+     | ident TOKEN_LPAREN expr_seq_opt TOKEN_RPAREN
+       { $$ = expr_create(EXPR_FUNCCALL, expr_create_name($1), $3); }
      | expr_atom
        { $$ = $1; }
      ;
 
 /* Atomic expressions. */
-expr_atom: TOKEN_IDENT
-           { $$ = expr_create_name("ident"); }
+expr_atom: ident
+           { $$ = expr_create_name(yytext); }
          | TOKEN_INTEGERLIT
-           { $$ = expr_create_integer_literal(0); }
+           { integer_decode(yytext, &literal_value); $$ = expr_create_integer_literal(literal_value); }
          | TOKEN_FLOATLIT
+// IMPLEMENT FLOAT
            { $$ = expr_create_integer_literal(0); }
          | TOKEN_CHARLIT
-           { $$ = expr_create_char_literal(0); }
+           { integer_decode(yytext, &literal_value); $$ = expr_create_char_literal(literal_value); }
          | TOKEN_STRINGLIT
-           { $$ = expr_create_string_literal("string"); }
+           { $$ = expr_create_string_literal(yytext); }
          | TOKEN_TRUE
            { $$ = expr_create_boolean_literal(1); }
          | TOKEN_FALSE
            { $$ = expr_create_integer_literal(0); }
          | TOKEN_LBRACE expr_seq TOKEN_RBRACE
-           { $$ = expr_create_integer_literal(0); }
+           { $$ = $2; }
          ;
 
 /* Optional expression. */
@@ -275,9 +281,8 @@ type_atom: TOKEN_INTEGER
            { $$ = type_create(TYPE_STRING, NULL, NULL); }
 
 /* Parameter. */
-param: TOKEN_IDENT TOKEN_COLON type
-// IDENTIFIER
-       { $$ = param_list_create("identifier", $3, NULL); }
+param: ident TOKEN_COLON type
+       { $$ = param_list_create($1, $3, NULL); }
      ;
 
 /* Comma-separated parameter sequence. */
@@ -366,15 +371,12 @@ stmt_seq_opt: stmt_seq
 /* Declarations. */
 
 /* Top-level declaration. */
-decl: TOKEN_IDENT TOKEN_COLON type TOKEN_SEMICOLON
-// IDENTIFIER
-      { $$ = decl_create("identifier", $3, NULL, NULL, NULL); }
-    | TOKEN_IDENT TOKEN_COLON type TOKEN_ASSIGN expr TOKEN_SEMICOLON
-// IDENTIFIER
-      { $$ = decl_create("identifier", $3, $5, NULL, NULL); }
-    | TOKEN_IDENT TOKEN_COLON type TOKEN_ASSIGN TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
-// IDENTIFIER
-      { $$ = decl_create("identifier", $3, NULL, $6, NULL); }
+decl: ident TOKEN_COLON type TOKEN_SEMICOLON
+      { $$ = decl_create($1, $3, NULL, NULL, NULL); }
+    | ident TOKEN_COLON type TOKEN_ASSIGN expr TOKEN_SEMICOLON
+      { $$ = decl_create($1, $3, $5, NULL, NULL); }
+    | ident TOKEN_COLON type TOKEN_ASSIGN TOKEN_LBRACE stmt_seq_opt TOKEN_RBRACE
+      { $$ = decl_create($1, $3, NULL, $6, NULL); }
     ;
 
 /* Declaration sequence. */
@@ -389,6 +391,11 @@ decl_seq_opt: decl_seq
             |
               { $$ = NULL; }
             ;
+
+/* Identifiers. */
+
+ident: TOKEN_IDENT
+       { $$ = strdup(yytext); }
 
 %%
 

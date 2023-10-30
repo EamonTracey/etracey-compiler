@@ -62,7 +62,7 @@ int scan_file(const char *path) {
     int ret;
     char errmsg[2048];
 
-    long int bmint;
+    int bmint;
     double bmfloat;
     char bmchar;
     char bmstring[2048];
@@ -72,7 +72,7 @@ int scan_file(const char *path) {
         switch (token) {
         case TOKEN_INTEGERLIT:
             if ((ret = integer_decode(yytext, &bmint)) == 0)
-                fprintf(stdout, "%s %ld\n", tokstr[token - 258], bmint);
+                fprintf(stdout, "%s %d\n", tokstr[token - 258], bmint);
             else {
                 snprintf(errmsg, 2048, intencerr[ret], yytext);
                 fprintf(stderr, "encode error: %s\n", errmsg);
