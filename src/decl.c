@@ -31,7 +31,7 @@ void decl_print(struct decl *d, int indent) {
         expr_print(d->value);
         fprintf(stdout, ";");
     } else if (d->code != NULL) {
-        fprintf(stdout, " {\n");
+        fprintf(stdout, " = {\n");
         stmt_print(d->code, indent);
         fprintf(stdout, "}");
     } else {
@@ -39,4 +39,9 @@ void decl_print(struct decl *d, int indent) {
     }
 
     fprintf(stdout, "\n");
+
+    if (d->next != NULL) {
+        decl_print(d->next, indent);
+    }
+
 }

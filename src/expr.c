@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "expr.h"
 
@@ -25,7 +26,7 @@ struct expr *expr_create_name(const char *n) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
 
     expr->kind = EXPR_IDENT;
-    expr->name = n;
+    expr->name = strdup(n);
 
     return expr;
 }
@@ -68,10 +69,131 @@ struct expr *expr_create_string_literal(const char *str) {
 
 void expr_print(struct expr *e) {
     switch (e->kind) {
+    case EXPR_INC:
+        expr_print(e->left);
+        fprintf(stdout, "++");
+        break;
+    case EXPR_DEC:
+        expr_print(e->left);
+        fprintf(stdout, "--");
+        break;
+    case EXPR_NOT:
+        fprintf(stdout, "!");
+        expr_print(e->left);
+        break;
+    case EXPR_EXP:
+        expr_print(e->left);
+        fprintf(stdout, "^");
+        expr_print(e->right);
+        break;
+    case EXPR_MULT:
+        expr_print(e->left);
+        fprintf(stdout, "*");
+        expr_print(e->right);
+        break;
+    case EXPR_DIV:
+        expr_print(e->left);
+        fprintf(stdout, "/");
+        expr_print(e->right);
+        break;
+    case EXPR_MOD:
+        expr_print(e->left);
+        fprintf(stdout, "%%");
+        expr_print(e->right);
+        break;
+    case EXPR_PLUS:
+        expr_print(e->left);
+        fprintf(stdout, "+");
+        expr_print(e->right);
+        break;
+    case EXPR_MINUS:
+        expr_print(e->left);
+        fprintf(stdout, "-");
+        expr_print(e->right);
+        break;
+    case EXPR_LT:
+        expr_print(e->left);
+        fprintf(stdout, "<");
+        expr_print(e->right);
+        break;
+    case EXPR_LTE:
+        expr_print(e->left);
+        fprintf(stdout, "<=");
+        expr_print(e->right);
+        break;
+    case EXPR_GT:
+        expr_print(e->left);
+        fprintf(stdout, ">");
+        expr_print(e->right);
+        break;
+    case EXPR_GTE:
+        expr_print(e->left);
+        fprintf(stdout, ">=");
+        expr_print(e->right);
+        break;
+    case EXPR_EQ:
+        expr_print(e->left);
+        fprintf(stdout, "==");
+        expr_print(e->right);
+        break;
+    case EXPR_NOTEQ:
+        expr_print(e->left);
+        fprintf(stdout, "!=");
+        expr_print(e->right);
+        break;
+    case EXPR_AND:
+        expr_print(e->left);
+        fprintf(stdout, "&&");
+        expr_print(e->right);
+        break;
+    case EXPR_OR:
+        expr_print(e->left);
+        fprintf(stdout, "||");
+        expr_print(e->right);
+        break;
+    case EXPR_ASSIGN:
+        expr_print(e->left);
+        fprintf(stdout, "=");
+        expr_print(e->right);
+        break;
+    case EXPR_POS:
+        fprintf(stdout, "+");
+        expr_print(e->left);
+        break;
+    case EXPR_NEG:
+        fprintf(stdout, "-");
+        expr_print(e->left);
+        break;
+    case EXPR_ARRACC:
+        expr_print(e->left);
+        fprintf(stdout, "[");
+        expr_print(e->right);
+        fprintf(stdout, "]");
+        break;
+    case EXPR_FUNCCALL:
+        expr_print(e->left);
+        fprintf(stdout, "(");
+        expr_print(e->right);
+        fprintf(stdout, ")");
+        break;
+    case EXPR_IDENT:
+        fprintf(stdout, "%s", e->name);
+        break;
     case EXPR_INTEGERLIT:
         fprintf(stdout, "%d", e->literal_value);
         break;
-    default:
+    case EXPR_FLOATLIT:
+        break;
+    case EXPR_CHARLIT:
+        fprintf(stdout, "%c", e->literal_value);
+        break;
+    case EXPR_STRINGLIT:
+        fprintf(stdout, "%s", e->string_literal);
+        break;
+    case EXPR_BOOLLIT:
+        fprintf(stdout, e->literal_value ? "true" : "false");
+        break;
+    case EXPR_ARRAY:
         break;
     }
 }

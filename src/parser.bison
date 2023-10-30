@@ -119,7 +119,7 @@ expr: expr0
 
 /* Assignment operator. */
 expr0: expr0 TOKEN_ASSIGN expr1
-       { $$ = expr_create(EXPR_PLUS, $1, $3); }
+       { $$ = expr_create(EXPR_ASSIGN, $1, $3); }
      | expr1
        { $$ = $1; }
      ;
@@ -157,9 +157,9 @@ expr3: expr3 TOKEN_LT expr4
 
 /* Addition and subtraction operators. */
 expr4: expr4 TOKEN_PLUS expr5
-       { $$ = expr_create(EXPR_NEG, $1, $3); }
+       { $$ = expr_create(EXPR_PLUS, $1, $3); }
      | expr4 TOKEN_MINUS expr5
-       { $$ = expr_create(EXPR_POS, $1, $3); }
+       { $$ = expr_create(EXPR_MINUS, $1, $3); }
      | expr5
        { $$ = $1; }
      ;
@@ -188,7 +188,7 @@ expr7: TOKEN_PLUS expr8
      | TOKEN_MINUS expr8
        { $$ = expr_create(EXPR_NEG, $2, NULL); }
      | TOKEN_NOT expr8
-       { $$ = expr_create(EXPR_OR, $2, NULL); }
+       { $$ = expr_create(EXPR_NOT, $2, NULL); }
      | expr8
        { $$ = $1; }
      ;
@@ -215,7 +215,7 @@ expr9: TOKEN_LPAREN expr TOKEN_RPAREN
 
 /* Atomic expressions. */
 expr_atom: ident
-           { $$ = expr_create_name(yytext); }
+           { $$ = expr_create_name($1); }
          | TOKEN_INTEGERLIT
            { integer_decode(yytext, &literal_value); $$ = expr_create_integer_literal(literal_value); }
          | TOKEN_FLOATLIT
@@ -224,7 +224,7 @@ expr_atom: ident
          | TOKEN_CHARLIT
            { integer_decode(yytext, &literal_value); $$ = expr_create_char_literal(literal_value); }
          | TOKEN_STRINGLIT
-           { $$ = expr_create_string_literal(yytext); }
+           { $$ = expr_create_string_literal(strdup(yytext)); }
          | TOKEN_TRUE
            { $$ = expr_create_boolean_literal(1); }
          | TOKEN_FALSE
