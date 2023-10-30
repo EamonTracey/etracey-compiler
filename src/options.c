@@ -61,7 +61,7 @@ int scan_file(const char *path) {
     char bmstring[2048];
 
     int token;
-    while ((token = yylex()) > 0) {
+    while ((token = yylex()) != TOKEN_EOF) {
         switch (token) {
         case TOKEN_INTEGERLIT:
             if ((ret = integer_decode(yytext, &bmint)) == 0)

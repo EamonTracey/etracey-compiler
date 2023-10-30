@@ -10,6 +10,8 @@
 \/\/[^\n]*\n                /* Ignore single-line comments. */
 \/\*(\*+[^*/]|[^*])*\*+\/   /* Ignore multi-line comments. */
 
+<<EOF>>     { return TOKEN_EOF; }
+
 array       { return TOKEN_ARRAY; }
 auto        { return TOKEN_AUTO; }
 boolean     { return TOKEN_BOOLEAN; }

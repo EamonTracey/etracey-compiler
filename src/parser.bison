@@ -1,3 +1,5 @@
+%token TOKEN_EOF
+
 /* Keywords. */
 %token TOKEN_ARRAY
 %token TOKEN_AUTO
@@ -76,8 +78,7 @@ extern void yyerror(char const *);
 %%
 
 /* A B-Minor file is a sequence of declarations. Empty files are valid. */
-program: decl_seq { return 0; }
-       |
+program: decl_seq_opt TOKEN_EOF { return 0; }
        ;
 
 /* Expressions. */
@@ -266,6 +267,10 @@ decl: TOKEN_IDENT TOKEN_COLON type TOKEN_SEMICOLON
 decl_seq: decl decl_seq
         | decl
         ;
+
+decl_seq_opt: decl_seq
+            |
+            ;
 
 %%
 
