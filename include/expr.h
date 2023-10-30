@@ -22,6 +22,8 @@ typedef enum {
     EXPR_AND,
     EXPR_OR,
     EXPR_ASSIGN,
+    EXPR_POS,
+    EXPR_NEG,
 
     EXPR_ARRACC,
     EXPR_FUNCCALL,
