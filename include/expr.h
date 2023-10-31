@@ -33,7 +33,9 @@ typedef enum {
     EXPR_CHARLIT,
     EXPR_STRINGLIT,
     EXPR_BOOLLIT,
-    EXPR_ARRAY
+    EXPR_ARRLIT,
+
+    EXPR_LIST
 } expr_t;
 
 struct expr {

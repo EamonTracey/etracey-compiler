@@ -230,7 +230,7 @@ expr_atom: ident
          | TOKEN_FALSE
            { $$ = expr_create_integer_literal(0); }
          | TOKEN_LBRACE expr_seq TOKEN_RBRACE
-           { $$ = $2; }
+           { $$ = expr_create(EXPR_ARRLIT, $2, NULL); }
          ;
 
 /* Optional expression. */
@@ -242,8 +242,7 @@ expr_opt: expr
 
 /* Comma-separated expression sequence. */
 expr_seq: expr TOKEN_COMMA expr_seq
-// MUST IMPLEMENT EXPR LIST
-          { $$ = $1; }
+          { $$ = expr_create(EXPR_LIST, $1, $3); }
         | expr
           { $$ = $1; }
         ;

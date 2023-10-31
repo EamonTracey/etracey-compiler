@@ -182,6 +182,7 @@ void expr_print(struct expr *e) {
     case EXPR_FUNCCALL:
         expr_print(e->left);
         fprintf(stdout, "(");
+        expr_print(e->right);
         fprintf(stdout, ")");
         break;
     case EXPR_IDENT:
@@ -202,7 +203,16 @@ void expr_print(struct expr *e) {
     case EXPR_BOOLLIT:
         fprintf(stdout, e->literal_value ? "true" : "false");
         break;
-    case EXPR_ARRAY:
+    case EXPR_ARRLIT:
+        fprintf(stdout, "{");
+        expr_print(e->left);
+        fprintf(stdout, "}");
         break;
+    case EXPR_LIST:
+        expr_print(e->left);
+        if (e->right != NULL) {
+            fprintf(stdout, ",");
+            expr_print(e->right);
+        }
     }
 }
