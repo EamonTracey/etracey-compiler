@@ -80,6 +80,12 @@ void expr_print(struct expr *e, int paren) {
     if (e == NULL)
         return;
 
+    /* 
+     * Parentheticals are necssary if the parent operator
+     * has higher precedence than the child operator.
+     * Note: Parentheticals also necessary for some same-precedence,
+     * non-associative operators (e.g., 1 - (2 + 3)).
+     */
     if (paren > 0)
         fprintf(stdout, "(");
 
@@ -227,38 +233,10 @@ void expr_print(struct expr *e, int paren) {
 }
 
 int precedences[] = {
-    8,
-    8,
-    7,
-    6,
-    5,
-    5,
-    5,
-    4,
-    4,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    2,
-    1,
-    0,
-    7,
-    7,
-
-    9,
-    9,
-    9,
-    9,
-    9,
-    9,
-    9,
-    9,
-    9,
-
-    -1
+    8, 8, 7, 6, 5, 5, 5, 4, 4,
+    3, 3, 3, 3, 3, 3, 2, 1, 0,
+    7, 7, 9, 9, 9, 9, 9, 9, 9,
+    9, 9, -1
 };
 
 int precdif(expr_t kind1, expr_t kind2) {
