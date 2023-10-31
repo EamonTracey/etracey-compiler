@@ -1,0 +1,10 @@
+id1: void;
+id2: integer;
+id4: float;
+id3: char;
+id5: string;
+id6: array [] integer;
+id7: array [] array [5 * 3 + 2 - f(7)] boolean;
+id8: function integer ();
+id9: function integer (a: array [5] function function float() (w: boolean));
+id10: boolean;
