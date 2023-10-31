@@ -31,7 +31,7 @@ void type_print(struct type *t) {
         fprintf(stdout, "boolean");
         break;
     case TYPE_CHARACTER:
-        fprintf(stdout, "character");
+        fprintf(stdout, "char");
         break;
     case TYPE_INTEGER:
         fprintf(stdout, "integer");
