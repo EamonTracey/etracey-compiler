@@ -1,7 +1,7 @@
 #ifndef ENCODE_H
 #define ENCODE_H
 
-int integer_decode(const char *, long int *);
+int integer_decode(const char *, int *);
 int float_decode(const char *, double *);
 int char_decode(const char *, char *);
 int string_decode(const char *, char *);

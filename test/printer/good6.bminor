@@ -1,0 +1,17 @@
+/* Parentheticals! */
+x: integer = 1 + 2 * 3 + 4;
+x: integer = (1 + 2) * 3 + 4;
+x: integer = 1 + 2 * (3 + 4);
+x: integer = (1 + 2) * (3 + 4);
+
+/* Extra parentheticals! */
+x: integer = ((1));
+x: integer = (1 * 2) * ((3));
+x: integer =
+(
+(
+(
+f(((((((((((((f(((0))))))))))))))))
+)
+)
+);

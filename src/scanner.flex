@@ -10,6 +10,8 @@
 \/\/[^\n]*\n                /* Ignore single-line comments. */
 \/\*(\*+[^*/]|[^*])*\*+\/   /* Ignore multi-line comments. */
 
+<<EOF>>     { return TOKEN_EOF; }
+
 array       { return TOKEN_ARRAY; }
 auto        { return TOKEN_AUTO; }
 boolean     { return TOKEN_BOOLEAN; }
@@ -58,10 +60,10 @@ while       { return TOKEN_WHILE; }
 ,           { return TOKEN_COMMA; }
 
 
-[0-9]+                                      { return TOKEN_INTEGERLIT; }
-([0-9]*\.[0-9]+|[0-9]+(e|E)(\+|-)?[0-9]+)   { return TOKEN_FLOATLIT; }
-'\\''|'[^']*'                               { return TOKEN_CHARLIT; }
-\"(\\\"|[^"])*\"                            { return TOKEN_STRINGLIT; }
+[0-9]+                                                              { return TOKEN_INTEGERLIT; }
+([0-9]+(e|E)(\+|-)?[0-9]+)|([0-9]*\.[0-9]+((e|E)(\+|-)?[0-9]+)?)    { return TOKEN_FLOATLIT; }
+'\\''|'[^']*'                                                       { return TOKEN_CHARLIT; }
+\"(\\\"|[^"])*\"                                                    { return TOKEN_STRINGLIT; }
 
 [_a-zA-Z][_a-zA-Z0-9]* { 
     if (yyleng > 255)

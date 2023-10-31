@@ -1,0 +1,11 @@
+f: function integer ();
+f: function integer () = {}
+
+f: function void (argc: integer, argv: array [] string);
+f: function void (argc: integer, argv: array [] string) = {}
+
+f: function void(
+    argc: integer,
+    argv: array [argc] string
+) = {
+}

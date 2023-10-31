@@ -1,0 +1,6 @@
+g6: void ={
+// invalid function type
+}
+g6: void;
+g6: void = {0};
+g6: void = {0;}

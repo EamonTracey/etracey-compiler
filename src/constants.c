@@ -1,5 +1,5 @@
 const char *tokstr[] = {
-    "ARRAY", "AUTO", "BOOLEAN", "CHAR", "ELSE", "FALSE","FLOAT",
+    "EOF", "ARRAY", "AUTO", "BOOLEAN", "CHAR", "ELSE", "FALSE","FLOAT",
     "FOR", "FUNCTION", "IF", "INTEGER", "PRINT", "RETURN", "STRING",
     "TRUE", "VOID", "WHILE", "INC", "DEC", "NOT", "EXP",
     "MULT", "DIV", "MOD", "PLUS", "MINUS", "LT", "LTE",

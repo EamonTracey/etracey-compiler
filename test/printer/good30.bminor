@@ -1,0 +1,80 @@
+/* A C-style comment */
+a:integer=5; // A C++ style comment
+
+x: integer;
+y: integer = 123;
+f: float = 45.67;
+b: boolean = false;
+c: char    = 'q';
+s: string  = "hello bminor\n";
+
+a: array [5] integer;
+
+a: array [5] integer = {1,2,3,4,5};
+
+x: integer = 65;
+y: char = 'A';
+
+f: integer = 0;
+
+writechar: function void ( c: char );
+a: integer = 65;
+
+b: array [2] boolean = {true,false};
+x: integer = 0;
+
+x: integer = 0;
+y: float = x;  // error: integer types can not be implicitly converted to float
+
+b: boolean;
+x: integer = 3;
+y: integer = 5;
+
+f: integer = 0;
+
+c: char = 'a';
+
+q: void = {
+// An arithmetic expression statement.
+y = m*x + b;
+
+// A return statement.
+return (f-32)*5/9;
+
+// An if-else statement.
+if( temp>100 ) {
+    print "It's really hot!\n";
+} else if( temp>70 ) {
+    print "It's pretty warm.\n";
+} else {
+    print "It's not too bad.\n";
+}
+
+// A for loop statement.
+for( i=0; i<100; i++ ) {
+    print i;
+}
+}
+
+square: function integer ( x: integer ) = {
+	return x^2;
+}
+
+printarray: function void ( a: array [] integer ) = {
+	i: integer;
+	for( i=0;i<array_length(a);i++) {
+		print a[i], "\n";
+	}
+}
+
+puts: function void ( s: string );
+
+main: function integer () = {
+	puts("hello world");
+}
+
+main: function integer ( argc: integer, argv: array [] string ) = {
+        puts("hello world");
+for(i=0;i<10;i++) print i;
+if(a) x=y; else z=w;
+}

@@ -1,0 +1,4 @@
+main: function integer (argc: integer, argv: array [] string) = {
+    print "Hello, world!\n";
+    return 0;
+}

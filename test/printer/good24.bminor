@@ -1,0 +1,12 @@
+a: integer = 0;
+b: float = 0.0;
+c: char = '0';
+d: string = "0";
+
+x: integer = "string?";
+b: function array [] array [5 * 2 / -x] function void (n: boolean) () = {"", '!', !true};
+
+q: void;
+r: integer;
+s: array [10] float;
+t: function void ();
