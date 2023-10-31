@@ -44,7 +44,10 @@ void type_print(struct type *t) {
     case TYPE_FUNCTION:
         fprintf(stdout, "function ");
         type_print(t->subtype);
-        fprintf(stdout, " ()");
+        fprintf(stdout, " ");
+        fprintf(stdout, "(");
+        param_list_print(t->params);
+        fprintf(stdout, ")");
         break;
     }
 }

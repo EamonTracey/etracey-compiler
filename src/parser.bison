@@ -272,7 +272,7 @@ type: type_atom
 type_atom: TOKEN_INTEGER
            { $$ = type_create(TYPE_INTEGER, NULL, NULL); }
          | TOKEN_FLOAT
-           { $$ = type_create(TYPE_INTEGER, NULL, NULL); }
+           { $$ = type_create(TYPE_FLOAT, NULL, NULL); }
          | TOKEN_BOOLEAN
            { $$ = type_create(TYPE_BOOLEAN, NULL, NULL); }
          | TOKEN_CHAR
