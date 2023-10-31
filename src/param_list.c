@@ -18,6 +18,9 @@ struct param_list *param_list_create(char *name, struct type *type, struct param
 }
 
 void param_list_print(struct param_list *a) {
+    if (a == NULL)
+        return;
+
     fprintf(stdout, "%s: ", a->name);
     type_print(a->type);
 

@@ -80,8 +80,9 @@ void stmt_print(struct stmt *s, int indent) {
         break;
     case STMT_PRINT:
         indent_print(indent);
-        fprintf(stdout, "print");
-        fprintf(stdout, "\n");
+        fprintf(stdout, "print ");
+        expr_print(s->expr);
+        fprintf(stdout, ";\n");
         break;
     case STMT_RETURN:
         indent_print(indent);

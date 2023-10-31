@@ -260,24 +260,24 @@ expr_seq_opt: expr_seq
 type: type_atom
       { $$ = $1; }
     | TOKEN_VOID
-      { $$ = type_create(TYPE_VOID, NULL, NULL); }
+      { $$ = type_create(TYPE_VOID, NULL, NULL, NULL); }
     | TOKEN_ARRAY TOKEN_LBRACK expr_opt TOKEN_RBRACK type
-      { $$ = type_create(TYPE_ARRAY, $5, NULL); }
+      { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
     | TOKEN_FUNCTION type TOKEN_LPAREN param_seq_opt TOKEN_RPAREN
-      { $$ = type_create(TYPE_FUNCTION, $2, $4); }
+      { $$ = type_create(TYPE_FUNCTION, $2, $4, NULL); }
     ;
 
 /* Atomic types. */
 type_atom: TOKEN_INTEGER
-           { $$ = type_create(TYPE_INTEGER, NULL, NULL); }
+           { $$ = type_create(TYPE_INTEGER, NULL, NULL, NULL); }
          | TOKEN_FLOAT
-           { $$ = type_create(TYPE_FLOAT, NULL, NULL); }
+           { $$ = type_create(TYPE_FLOAT, NULL, NULL, NULL); }
          | TOKEN_BOOLEAN
-           { $$ = type_create(TYPE_BOOLEAN, NULL, NULL); }
+           { $$ = type_create(TYPE_BOOLEAN, NULL, NULL, NULL); }
          | TOKEN_CHAR
-           { $$ = type_create(TYPE_CHARACTER, NULL, NULL); }
+           { $$ = type_create(TYPE_CHARACTER, NULL, NULL, NULL); }
          | TOKEN_STRING
-           { $$ = type_create(TYPE_STRING, NULL, NULL); }
+           { $$ = type_create(TYPE_STRING, NULL, NULL, NULL); }
 
 /* Parameter. */
 param: ident TOKEN_COLON type

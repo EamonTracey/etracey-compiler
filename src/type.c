@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "expr.h"
 #include "param_list.h"
 #include "type.h"
 
-struct type *type_create(type_t kind, struct type *subtype, struct param_list *params) {
+struct type *type_create(type_t kind, struct type *subtype, struct param_list *params, struct expr *size) {
     struct type *type = (struct type *)malloc(sizeof(struct type));
 
     if (type == NULL)
@@ -13,6 +14,7 @@ struct type *type_create(type_t kind, struct type *subtype, struct param_list *p
     type->kind = kind;
     type->subtype = subtype;
     type->params = params;
+    type->size = size;
 
     return type;
 }
@@ -38,7 +40,10 @@ void type_print(struct type *t) {
         fprintf(stdout, "string");
         break;
     case TYPE_ARRAY:
-        fprintf(stdout, "array [] ");
+        fprintf(stdout, "array [");
+        if (t->size != NULL)
+            expr_print(t->size);
+        fprintf(stdout, "] ");
         type_print(t->subtype);
         break;
     case TYPE_FUNCTION:
