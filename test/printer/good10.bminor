@@ -1,0 +1,19 @@
+f: void = {
+    if (true) {
+    }
+
+    if (true)
+        do_this();
+        else 
+do_that();
+
+
+    if (true) if (true) 0; else 1; 
+
+    for (;;) for (;;) for (;;) for (;;) {}
+    
+    i: integer = 0;
+    for (i = 0; i < 10; i++) { print i; }
+
+    return ;
+}

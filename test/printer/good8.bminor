@@ -1,0 +1,9 @@
+// All kinds of expressions.
+a: array [] array [] integer = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
+b: float = 3.9;
+c: float = -3.9E2;
+d: integer = 123456789;
+e: string = "foo" + "bar";
+f: boolean = (true && false) || x;
+g: boolean = true && (false || x);
+h: char = y () - z ((1), (2), "str", {0}) ;
