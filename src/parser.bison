@@ -229,7 +229,7 @@ expr_atom: ident
          | TOKEN_TRUE
            { $$ = expr_create_boolean_literal(1); }
          | TOKEN_FALSE
-           { $$ = expr_create_integer_literal(0); }
+           { $$ = expr_create_boolean_literal(0); }
          | TOKEN_LBRACE expr_seq TOKEN_RBRACE
            { $$ = expr_create(EXPR_ARRLIT, $2, NULL); }
          ;
