@@ -20,6 +20,9 @@ struct type *type_create(type_t kind, struct type *subtype, struct param_list *p
 }
 
 void type_print(struct type *t) {
+    if (t == NULL)
+        return;
+
     switch (t->kind) {
     case TYPE_VOID:
         fprintf(stdout, "void");
@@ -42,7 +45,7 @@ void type_print(struct type *t) {
     case TYPE_ARRAY:
         fprintf(stdout, "array [");
         if (t->size != NULL)
-            expr_print(t->size);
+            expr_print(t->size, 0);
         fprintf(stdout, "] ");
         type_print(t->subtype);
         break;

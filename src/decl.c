@@ -24,13 +24,16 @@ struct decl *decl_create(char *name, struct type *type, struct expr *value, stru
 }
 
 void decl_print(struct decl *d, int indent) {
+    if (d == NULL)
+        return;
+
     indent_print(indent);
     fprintf(stdout, "%s: ", d->name);
     type_print(d->type);
 
     if (d->value != NULL) {
         fprintf(stdout, " = ");
-        expr_print(d->value);
+        expr_print(d->value, 0);
         fprintf(stdout, ";");
     } else if (d->code != NULL) {
         fprintf(stdout, " = ");

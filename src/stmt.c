@@ -24,17 +24,17 @@ struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr,
     return stmt;
 }
 
-//typedef enum {
-//    STMT_PRINT,
-//} stmt_t;
 void stmt_print(struct stmt *s, int indent) {
+    if (s == NULL)
+        return;
+
     switch (s->kind) {
     case STMT_DECL:
         decl_print(s->decl, indent);
         break;
     case STMT_EXPR:
         indent_print(indent);
-        expr_print(s->expr);
+        expr_print(s->expr, 0);
         fprintf(stdout, ";");
         fprintf(stdout, "\n");
         break;
@@ -49,7 +49,7 @@ void stmt_print(struct stmt *s, int indent) {
     case STMT_IF_ELSE:
         indent_print(indent);
         fprintf(stdout, "if (");
-        expr_print(s->expr);
+        expr_print(s->expr, 0);
         fprintf(stdout, ") ");
         if (s->body->kind != STMT_BLOCK)
             fprintf(stdout, "\n");
@@ -66,13 +66,13 @@ void stmt_print(struct stmt *s, int indent) {
         indent_print(indent);
         fprintf(stdout, "for (");
         if (s->init_expr != NULL)
-            expr_print(s->init_expr);
+            expr_print(s->init_expr, 0);
         fprintf(stdout, ";");
         if (s->expr != NULL)
-            expr_print(s->expr);
+            expr_print(s->expr, 0);
         fprintf(stdout, ";");
         if (s->next_expr != NULL)
-            expr_print(s->next_expr);
+            expr_print(s->next_expr, 0);
         fprintf(stdout, ") ");
         if (s->body->kind != STMT_BLOCK)
             fprintf(stdout, "\n");
@@ -80,8 +80,11 @@ void stmt_print(struct stmt *s, int indent) {
         break;
     case STMT_PRINT:
         indent_print(indent);
-        fprintf(stdout, "print ");
-        expr_print(s->expr);
+        fprintf(stdout, "print");
+        if (s->expr != NULL) {
+            fprintf(stdout, " ");
+            expr_print(s->expr, 0);
+        }
         fprintf(stdout, ";\n");
         break;
     case STMT_RETURN:
@@ -89,10 +92,9 @@ void stmt_print(struct stmt *s, int indent) {
         fprintf(stdout, "return");
         if (s->expr != NULL) {
             fprintf(stdout, " ");
-            expr_print(s->expr);
+            expr_print(s->expr, 0);
         }
-        fprintf(stdout, ";");
-        fprintf(stdout, "\n");
+        fprintf(stdout, ";\n");
         break;
     default:
         break;
