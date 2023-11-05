@@ -161,3 +161,23 @@ int print_file(const char *path) {
 
     return 0;
 }
+
+int resolve_file(const char *path) {
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stderr, "error: failed to open file %s.\n", path);
+        return -1;
+    }
+
+    if (yyparse() != 0) {
+        fprintf(stderr, "parse error: unable to parse file %s.\n", path);
+        return -1;
+    }
+
+    // TODO: implement name resolution.
+    fprintf(stdout, "%p\n", ast);
+
+    fclose(yyin);
+
+    return 0;
+}

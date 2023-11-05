@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
         return parse_file(argv[2]) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
     else if (!strcmp(argv[1], "--print"))
         return print_file(argv[2]) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+    else if (!strcmp(argv[1], "--resolve"))
+        return resolve_file(argv[2]) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
     
     fprintf(stderr, "error: unknown option \"%s\".\n", argv[1]);
     return EXIT_FAILURE;
