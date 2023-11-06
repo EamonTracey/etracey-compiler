@@ -5,6 +5,7 @@
 #include "indent.h"
 #include "scope.h"
 #include "stmt.h"
+#include "symbol.h"
 #include "type.h"
 
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
@@ -52,14 +53,18 @@ void decl_resolve(struct decl *d) {
     if (d == NULL)
         return;
 
-    if (scope_lookup_current(d->name) != NULL) {
-        fprintf(stderr, "error: previously declared!!!\n");
-        return;
-    }
+    expr_resolve(d->value);
 
-    symbol_t kind = scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL;
-    d->symbol  = symbol_create(kind, d->type, d->name);
-    scope_bind(d->name, d->symbol);
+    struct symbol *s = scope_lookup_current(d->name);
+    if (s != NULL) {
+        fprintf(stdout, "resolve error: %s was previously declared as type ", d->name);
+        type_print(s->type);
+        fprintf(stdout, ".\n");
+    } else {
+        symbol_t kind = scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL;
+        d->symbol  = symbol_create(kind, d->type, d->name);
+        scope_bind(d->name, d->symbol);
+    }
 
     // Function declaration.
     if (d->code) {

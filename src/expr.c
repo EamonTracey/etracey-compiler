@@ -242,7 +242,7 @@ void expr_resolve(struct expr *e) {
     if (e->kind == EXPR_IDENT) {
         struct symbol *s = scope_lookup(e->name);
         if (s == NULL) {
-            fprintf(stderr, "undeclared identifier!!!\n");
+            fprintf(stderr, "resolve error: %s is not defined.\n", e->name);
             return;
         }
         e->symbol = s;
