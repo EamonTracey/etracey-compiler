@@ -8,6 +8,7 @@
 #include "expr.h"
 #include "parser.h"
 #include "param_list.h"
+#include "scope.h"
 #include "stmt.h"
 #include "type.h"
 
@@ -174,8 +175,10 @@ int resolve_file(const char *path) {
         return -1;
     }
 
-    // TODO: implement name resolution.
-    fprintf(stdout, "%p\n", ast);
+    // Enter global scope, resolve program, exit global scope.
+    scope_enter();
+    decl_resolve(ast);
+    scope_exit();
 
     fclose(yyin);
 

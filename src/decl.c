@@ -46,3 +46,7 @@ void decl_print(struct decl *d, int indent) {
 
     decl_print(d->next, indent);
 }
+
+void decl_resolve(struct decl *d) {
+    //struct symbol *s = symbol_create();
+}

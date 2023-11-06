@@ -11,7 +11,6 @@ struct symbol* symbol_create(symbol_t kind, struct type *type, char *name) {
     symbol->kind = kind;
     symbol->type = type;
     symbol->name = name;
-    symbol->which = 0;
 
     return symbol;
 }
