@@ -29,3 +29,7 @@ void param_list_print(struct param_list *a) {
         param_list_print(a->next);
     }
 }
+
+void param_list_resolve(struct param_list *a) {
+
+}

@@ -103,3 +103,7 @@ void stmt_print(struct stmt *s, int indent) {
 
     stmt_print(s->next, indent);
 }
+
+void stmt_resolve(struct stmt *s) {
+
+}
