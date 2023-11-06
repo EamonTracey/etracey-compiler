@@ -38,6 +38,7 @@ struct symbol *scope_lookup(const char *name) {
         struct symbol *s = hash_table_lookup(curr, name);
         if (s != NULL)
             return s;
+        curr = curr->next;
     }
     return NULL;
 }

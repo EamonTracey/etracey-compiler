@@ -7,8 +7,6 @@
 #include "stmt.h"
 #include "type.h"
 
-extern struct hash_table *symbol_table;
-
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
     struct decl *decl = (struct decl *)malloc(sizeof(struct decl));
     
@@ -59,9 +57,9 @@ void decl_resolve(struct decl *d) {
         return;
     }
 
-    struct symbol *s = symbol_create(scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL, d->type, d->name);
-    scope_bind(d->name, s);
-    d->symbol = s;
+    symbol_t kind = scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL;
+    d->symbol  = symbol_create(kind, d->type, d->name);
+    scope_bind(d->name, d->symbol);
 
     // Function declaration.
     if (d->code) {
