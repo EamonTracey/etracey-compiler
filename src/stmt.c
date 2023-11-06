@@ -101,6 +101,5 @@ void stmt_print(struct stmt *s, int indent) {
     }
 
 
-    if (s->next != NULL)
-        stmt_print(s->next, indent);
+    stmt_print(s->next, indent);
 }
