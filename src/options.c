@@ -26,12 +26,12 @@ int encode_file(const char *path) {
 
     FILE *stream = fopen(path, "r");
     if (stream == NULL) {
-        fprintf(stderr, "error: failed to open file \"%s\".\n", path);
+        fprintf(stdout, "error: failed to open file \"%s\".\n", path);
         return -1;
     }
 
     if (fgets(line, 2048, stream) == NULL) {
-        fprintf(stderr, "error: failed to read file \"%s\".\n", path);
+        fprintf(stdout, "error: failed to read file \"%s\".\n", path);
         fclose(stream);
         return -1;
     }
@@ -42,7 +42,7 @@ int encode_file(const char *path) {
     char dec[256];
     int ret;
     if ((ret = string_decode(line, dec)) != 0) {
-        fprintf(stderr, "encode error: %s\n", strencerr[ret]);
+        fprintf(stdout, "encode error: %s\n", strencerr[ret]);
         return -1;
     }
 
@@ -58,7 +58,7 @@ int encode_file(const char *path) {
 int scan_file(const char *path) {
     yyin = fopen(path, "r");
     if (yyin == NULL) {
-        fprintf(stderr, "error: failed to open file \"%s\".\n", path);
+        fprintf(stdout, "error: failed to open file \"%s\".\n", path);
         return -1;
     }
 
@@ -78,7 +78,7 @@ int scan_file(const char *path) {
                 fprintf(stdout, "%s %d\n", tokstr[token - 258], bmint);
             else {
                 snprintf(errmsg, 2048, intencerr[ret], yytext);
-                fprintf(stderr, "encode error: %s\n", errmsg);
+                fprintf(stdout, "encode error: %s\n", errmsg);
                 return -1;
             }
             break;
@@ -87,7 +87,7 @@ int scan_file(const char *path) {
                 fprintf(stdout, "%s %lf\n", tokstr[token - 258], bmfloat);
             else {
                 snprintf(errmsg, 2048, floatencerr[ret], yytext);
-                fprintf(stderr, "encode error: %s\n", errmsg);
+                fprintf(stdout, "encode error: %s\n", errmsg);
                 return -1;
             }
             break;
@@ -95,7 +95,7 @@ int scan_file(const char *path) {
             if ((ret = char_decode(yytext, &bmchar)) == 0)
                 fprintf(stdout, "%s %c\n", tokstr[token - 258], bmchar);
             else {
-                fprintf(stderr, "encode error: %s\n", charencerr[ret]);
+                fprintf(stdout, "encode error: %s\n", charencerr[ret]);
                 return -1;
             }
             break;            
@@ -103,7 +103,7 @@ int scan_file(const char *path) {
             if ((ret = string_decode(yytext, bmstring)) == 0)
                 fprintf(stdout, "%s %s\n", tokstr[token - 258], bmstring);
             else {
-                fprintf(stderr, "encode error: %s\n", strencerr[ret]);
+                fprintf(stdout, "encode error: %s\n", strencerr[ret]);
                 return -1;
             }
             break;
@@ -111,16 +111,16 @@ int scan_file(const char *path) {
             fprintf(stdout, "%s %s\n", tokstr[token - 258], yytext);
             break;
         case TOKEN_INVALID_LONG:
-            fprintf(stderr, "scan error: identifier must not exceed 255 characters.\n");
+            fprintf(stdout, "scan error: identifier must not exceed 255 characters.\n");
             return -1;
         case TOKEN_INVALID_NUMIDENT:
-            fprintf(stderr, "scan error: identifier must start with an underscore or letter.\n");
+            fprintf(stdout, "scan error: identifier must start with an underscore or letter.\n");
             return -1;
         case TOKEN_INVALID_OPENCOM:
-            fprintf(stderr, "scan error: multiline comment must be terminated.\n");
+            fprintf(stdout, "scan error: multiline comment must be terminated.\n");
             return -1;
         case TOKEN_INVALID_ANY:
-            fprintf(stderr, "scan error: invalid token %s\n", yytext);
+            fprintf(stdout, "scan error: invalid token %s\n", yytext);
             return -1;
         default:
             fprintf(stdout, "%s\n", tokstr[token - 258]);
@@ -135,7 +135,7 @@ int scan_file(const char *path) {
 int parse_file(const char *path) {
     yyin = fopen(path, "r");
     if (yyin == NULL) {
-        fprintf(stderr, "error: failed to open file %s.\n", path);
+        fprintf(stdout, "error: failed to open file %s.\n", path);
         return -1;
     }
 
@@ -151,7 +151,7 @@ int parse_file(const char *path) {
 int print_file(const char *path) {
     yyin = fopen(path, "r");
     if (yyin == NULL) {
-        fprintf(stderr, "error: failed to open file %s.\n", path);
+        fprintf(stdout, "error: failed to open file %s.\n", path);
         return -1;
     }
 
@@ -168,12 +168,12 @@ int print_file(const char *path) {
 int resolve_file(const char *path) {
     yyin = fopen(path, "r");
     if (yyin == NULL) {
-        fprintf(stderr, "error: failed to open file %s.\n", path);
+        fprintf(stdout, "error: failed to open file %s.\n", path);
         return -1;
     }
 
     if (yyparse() != 0) {
-        fprintf(stderr, "parse error: unable to parse file %s.\n", path);
+        fprintf(stdout, "parse error: unable to parse file %s.\n", path);
         return -1;
     }
 

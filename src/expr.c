@@ -245,7 +245,7 @@ void expr_resolve(struct expr *e) {
         struct symbol *s = scope_lookup(e->name);
         if (s == NULL) {
             ++resolve_errors;
-            fprintf(stderr, "resolve error: %s is not defined.\n", e->name);
+            fprintf(stdout, "resolve error: %s is not defined.\n", e->name);
             return;
         }
         e->symbol = s;

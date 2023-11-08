@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        fprintf(stderr, "error: invalid arguments, expecting option and filename.\n");
+        fprintf(stdout, "error: invalid arguments, expecting option and filename.\n");
         return EXIT_FAILURE;
     }
 
@@ -21,6 +21,6 @@ int main(int argc, char *argv[]) {
     else if (!strcmp(argv[1], "--resolve"))
         return resolve_file(argv[2]) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
     
-    fprintf(stderr, "error: unknown option \"%s\".\n", argv[1]);
+    fprintf(stdout, "error: unknown option \"%s\".\n", argv[1]);
     return EXIT_FAILURE;
 }
