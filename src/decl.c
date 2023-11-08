@@ -8,6 +8,8 @@
 #include "symbol.h"
 #include "type.h"
 
+extern int resolve_errors;
+
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
     struct decl *decl = (struct decl *)malloc(sizeof(struct decl));
     
@@ -57,6 +59,7 @@ void decl_resolve(struct decl *d) {
 
     struct symbol *s = scope_lookup_current(d->name);
     if (s != NULL) {
+        ++resolve_errors;
         fprintf(stdout, "resolve error: %s was previously declared as type ", d->name);
         type_print(s->type);
         fprintf(stdout, ".\n");
@@ -70,7 +73,9 @@ void decl_resolve(struct decl *d) {
     if (d->code) {
         scope_enter();
         param_list_resolve(d->type->params);
+        scope_enter();
         stmt_resolve(d->code);
+        scope_exit();
         scope_exit();
     }
 

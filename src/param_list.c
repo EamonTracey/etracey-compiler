@@ -5,6 +5,8 @@
 #include "scope.h"
 #include "type.h"
 
+extern int resolve_errors;
+
 struct param_list *param_list_create(char *name, struct type *type, struct param_list *next) {
     struct param_list *param_list = (struct param_list *)malloc(sizeof(struct param_list));
 
@@ -36,6 +38,7 @@ void param_list_resolve(struct param_list *a) {
 
     struct symbol *s = scope_lookup_current(a->name);
     if (s != NULL) {
+        ++resolve_errors;
         fprintf(stdout, "error: parameter %s was previously declared as type ", a->name);
         type_print(s->type);
         fprintf(stdout, ".\n");

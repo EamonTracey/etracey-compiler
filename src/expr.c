@@ -5,6 +5,8 @@
 #include "expr.h"
 #include "scope.h"
 
+extern int resolve_errors;
+
 struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
     
@@ -242,6 +244,7 @@ void expr_resolve(struct expr *e) {
     if (e->kind == EXPR_IDENT) {
         struct symbol *s = scope_lookup(e->name);
         if (s == NULL) {
+            ++resolve_errors;
             fprintf(stderr, "resolve error: %s is not defined.\n", e->name);
             return;
         }

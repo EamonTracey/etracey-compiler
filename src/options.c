@@ -19,6 +19,8 @@ extern int yyparse();
 
 extern struct decl *ast;
 
+int resolve_errors = 0;
+
 int encode_file(const char *path) {
     char line[2048];
 
@@ -182,5 +184,5 @@ int resolve_file(const char *path) {
 
     fclose(yyin);
 
-    return 0;
+    return resolve_errors == 0 ? 0 : -1;
 }
