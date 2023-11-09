@@ -1,15 +1,110 @@
-/* Update array with values from function calls. */
+// MATHEMATICAL CONSTANTS
+DELTA_T: float = 0.01;
+B: float = 10;
 
-x: array [5] integer = {1,2,3,4,5};
-intFxn: function integer ();
+// Initial values.
+V1: float = 100;
+P1: float = 1000;
 
-main: function void () =
-{
-	x[4] = intFxn();
-	x[intFxn()] = 4;
-	
+V2: float = 1;
+P2: float = 0;
+
+V3: float = -1;
+P3: float = 0;
+
+G1: float = 0;
+G2: float = 0;
+
+
+mass_flow_rate: function float(G: float, Pa: float, Pb: float) ={
+    return G * (Pa - Pb);
 }
-intFxn: function integer () =
-{
-	return 3;
+
+delta_P: function float (volume: float, pressure: float, flow_rate: float) ={
+    // Let -1 indicate infinite volume.
+    // Infinite volume means the pressure always remains 0.
+    if (volume < 0)
+        return 0;
+
+    return DELTA_T * B / volume * flow_rate;
+}
+
+main: function integer() ={
+    // Elements one and two are connected via orifice1.
+    // Elements two and three are connected via orifice2.
+one: array [] integer = {0};
+two: array [] integer = {0};
+three: array [] integer = {0};
+o1: array [] integer = {0};
+o2: array [] integer = {0};
+
+t: integer;
+    for (t = 0; t <= 1000; t++)  {
+        // calculate time.
+        time: float = t * 0.01;
+
+        // perform events if necessary.
+        if (t == 100) {
+print "switching";
+            o1;
+        } else if (t == 400) {
+print "switching";
+            o1;
+        } else if (t == 800) {
+print "switching";
+            o2 = 1;
+        }
+
+        // simulate!
+        one_flow_rate: float = 0;
+        two_flow_rate: float = 0;
+        three_flow_rate: float = 0;
+
+        if (o1 > 0) {
+            Q: float = mass_flow_rate(o1, one, two); 
+            one_flow_rate = Q * (-1);
+            two_flow_rate = -one_flow_rate;
+        }
+
+        if (o2 > 0) {
+            Q: float = mass_flow_rate(o2, two);
+            two_flow_rate =1+ Q * (1);
+            three_flow_rate = Q * (-1);
+        }
+
+        // euler integration -> = current + delta
+        three =1+ delta_P(three, three, three_flow_rate);
+
+        // flow from one to two
+//        if (o1 > 0) {
+//            Q: float = mass_flow_rate(o1, one, two);
+//
+//            // -Q because pressure is decreasing
+//            //float delta_P_one = (0.01 * B / one.volume) * (-Q);
+//            // +Q because pressure is decreasing
+//            //float delta_P_two = (0.01 * B / two.volume) * (+Q);
+//
+//            one_flow_rate: float = Q * (1);
+//            two_flow_rate: float = -one_flow_rate;
+//            one =1+delta_P(one, one, one_flow_rate);
+//            two =1+delta_P(two, two, two_flow_rate);
+//        }
+//
+//        // flow from two to three
+//        if (o2.conductance > 0) {
+//            Q: float = mass_flow_rate(o2, two, three);
+//
+//            // -Q because pressure is decreasing
+//            //float delta_P_two = (0.01 * B / two) * (-Q);
+//            // 0 because volume is infinite
+//            //float delta_P_three = 0;
+//
+//            two_flow_rate: float = Q * (1);
+//            three_flow_rate: float = -two_flow_rate;
+//        }
+
+        // print pressures
+        print one, two;
+
+    }
 }

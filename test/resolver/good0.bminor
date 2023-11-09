@@ -1,0 +1,6 @@
+/* Simple globals */
+x: integer = 10;
+y: array [x] string;
+z: char;
+func: function integer () = {}
+oh: function void ();

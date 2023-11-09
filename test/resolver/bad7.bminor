@@ -1,0 +1,5 @@
+a: integer;
+a: function void();
+
+b: function void();
+b: array [] array [] string;

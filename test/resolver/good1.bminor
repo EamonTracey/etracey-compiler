@@ -1,11 +1,17 @@
-/* Assign integer expression to local variable/ typechecking with function call. */
+/* Nested same names */
 
-x: integer = 5;
-y: integer = 10;
+x: integer;
 
-main: function void ()=
-{
-	x: integer = y * 10 + 15 - 4;
+q: char;
+
+y: function void (x: char) = {
+    print x;
+    z: string = "what?" - x;
+    y: string = 3;
+
+    { x: integer; x-3; {x: string = "";{{{{y: integer = 8; print y;}}}}}}
+
+    print x, z, y;
+    
+    return y - q ^ 2;
 }
-	
-
