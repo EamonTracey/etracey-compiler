@@ -1,0 +1,5 @@
+x: integer = {
+    {x: integer;}
+    return x;
+}
+

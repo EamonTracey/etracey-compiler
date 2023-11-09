@@ -3,6 +3,9 @@
 #include <string.h>
 
 #include "expr.h"
+#include "scope.h"
+
+extern int resolve_errors;
 
 struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
@@ -232,6 +235,25 @@ void expr_print(struct expr *e, int paren) {
 
     if (paren > 0)
         fprintf(stdout, ")");
+}
+
+void expr_resolve(struct expr *e) {
+    if (e == NULL)
+        return;
+
+    if (e->kind == EXPR_IDENT) {
+        struct symbol *s = scope_lookup(e->name);
+        if (s == NULL) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: %s is not defined.\n", e->name);
+            return;
+        }
+        e->symbol = s;
+        symbol_print(e->symbol);
+    } else {
+        expr_resolve(e->left);
+        expr_resolve(e->right);
+    }
 }
 
 int precedences[] = {

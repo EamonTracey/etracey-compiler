@@ -4,6 +4,7 @@
 #include "decl.h"
 #include "expr.h"
 #include "indent.h"
+#include "scope.h"
 #include "stmt.h"
 
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
@@ -101,6 +102,45 @@ void stmt_print(struct stmt *s, int indent) {
     }
 
 
-    if (s->next != NULL)
-        stmt_print(s->next, indent);
+    stmt_print(s->next, indent);
+}
+
+void stmt_resolve(struct stmt *s) {
+    if (s == NULL)
+        return;
+    
+    switch (s->kind) {
+    case STMT_DECL:
+        decl_resolve(s->decl);
+        break;
+    case STMT_IF_ELSE:
+        expr_resolve(s->expr);
+        scope_enter();
+        stmt_resolve(s->body);
+        scope_exit();
+        scope_enter();
+        stmt_resolve(s->else_body);
+        scope_exit();
+        break;
+    case STMT_FOR:
+        expr_resolve(s->init_expr);
+        expr_resolve(s->expr);
+        expr_resolve(s->next_expr);
+        scope_enter();
+        stmt_resolve(s->body);
+        scope_exit();
+        break;
+    case STMT_EXPR:
+    case STMT_PRINT:
+    case STMT_RETURN:
+        expr_resolve(s->expr);
+        break;
+    case STMT_BLOCK:
+        scope_enter();
+        stmt_resolve(s->body);
+        scope_exit();
+        break;
+    }
+
+    stmt_resolve(s->next);
 }

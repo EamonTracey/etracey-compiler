@@ -1,0 +1,9 @@
+create: function integer () = {}
+create: function integer ();
+create: function integer () = {}
+create: function integer ();
+create: function integer ();
+create: function integer () = {}
+create: function integer ();
+create: function integer ();
+create: function integer ();

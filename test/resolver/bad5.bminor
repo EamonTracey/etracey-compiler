@@ -1,0 +1,1 @@
+func : function integer (a: string, b: float, a: char);

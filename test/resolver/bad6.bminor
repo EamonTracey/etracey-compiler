@@ -1,0 +1,6 @@
+main: function void (argc : integer, argc : array [] string) = {
+    print s;
+
+
+    return EXIT_SUCCESS;
+} 

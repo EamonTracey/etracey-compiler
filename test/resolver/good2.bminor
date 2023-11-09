@@ -1,0 +1,4 @@
+/* Array size */
+
+x: integer = 5;
+arr: array [x + 3] integer;

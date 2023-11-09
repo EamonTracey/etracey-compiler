@@ -1,0 +1,17 @@
+/* Nested same names */
+
+x: integer;
+
+q: char;
+
+y: function void (x: char) = {
+    print x;
+    z: string = "what?" - x;
+    y: string = 3;
+
+    { x: integer; x-3; {x: string = "";{{{{y: integer = 8; print y;}}}}}}
+
+    print x, z, y;
+    
+    return y - q ^ 2;
+}
