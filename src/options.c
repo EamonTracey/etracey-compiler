@@ -157,10 +157,9 @@ int print_file(const char *path) {
 
     if (yyparse() != 0)
         return -1;
+    fclose(yyin);
 
     decl_print(ast, 0);
-
-    fclose(yyin);
 
     return 0;
 }
@@ -172,17 +171,14 @@ int resolve_file(const char *path) {
         return -1;
     }
 
-    if (yyparse() != 0) {
-        fprintf(stdout, "parse error: unable to parse file %s.\n", path);
+    if (yyparse() != 0)
         return -1;
-    }
+    fclose(yyin);
 
     // Enter global scope, resolve program, exit global scope.
     scope_enter();
     decl_resolve(ast);
     scope_exit();
-
-    fclose(yyin);
 
     return resolve_errors == 0 ? 0 : -1;
 }

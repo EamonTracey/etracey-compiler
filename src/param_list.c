@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "expr.h"
 #include "param_list.h"
 #include "scope.h"
 #include "type.h"
@@ -36,16 +37,19 @@ void param_list_resolve(struct param_list *a) {
     if (a == NULL)
         return;
 
+    expr_resolve(a->type->size);
+
     struct symbol *s = scope_lookup_current(a->name);
     if (s != NULL) {
         ++resolve_errors;
-        fprintf(stdout, "error: parameter %s was previously declared as type ", a->name);
+        fprintf(stdout, "resolve error: parameter %s was previously declared as type ", a->name);
         type_print(s->type);
         fprintf(stdout, ".\n");
         return;
     } else {
         a->symbol = symbol_create(SYMBOL_PARAM, a->type, a->name);
         scope_bind(a->name, a->symbol);
+        symbol_print(a->symbol);
     }
 
     param_list_resolve(a->next);

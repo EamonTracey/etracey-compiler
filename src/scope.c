@@ -29,6 +29,7 @@ int scope_level() {
 }
 
 void scope_bind(const char *name, struct symbol *s) {
+    s->which = symbol_table->size;
     hash_table_insert(symbol_table, name, s);
 }
 

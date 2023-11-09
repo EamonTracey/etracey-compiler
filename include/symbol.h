@@ -14,8 +14,11 @@ struct symbol {
 	struct type *type;
 	char *name;
 	int which;
+
+    int funcdef;
 };
 
-struct symbol* symbol_create(symbol_t kind, struct type *type, char *name);
+struct symbol *symbol_create(symbol_t kind, struct type *type, char *name);
+void symbol_print(struct symbol *s);
 
 #endif

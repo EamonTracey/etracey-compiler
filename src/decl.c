@@ -56,26 +56,53 @@ void decl_resolve(struct decl *d) {
         return;
 
     expr_resolve(d->value);
+    expr_resolve(d->type->size);
 
     struct symbol *s = scope_lookup_current(d->name);
+
     if (s != NULL) {
-        ++resolve_errors;
-        fprintf(stdout, "resolve error: %s was previously declared as type ", d->name);
-        type_print(s->type);
-        fprintf(stdout, ".\n");
+        if (s->type->kind == TYPE_FUNCTION && d->type->kind != TYPE_FUNCTION) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: function %s cannot be redeclared as type ", s->name);
+            type_print(d->type);
+            fprintf(stdout, ".\n");
+        } else if (s->type->kind != TYPE_FUNCTION && d->type->kind == TYPE_FUNCTION) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: %s with non-function type ", s->name);
+            type_print(s->type);
+            fprintf(stdout, " cannot be redeclared as a function.\n");
+        } else if (s->type->kind != TYPE_FUNCTION && d->type->kind != TYPE_FUNCTION) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: %s was previously declared as type ", d->name);
+            type_print(s->type);
+            fprintf(stdout, " in same scope.\n");
+        } else if (s->funcdef && d->code) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: body of function %s cannot be redefined.\n", s->name);
+        } else
+            symbol_print(s);
     } else {
         symbol_t kind = scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL;
-        d->symbol  = symbol_create(kind, d->type, d->name);
+        d->symbol = symbol_create(kind, d->type, d->name);
+        d->symbol->funcdef = 0;
         scope_bind(d->name, d->symbol);
+        symbol_print(d->symbol);
+        s = d->symbol;
     }
 
-    // Function declaration.
+    // Function body resolution.
     if (d->code) {
+        if (s)
+            s->funcdef = 1;
         scope_enter();
         param_list_resolve(d->type->params);
         scope_enter();
         stmt_resolve(d->code);
         scope_exit();
+        scope_exit();
+    } else if (d->type->params) {
+        scope_enter();
+        param_list_resolve(d->type->params);
         scope_exit();
     }
 

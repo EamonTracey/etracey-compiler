@@ -249,6 +249,7 @@ void expr_resolve(struct expr *e) {
             return;
         }
         e->symbol = s;
+        symbol_print(e->symbol);
     } else {
         expr_resolve(e->left);
         expr_resolve(e->right);
