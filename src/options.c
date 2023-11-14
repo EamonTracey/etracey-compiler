@@ -186,3 +186,28 @@ int resolve_file(const char *path) {
 
     return resolve_errors == 0 ? 0 : -1;
 }
+
+int typecheck_file(const char *path) {
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stdout, "error: failed to open file %s.\n", path);
+        return -1;
+    }
+    
+    // Perform parsing.
+    if (yyparse() != 0)
+        return -1;
+    fclose(yyin);
+
+    // Perform name resolution.
+    scope_enter();
+    decl_resolve(ast);
+    scope_exit();
+    if (resolve_errors > 0)
+        return -1;
+
+    // Perform typechecking.
+    decl_typecheck(ast);
+
+    return 0;
+}

@@ -6,5 +6,6 @@ int scan_file(const char *);
 int parse_file(const char *);
 int print_file(const char *);
 int resolve_file(const char *);
+int typecheck_file(const char *);
 
 #endif
