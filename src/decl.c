@@ -108,3 +108,24 @@ void decl_resolve(struct decl *d) {
 
     decl_resolve(d->next);
 }
+
+void decl_typecheck(struct decl *d) {
+    if (d == NULL)
+        return;
+
+    if (d->value != NULL) {
+        struct type *t = expr_typecheck(d->value);
+        if (!type_equals(t, d->symbol->type)) {
+            /* TODO: error. */
+        }
+    }
+
+    if (d->code) {
+        if (d->symbol->type->kind != TYPE_FUNCTION) {
+            /* TODO: error. */
+        }
+        stmt_typecheck(d->code);
+    }
+
+    decl_typecheck(d->next);
+}

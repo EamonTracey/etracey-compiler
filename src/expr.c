@@ -256,6 +256,108 @@ void expr_resolve(struct expr *e) {
     }
 }
 
+struct type *expr_typecheck(struct expr *e) {
+    if (e == NULL)
+        return NULL;
+
+    struct type *lt = expr_typecheck(e->left);
+    struct type *rt = expr_typecheck(e->right);
+
+    switch (e->kind) {
+    case EXPR_INC:
+        if (e->left->symbol == NULL) {
+            fprintf(stdout, "type error: cannot increment a non-variable.\n");
+        }
+        if (lt->kind != TYPE_INTEGER) {
+            fprintf(stdout, "type error: cannot increment a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_DEC:
+        if (e->left->symbol == NULL) {
+            fprintf(stdout, "type error: cannot decrement a non-variable.\n");
+        }
+        if (lt->kind != TYPE_INTEGER) {
+            fprintf(stdout, "type error: cannot decrement a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_NOT:
+        if (lt->kind != TYPE_BOOLEAN) {
+            fprintf(stdout, "type error: cannot apply logical not to a");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_EXP:
+        /*TODO: not sure quite honestly.*/
+        return NULL;
+    case EXPR_MULT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot multiply a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_IDENT:
+        return type_create(e->symbol->type->kind, NULL, NULL, NULL);
+    case EXPR_INTEGERLIT:
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_FLOATLIT:
+        return type_create(TYPE_FLOAT, NULL, NULL, NULL);
+    case EXPR_CHARLIT:
+        return type_create(TYPE_CHARACTER, NULL, NULL, NULL);
+    case EXPR_STRINGLIT:
+        return type_create(TYPE_STRING, NULL, NULL, NULL);
+    case EXPR_BOOLLIT:
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    default:
+        return NULL;
+    }
+}
+
+/*
+typedef enum {
+    EXPR_MULT,
+    EXPR_DIV,
+    EXPR_MOD,
+    EXPR_PLUS,
+    EXPR_MINUS,
+    EXPR_LT,
+    EXPR_LTE,
+    EXPR_GT,
+    EXPR_GTE,
+    EXPR_EQ,
+    EXPR_NOTEQ,
+    EXPR_AND,
+    EXPR_OR,
+    EXPR_ASSIGN,
+    EXPR_POS,
+    EXPR_NEG,
+
+    EXPR_ARRACC,
+    EXPR_FUNCCALL,
+    EXPR_IDENT,
+    EXPR_ARRLIT,
+
+    EXPR_LIST
+} expr_t;
+*/
+
 int precedences[] = {
     8, 8, 7, 6, 5, 5, 5, 4, 4,
     3, 3, 3, 3, 3, 3, 2, 1, 0,

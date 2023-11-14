@@ -59,3 +59,31 @@ void type_print(struct type *t) {
         break;
     }
 }
+
+int type_equals(struct type *t1, struct type *t2) {
+    if (t1->kind != t2->kind)
+        return 0;
+
+    if (t1->kind == TYPE_ARRAY) {
+        return type_equals(t1->subtype, t2->subtype);
+    }
+
+    if (t1->kind == TYPE_FUNCTION) {
+        return type_equals(t1->subtype, t2->subtype) && type_param_equals(t1->params, t2->params);
+    }
+
+    return 1;
+}
+
+int type_param_equals(struct param_list *p1, struct param_list *p2) {
+    if (p1 == NULL && p2 == NULL)
+        return 1;
+    if (p1 == NULL && p2 != NULL)
+        return 0;
+    if (p1 != NULL && p2 == NULL)
+        return 0;
+    if (!type_equals(p1->type, p2->type))
+        return 0;
+
+    return type_param_equals(p1->next, p2->next);
+}

@@ -25,5 +25,7 @@ struct type {
 
 struct type *type_create(type_t kind, struct type *subtype, struct param_list *params, struct expr *size);
 void type_print(struct type *t);
+int type_equals(struct type *t1, struct type *t2);
+int type_param_equals(struct param_list *p1, struct param_list *p2);
 
 #endif

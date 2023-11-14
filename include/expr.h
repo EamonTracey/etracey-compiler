@@ -64,6 +64,7 @@ struct expr *expr_create_string_literal(const char *str);
 
 void expr_print(struct expr *e, int paren);
 void expr_resolve(struct expr *e);
+struct type *expr_typecheck(struct expr *e);
 
 int precdif(expr_t kind1, expr_t kind2);
 

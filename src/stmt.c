@@ -144,3 +144,6 @@ void stmt_resolve(struct stmt *s) {
 
     stmt_resolve(s->next);
 }
+
+void stmt_typecheck(struct stmt *s) {
+}
