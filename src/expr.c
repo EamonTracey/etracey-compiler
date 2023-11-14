@@ -290,7 +290,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_NOT:
         if (lt->kind != TYPE_BOOLEAN) {
-            fprintf(stdout, "type error: cannot apply logical not to a");
+            fprintf(stdout, "type error: cannot apply logical not to a ");
             type_print(lt);
             fprintf(stdout, " (");
             expr_print(e->left, 0);
@@ -313,6 +313,125 @@ struct type *expr_typecheck(struct expr *e) {
             fprintf(stdout, ").\n");
         }
         return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_DIV:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot divide a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") by a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_MOD:
+        if (!(lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER)) {
+            fprintf(stdout, "type error: cannot take the modulus of a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_PLUS:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot add a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_MINUS:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot subtract a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") by a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_LT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot perform less-than comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_LTE:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot perform less-than-equal comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_GT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot perform greater-than comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_GTE:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            fprintf(stdout, "type error: cannot perform greater-than-equal comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_EQ:
+    case EXPR_NOTEQ:
+        if (!type_equals(lt, rt)) {
+            fprintf(stdout, "cannot perform equality comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        /* TODO non-atomic types cannot be compared */
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_IDENT:
         return type_create(e->symbol->type->kind, NULL, NULL, NULL);
     case EXPR_INTEGERLIT:
@@ -332,17 +451,6 @@ struct type *expr_typecheck(struct expr *e) {
 
 /*
 typedef enum {
-    EXPR_MULT,
-    EXPR_DIV,
-    EXPR_MOD,
-    EXPR_PLUS,
-    EXPR_MINUS,
-    EXPR_LT,
-    EXPR_LTE,
-    EXPR_GT,
-    EXPR_GTE,
-    EXPR_EQ,
-    EXPR_NOTEQ,
     EXPR_AND,
     EXPR_OR,
     EXPR_ASSIGN,

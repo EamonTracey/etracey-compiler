@@ -117,6 +117,13 @@ void decl_typecheck(struct decl *d) {
         struct type *t = expr_typecheck(d->value);
         if (!type_equals(t, d->symbol->type)) {
             /* TODO: error. */
+            fprintf(stdout, "type error: type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(d->value, 0);
+            fprintf(stdout, ") does not match %s's declaration type ", d->name);
+            type_print(d->type);
+            fprintf(stdout, ".\n");
         }
     }
 
