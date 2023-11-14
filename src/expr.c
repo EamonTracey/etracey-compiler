@@ -448,6 +448,63 @@ struct type *expr_typecheck(struct expr *e) {
         }
         /* TODO non-atomic types cannot be compared */
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_AND:
+        if (!(lt->kind == TYPE_BOOLEAN && rt->kind == TYPE_BOOLEAN)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform logical and between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_OR:
+        if (!(lt->kind == TYPE_BOOLEAN && rt->kind == TYPE_BOOLEAN)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform logical or between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_ASSIGN:
+        if (e->left->symbol == NULL) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot assign to a non-variable.\n");
+        }
+        if (lt->kind != rt->kind) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot assign non-matching type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ") to a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind, NULL, NULL, NULL);
+    case EXPR_POS:
+    case EXPR_NEG:
+        if (lt->kind != TYPE_INTEGER && lt->kind != TYPE_FLOAT) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot apply unary operator to a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind, NULL, NULL, NULL);
     case EXPR_IDENT:
         return type_create(e->symbol->type->kind, NULL, NULL, NULL);
     case EXPR_INTEGERLIT:
@@ -460,6 +517,17 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_STRING, NULL, NULL, NULL);
     case EXPR_BOOLLIT:
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_ARRACC:
+        if (lt->kind != TYPE_ARRAY) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform array access on non-array type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        /* TODO subtype does not work rn */
+        return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
     default:
         return NULL;
     }
@@ -467,15 +535,8 @@ struct type *expr_typecheck(struct expr *e) {
 
 /*
 typedef enum {
-    EXPR_AND,
-    EXPR_OR,
-    EXPR_ASSIGN,
-    EXPR_POS,
-    EXPR_NEG,
-
     EXPR_ARRACC,
     EXPR_FUNCCALL,
-    EXPR_IDENT,
     EXPR_ARRLIT,
 
     EXPR_LIST
