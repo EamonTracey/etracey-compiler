@@ -8,6 +8,8 @@
 #include "symbol.h"
 #include "type.h"
 
+int which = 0;
+
 extern int resolve_errors;
 extern int type_errors;
 
@@ -87,6 +89,10 @@ void decl_resolve(struct decl *d) {
         d->symbol = symbol_create(kind, d->type, d->name);
         d->symbol->funcdef = 0;
         scope_bind(d->name, d->symbol);
+        if (kind == SYMBOL_LOCAL)
+            d->symbol->which = which++;
+        else
+            which = 0;
         symbol_print(d->symbol);
         s = d->symbol;
     }

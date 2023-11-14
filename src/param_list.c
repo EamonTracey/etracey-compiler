@@ -6,6 +6,8 @@
 #include "scope.h"
 #include "type.h"
 
+extern int which;
+
 extern int resolve_errors;
 
 struct param_list *param_list_create(char *name, struct type *type, struct param_list *next) {
@@ -48,6 +50,7 @@ void param_list_resolve(struct param_list *a) {
         return;
     } else {
         a->symbol = symbol_create(SYMBOL_PARAM, a->type, a->name);
+        a->symbol->which = which++;
         scope_bind(a->name, a->symbol);
         symbol_print(a->symbol);
     }
