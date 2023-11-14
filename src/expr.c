@@ -506,7 +506,7 @@ struct type *expr_typecheck(struct expr *e) {
         }
         return type_create(lt->kind, NULL, NULL, NULL);
     case EXPR_IDENT:
-        return type_create(e->symbol->type->kind, NULL, NULL, NULL);
+        return type_create(e->symbol->type->kind, e->symbol->type->subtype, e->symbol->type->params, e->symbol->type->size);
     case EXPR_INTEGERLIT:
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_FLOATLIT:
@@ -526,7 +526,14 @@ struct type *expr_typecheck(struct expr *e) {
             expr_print(e->left, 0);
             fprintf(stdout, ").\n");
         }
-        /* TODO subtype does not work rn */
+        if (rt->kind != TYPE_INTEGER) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot index array with type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
         return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
     default:
         return NULL;
