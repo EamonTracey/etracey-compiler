@@ -61,6 +61,11 @@ void type_print(struct type *t) {
 }
 
 int type_equals(struct type *t1, struct type *t2) {
+    if ((t1 == NULL && t2 != NULL) || (t1 != NULL && t2 == NULL))
+        return 0;
+    if (t1 == NULL && t2 == NULL)
+        return 1;
+
     if (t1->kind != t2->kind)
         return 0;
 

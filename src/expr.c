@@ -481,7 +481,7 @@ struct type *expr_typecheck(struct expr *e) {
             ++type_errors;
             fprintf(stdout, "type error: cannot assign to a non-variable.\n");
         }
-        if (lt->kind != rt->kind) {
+        if (!type_equals(lt, rt)) {
             ++type_errors;
             fprintf(stdout, "type error: cannot assign non-matching type ");
             type_print(rt);
@@ -493,6 +493,7 @@ struct type *expr_typecheck(struct expr *e) {
             expr_print(e->left, 0);
             fprintf(stdout, ").\n");
         }
+        /* TODO: nonatomics? */
         return type_create(lt->kind, NULL, NULL, NULL);
     case EXPR_POS:
     case EXPR_NEG:
@@ -535,6 +536,53 @@ struct type *expr_typecheck(struct expr *e) {
             fprintf(stdout, ").\n");
         }
         return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_FUNCCALL:
+        /* TODO: fix double error issue when argument has type error */
+        if (lt->kind != TYPE_FUNCTION) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform function call on non-function type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        } else {
+            struct param_list *par = lt->params;
+            struct expr *arg = e->right;
+            while (par != NULL && arg != NULL) {
+                struct type *argtype = expr_typecheck(arg->left);
+                if (!type_equals(par->type, argtype)) {
+                    ++type_errors;
+                    fprintf(stdout, "type error: argument of type ");
+                    type_print(argtype);
+                    fprintf(stdout, " (");
+                    expr_print(arg->left, 0);
+                    fprintf(stdout, ") does not match function %s's parameter %s's type ", e->left->name, par->name);
+                    type_print(par->type);
+                    fprintf(stdout, ".\n");
+                }
+                par = par->next;
+                arg = arg->right;
+            }
+            if (par == NULL && arg != NULL) {
+                ++type_errors;
+                int count = 0;
+                while (arg != NULL) {
+                    ++count;
+                    arg = arg->right;
+                }
+                fprintf(stdout, "type error: function %s received %d extra arguments.\n", e->left->name, count);
+            }
+            if (par != NULL && arg == NULL) {
+                ++type_errors;
+                int count = 0;
+                while (par != NULL) {
+                    ++count;
+                    par = par->next;
+                }
+                fprintf(stdout, "type error: function %s requires %d more arguments.\n", e->left->name, count);
+            }
+        }
+        return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
     default:
         return NULL;
     }
@@ -542,8 +590,6 @@ struct type *expr_typecheck(struct expr *e) {
 
 /*
 typedef enum {
-    EXPR_ARRACC,
-    EXPR_FUNCCALL,
     EXPR_ARRLIT,
 
     EXPR_LIST
