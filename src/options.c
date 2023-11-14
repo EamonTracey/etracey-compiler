@@ -19,6 +19,8 @@ extern int yyparse();
 
 extern struct decl *ast;
 
+extern int verb;
+
 int resolve_errors = 0;
 
 int encode_file(const char *path) {
@@ -176,9 +178,11 @@ int resolve_file(const char *path) {
     fclose(yyin);
 
     // Enter global scope, resolve program, exit global scope.
+    verb = 1;
     scope_enter();
     decl_resolve(ast);
     scope_exit();
+    verb = 0;
 
     return resolve_errors == 0 ? 0 : -1;
 }

@@ -3,6 +3,8 @@
 
 #include "symbol.h"
 
+extern int verb;
+
 struct symbol *symbol_create(symbol_t kind, struct type *type, char *name) {
     struct symbol *symbol = (struct symbol *)malloc(sizeof(struct symbol));
 
@@ -17,6 +19,9 @@ struct symbol *symbol_create(symbol_t kind, struct type *type, char *name) {
 }
 
 void symbol_print(struct symbol *s) {
+    if (!verb)
+        return;
+
     fprintf(stdout, "%s resolves to ", s->name);
 
     switch (s->kind) {
