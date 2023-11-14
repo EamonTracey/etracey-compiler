@@ -137,8 +137,10 @@ void decl_typecheck(struct decl *d) {
 
     if (d->code) {
         if (d->symbol->type->kind != TYPE_FUNCTION) {
-            /* TODO: error. */
             ++type_errors;
+            fprintf(stdout, "type error: non-function type ");
+            type_print(d->symbol->type);
+            fprintf(stdout, " (%s) cannot have a function body.\n", d->symbol->name);
         }
         stmt_typecheck(d->code);
     }
