@@ -22,6 +22,7 @@ extern struct decl *ast;
 extern int verb;
 
 int resolve_errors = 0;
+int type_errors = 0;
 
 int encode_file(const char *path) {
     char line[2048];
@@ -209,5 +210,5 @@ int typecheck_file(const char *path) {
     // Perform typechecking.
     decl_typecheck(ast);
 
-    return 0;
+    return type_errors == 0 ? 0 : -1;
 }

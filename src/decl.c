@@ -9,6 +9,7 @@
 #include "type.h"
 
 extern int resolve_errors;
+extern int type_errors;
 
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
     struct decl *decl = (struct decl *)malloc(sizeof(struct decl));
@@ -117,6 +118,7 @@ void decl_typecheck(struct decl *d) {
         struct type *t = expr_typecheck(d->value);
         if (!type_equals(t, d->symbol->type)) {
             /* TODO: error. */
+            ++type_errors;
             fprintf(stdout, "type error: type ");
             type_print(t);
             fprintf(stdout, " (");
@@ -130,6 +132,7 @@ void decl_typecheck(struct decl *d) {
     if (d->code) {
         if (d->symbol->type->kind != TYPE_FUNCTION) {
             /* TODO: error. */
+            ++type_errors;
         }
         stmt_typecheck(d->code);
     }

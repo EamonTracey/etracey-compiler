@@ -6,6 +6,7 @@
 #include "scope.h"
 
 extern int resolve_errors;
+extern int type_errors;
 
 struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
@@ -266,9 +267,11 @@ struct type *expr_typecheck(struct expr *e) {
     switch (e->kind) {
     case EXPR_INC:
         if (e->left->symbol == NULL) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot increment a non-variable.\n");
         }
         if (lt->kind != TYPE_INTEGER) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot increment a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -278,9 +281,11 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_DEC:
         if (e->left->symbol == NULL) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot decrement a non-variable.\n");
         }
         if (lt->kind != TYPE_INTEGER) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot decrement a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -290,6 +295,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_NOT:
         if (lt->kind != TYPE_BOOLEAN) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot apply logical not to a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -302,6 +308,7 @@ struct type *expr_typecheck(struct expr *e) {
         return NULL;
     case EXPR_MULT:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot multiply a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -315,6 +322,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_DIV:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot divide a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -328,6 +336,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_MOD:
         if (!(lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER)) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot take the modulus of a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -341,6 +350,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_PLUS:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot add a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -354,6 +364,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_MINUS:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot subtract a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -367,6 +378,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_LT:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot perform less-than comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -380,6 +392,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_LTE:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot perform less-than-equal comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -393,6 +406,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_GT:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot perform greater-than comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -406,6 +420,7 @@ struct type *expr_typecheck(struct expr *e) {
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_GTE:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
             fprintf(stdout, "type error: cannot perform greater-than-equal comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
@@ -420,6 +435,7 @@ struct type *expr_typecheck(struct expr *e) {
     case EXPR_EQ:
     case EXPR_NOTEQ:
         if (!type_equals(lt, rt)) {
+            ++type_errors;
             fprintf(stdout, "cannot perform equality comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
