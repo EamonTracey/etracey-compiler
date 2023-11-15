@@ -147,7 +147,7 @@ void decl_typecheck(struct decl *d) {
             type_print(d->symbol->type);
             fprintf(stdout, " (%s) cannot have a function body.\n", d->symbol->name);
         }
-        stmt_typecheck(d->code);
+        stmt_typecheck(d->code, d->type->subtype);
     }
 
     decl_typecheck(d->next);

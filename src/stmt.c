@@ -147,7 +147,7 @@ void stmt_resolve(struct stmt *s) {
     stmt_resolve(s->next);
 }
 
-void stmt_typecheck(struct stmt *s) {
+void stmt_typecheck(struct stmt *s, struct type *ret) {
     if (s == NULL)
         return;
 
@@ -167,8 +167,8 @@ void stmt_typecheck(struct stmt *s) {
             expr_print(s->expr, 0);
             fprintf(stdout, ").\n");
         }
-        stmt_typecheck(s->body);
-        stmt_typecheck(s->else_body);
+        stmt_typecheck(s->body, ret);
+        stmt_typecheck(s->else_body, ret);
         break;
     case STMT_FOR:
         expr_typecheck(s->init_expr);
@@ -190,12 +190,33 @@ void stmt_typecheck(struct stmt *s) {
         break;
     case STMT_RETURN:
         t = expr_typecheck(s->expr);
-        /* TODO: ensure matches function return type */
+        if (t == NULL) {
+            if (ret->kind != TYPE_VOID) {
+                ++type_errors;
+                fprintf(stdout, "type error: must return a value in non-void function.\n");
+            }
+        } else if (ret->kind == TYPE_VOID) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot return type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ") from void function.\n");
+        } else if (!type_equals(t, ret)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot return type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ") from function with return type ");
+            type_print(ret);
+            fprintf(stdout, ".\n");
+        }
         break;
     case STMT_BLOCK:
-        stmt_typecheck(s->body);
+        stmt_typecheck(s->body, ret);
         break;
     }
 
-    stmt_typecheck(s->next);
+    stmt_typecheck(s->next, ret);
 }
