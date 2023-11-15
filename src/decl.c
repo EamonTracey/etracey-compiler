@@ -122,7 +122,7 @@ void decl_typecheck(struct decl *d) {
 
     if (d->type->kind == TYPE_VOID) {
         ++type_errors;
-        fprintf(stdout, "type error: standalone variable %s cannot have type void\n.", d->name);
+        fprintf(stdout, "type error: standalone variable %s cannot have type void.\n", d->name);
     }
 
     if (d->value != NULL) {
