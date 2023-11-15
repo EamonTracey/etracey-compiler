@@ -7,6 +7,8 @@
 #include "scope.h"
 #include "stmt.h"
 
+extern int type_errors;
+
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
     struct stmt *stmt = (struct stmt *)malloc(sizeof(struct stmt));
 
@@ -146,4 +148,54 @@ void stmt_resolve(struct stmt *s) {
 }
 
 void stmt_typecheck(struct stmt *s) {
+    if (s == NULL)
+        return;
+
+    struct type *t;
+
+    switch (s->kind) {
+    case STMT_DECL:
+        decl_typecheck(s->decl);
+        break;
+    case STMT_IF_ELSE:
+        t = expr_typecheck(s->expr);
+        if (t->kind != TYPE_BOOLEAN) {
+            ++type_errors;
+            fprintf(stdout, "type error: if condition cannot be type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ").\n");
+        }
+        stmt_typecheck(s->body);
+        stmt_typecheck(s->else_body);
+        break;
+    case STMT_FOR:
+        expr_typecheck(s->init_expr);
+        t = expr_typecheck(s->expr);
+        if (t->kind != TYPE_BOOLEAN) {
+            ++type_errors;
+            fprintf(stdout, "type error: for condition cannot be type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ").\n");
+        }
+        expr_typecheck(s->next_expr);
+        break;
+    case STMT_EXPR:
+        expr_typecheck(s->expr);
+        break;
+    case STMT_PRINT:
+        break;
+    case STMT_RETURN:
+        t = expr_typecheck(s->expr);
+        /* TODO: ensure matches function return type */
+        break;
+    case STMT_BLOCK:
+        stmt_typecheck(s->body);
+        break;
+    }
+
+    stmt_typecheck(s->next);
 }

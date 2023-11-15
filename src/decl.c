@@ -120,6 +120,11 @@ void decl_typecheck(struct decl *d) {
     if (d == NULL)
         return;
 
+    if (d->type->kind == TYPE_VOID) {
+        ++type_errors;
+        fprintf(stdout, "type error: standalone variable %s cannot have type void\n.", d->name);
+    }
+
     if (d->value != NULL) {
         struct type *t = expr_typecheck(d->value);
         if (!type_equals(t, d->symbol->type)) {
