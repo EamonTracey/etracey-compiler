@@ -28,4 +28,6 @@ void type_print(struct type *t);
 int type_equals(struct type *t1, struct type *t2);
 int type_param_equals(struct param_list *p1, struct param_list *p2);
 
+int type_is_atomic(struct type *t);
+
 #endif
