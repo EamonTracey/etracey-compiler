@@ -6,6 +6,7 @@
 #include "indent.h"
 #include "scope.h"
 #include "stmt.h"
+#include "type.h"
 
 extern int type_errors;
 
@@ -152,6 +153,7 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
         return;
 
     struct type *t;
+    struct expr *e;
 
     switch (s->kind) {
     case STMT_DECL:
@@ -187,6 +189,22 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
         expr_typecheck(s->expr);
         break;
     case STMT_PRINT:
+        /* TODO: fix segfault with array literal ... 99% sure only because arrlit expr check not yet implemented*/
+        e = s->expr;
+        while (e != NULL) {
+            expr_print(e->left, 0);
+            fprintf(stdout, "\n");
+            t = expr_typecheck(e->left);
+            if (!type_is_atomic(t)) {
+                ++type_errors;
+                fprintf(stdout, "type error: cannot pass non-atomic type ");
+                type_print(t);
+                fprintf(stdout, " (");
+                expr_print(e->left, 0);
+                fprintf(stdout, ") to print statement.\n");
+            }
+            e = e->right;
+        }
         break;
     case STMT_RETURN:
         t = expr_typecheck(s->expr);
