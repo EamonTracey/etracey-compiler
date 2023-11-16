@@ -264,6 +264,8 @@ struct type *expr_typecheck(struct expr *e) {
     struct type *lt = expr_typecheck(e->left);
     struct type *rt = expr_typecheck(e->right);
 
+    struct expr *q;
+
     switch (e->kind) {
     case EXPR_INC:
         if (e->left->symbol == NULL) {
@@ -304,8 +306,19 @@ struct type *expr_typecheck(struct expr *e) {
         }
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_EXP:
-        /*TODO: not sure quite honestly.*/
-        return NULL;
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot exponentiate a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_MULT:
         if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
             ++type_errors;
@@ -583,6 +596,22 @@ struct type *expr_typecheck(struct expr *e) {
             }
         }
         return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_ARRLIT:
+        q = e->left;
+        lt = expr_typecheck(q->left);
+        while (q != NULL) {
+            rt = expr_typecheck(q->left);
+            if (!type_equals(lt, rt)) {
+                ++type_errors;
+                fprintf(stdout, "type error: array literal cannot have mismatching types ");
+                type_print(lt);
+                fprintf(stdout, " and ");
+                type_print(rt);
+                fprintf(stdout, "\n");
+            }
+            q = q->right;
+        }
+        return type_create(TYPE_ARRAY, lt, NULL, NULL);
     default:
         return NULL;
     }
