@@ -95,8 +95,8 @@ int type_param_equals(struct param_list *p1, struct param_list *p2) {
 
 int type_is_atomic(struct type *t) {
     return t->kind == TYPE_INTEGER
-        || t->KIND == TYPE_FLOAT
-        || t-kind == TYPE_CHARACTER
+        || t->kind == TYPE_FLOAT
+        || t->kind == TYPE_CHARACTER
         || t->kind == TYPE_STRING
         || t->kind == TYPE_BOOLEAN;
 }
