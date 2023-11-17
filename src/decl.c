@@ -82,8 +82,9 @@ void decl_resolve(struct decl *d) {
         } else if (s->funcdef && d->code) {
             ++resolve_errors;
             fprintf(stdout, "resolve error: body of function %s cannot be redefined.\n", s->name);
-        } else
-            symbol_print(s);
+        } else {
+            symbol_print(d->symbol = s);
+        }
     } else {
         symbol_t kind = scope_level() == 1 ? SYMBOL_GLOBAL : SYMBOL_LOCAL;
         d->symbol = symbol_create(kind, d->type, d->name);
@@ -147,6 +148,8 @@ void decl_typecheck(struct decl *d) {
         }
     }
 
+    fprintf(stdout, "here: %p\n", d->symbol);
+
     if (d->type->kind == TYPE_FUNCTION) {
         if (d->symbol->kind != SYMBOL_GLOBAL) {
             ++type_errors;
@@ -162,9 +165,34 @@ void decl_typecheck(struct decl *d) {
 
     /* TODO: array typechecking, will need recursive call */
     if (d->type->kind == TYPE_ARRAY) {
-        if (d->symbol->kind == SYMBOL_GLOBAL) {
-        }
-        if (d->symbol->kind == SYMBOL_LOCAL) {
+        /* array subtypes must be atomic or array */
+        struct type *st = d->type;
+        while (st != NULL) {
+            if (!(type_is_atomic(st) || st->kind == TYPE_ARRAY)) {
+                ++type_errors;
+                fprintf(stdout, "type error: array cannot contain non-atomic, non-array type ");
+                type_print(st);
+                fprintf(stdout, ".\n");
+            }
+            /* TODO?: array without size? */
+            if (st->size != NULL) {
+                if (d->symbol->kind == SYMBOL_GLOBAL) {
+                    if (st->size->kind != EXPR_INTEGERLIT) {
+                        ++type_errors;
+                        fprintf(stdout, "type error: global array size expression (");
+                        expr_print(st->size, 0);
+                        fprintf(stdout, ") must be an integer literal.\n");
+                    }
+                }
+                if (d->symbol->kind == SYMBOL_LOCAL) {
+                    if (expr_typecheck(st->size)->kind != TYPE_INTEGER) {
+                        fprintf(stdout, "type error: array size expression (");
+                        expr_print(st->size, 0);
+                        fprintf(stdout, ") must evaluate to an integer.\n");
+                    }
+                }
+            }
+            st = st->subtype;
         }
     }
 
