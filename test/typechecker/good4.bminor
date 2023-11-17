@@ -1,0 +1,16 @@
+everything: function void (a: boolean, b: integer, c: float, d: string, e: char, f: array [] float) = {
+    return;
+}
+
+main: function integer () = {
+    a: array [100] float;
+
+    everything(
+        1 < 2 && 3 <= 4 || 5 > 6 || 7 >= 8,
+        1 - 2 * 3 + 4 / 5 ^ 6,
+        0.1 - 0.2 * 0.3 + 0.4 / 0.5 ^ 0.6,
+        "wow",
+        'Q',
+        a
+    );
+}
