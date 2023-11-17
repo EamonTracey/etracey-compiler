@@ -197,6 +197,10 @@ void decl_typecheck(struct decl *d) {
             }
             st = st->subtype;
         }
+        if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot initialize array %s in a local scope.\n", d->name);
+        }
     }
 
     if (d->code) {
