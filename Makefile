@@ -34,3 +34,4 @@ clean:
 	rm -f test/parser/*.out*
 	rm -f test/printer/*.out*
 	rm -f test/resolver/*.out*
+	rm -f test/typechecker/*.out*
