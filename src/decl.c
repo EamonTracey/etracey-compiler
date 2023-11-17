@@ -188,6 +188,7 @@ void decl_typecheck(struct decl *d) {
                 }
                 if (d->symbol->kind == SYMBOL_LOCAL) {
                     if (expr_typecheck(st->size)->kind != TYPE_INTEGER) {
+                        ++type_errors;
                         fprintf(stdout, "type error: array size expression (");
                         expr_print(st->size, 0);
                         fprintf(stdout, ") must evaluate to an integer.\n");
