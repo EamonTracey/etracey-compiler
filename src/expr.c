@@ -524,15 +524,15 @@ struct type *expr_typecheck(struct expr *e) {
             expr_print(e->left, 0);
             fprintf(stdout, ").\n");
         }
-        if (!type_is_atomic(lt)) {
+        if (!(type_is_atomic(lt) || lt->kind == TYPE_ARRAY)) {
             ++type_errors;
-            fprintf(stdout, "type error: cannot perform assignment with non-atomic type ");
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic, non-array type ");
             type_print(rt);
             fprintf(stdout, " (");
             expr_print(e->left, 0);
             fprintf(stdout, ").\n");
         }
-        if (!type_is_atomic(rt)) {
+        if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
             ++type_errors;
             fprintf(stdout, "type error: cannot perform assignment with non-atomic type ");
             type_print(rt);
