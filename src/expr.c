@@ -459,7 +459,22 @@ struct type *expr_typecheck(struct expr *e) {
             expr_print(e->right, 0);
             fprintf(stdout, ").\n");
         }
-        /* TODO non-atomic types cannot be compared */
+        if (!type_is_atomic(lt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: non-atomic type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") cannot be compared.\n");
+        }
+        if (!type_is_atomic(rt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: non-atomic type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ") cannot be compared.\n");
+        }
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_AND:
         if (!(lt->kind == TYPE_BOOLEAN && rt->kind == TYPE_BOOLEAN)) {
@@ -581,6 +596,7 @@ struct type *expr_typecheck(struct expr *e) {
                 int count = 0;
                 while (arg != NULL) {
                     ++count;
+                    expr_typecheck(arg);
                     arg = arg->right;
                 }
                 fprintf(stdout, "type error: function %s received %d extra arguments.\n", e->left->name, count);

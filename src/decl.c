@@ -82,6 +82,9 @@ void decl_resolve(struct decl *d) {
         } else if (s->funcdef && d->code) {
             ++resolve_errors;
             fprintf(stdout, "resolve error: body of function %s cannot be redefined.\n", s->name);
+        } else if (d->type->kind == TYPE_FUNCTION && s->type->kind == TYPE_FUNCTION && !type_param_equals(d->type->params, s->type->params)) {
+            ++resolve_errors;
+            fprintf(stdout, "resolve error: function %s cannot be redeclared with different parameters.\n", d->name);
         } else {
             symbol_print(d->symbol = s);
         }
@@ -148,8 +151,6 @@ void decl_typecheck(struct decl *d) {
         }
     }
 
-    fprintf(stdout, "here: %p\n", d->symbol);
-
     if (d->type->kind == TYPE_FUNCTION) {
         if (d->symbol->kind != SYMBOL_GLOBAL) {
             ++type_errors;
@@ -161,6 +162,7 @@ void decl_typecheck(struct decl *d) {
             type_print(d->type->subtype);
             fprintf(stdout, ".\n");
         }
+        param_list_typecheck(d->type->params);
     }
 
     /* TODO: array typechecking, will need recursive call */

@@ -189,7 +189,6 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
         expr_typecheck(s->expr);
         break;
     case STMT_PRINT:
-        /* TODO: fix segfault with array literal ... 99% sure only because arrlit expr check not yet implemented*/
         e = s->expr;
         while (e != NULL) {
             expr_print(e->left, 0);
