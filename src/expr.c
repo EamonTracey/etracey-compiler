@@ -601,6 +601,14 @@ struct type *expr_typecheck(struct expr *e) {
         lt = expr_typecheck(q->left);
         while (q != NULL) {
             rt = expr_typecheck(q->left);
+            if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
+                ++type_errors;
+                fprintf(stdout, "type error: array literal cannot have element with type ");
+                type_print(rt);
+                fprintf(stdout, " (");
+                expr_print(q->left, 0);
+                fprintf(stdout, ").\n");
+            }
             if (!type_equals(lt, rt)) {
                 ++type_errors;
                 fprintf(stdout, "type error: array literal cannot have mismatching types ");
@@ -617,13 +625,23 @@ struct type *expr_typecheck(struct expr *e) {
     }
 }
 
-/*
-typedef enum {
-    EXPR_ARRLIT,
+int expr_is_literal(struct expr *e) {
+    if (e->kind == EXPR_ARRLIT) {
+        e = e->left;
+        while (e != NULL) {
+            if (!expr_is_literal(e->left))
+                return 0;
+            e = e->right;
+        }
+        return 1;
+    }
 
-    EXPR_LIST
-} expr_t;
-*/
+    return e->kind == EXPR_INTEGERLIT
+        || e->kind == EXPR_FLOATLIT
+        || e->kind == EXPR_CHARLIT
+        || e->kind == EXPR_STRINGLIT
+        || e->kind == EXPR_BOOLLIT;
+}
 
 int precedences[] = {
     8, 8, 7, 6, 5, 5, 5, 4, 4,

@@ -128,7 +128,6 @@ void decl_typecheck(struct decl *d) {
     if (d->value != NULL) {
         struct type *t = expr_typecheck(d->value);
         if (!type_equals(t, d->symbol->type)) {
-            /* TODO: error. */
             ++type_errors;
             fprintf(stdout, "type error: type ");
             type_print(t);
@@ -137,6 +136,35 @@ void decl_typecheck(struct decl *d) {
             fprintf(stdout, ") does not match %s's declaration type ", d->name);
             type_print(d->type);
             fprintf(stdout, ".\n");
+        }
+        if (d->symbol->kind == SYMBOL_GLOBAL) {
+            if (!expr_is_literal(d->value)) {
+                ++type_errors;
+                fprintf(stdout, "type error: global expression (");
+                expr_print(d->value, 0);
+                fprintf(stdout, ") cannot be nonliteral.\n");
+            }
+        }
+    }
+
+    if (d->type->kind == TYPE_FUNCTION) {
+        if (d->symbol->kind != SYMBOL_GLOBAL) {
+            ++type_errors;
+            fprintf(stdout, "type error: function %s cannot be declared in a local scope.\n", d->name);
+        }
+        if (!(type_is_atomic(d->type->subtype) || d->type->subtype->kind == TYPE_VOID)) {
+            ++type_errors;
+            fprintf(stdout, "type error: function %s cannot return non-atomic, non-void type ", d->name);
+            type_print(d->type->subtype);
+            fprintf(stdout, ".\n");
+        }
+    }
+
+    /* TODO: array typechecking, will need recursive call */
+    if (d->type->kind == TYPE_ARRAY) {
+        if (d->symbol->kind == SYMBOL_GLOBAL) {
+        }
+        if (d->symbol->kind == SYMBOL_LOCAL) {
         }
     }
 
