@@ -74,10 +74,8 @@ void param_list_typecheck(struct param_list *a) {
             }
             if (st->size != NULL) {
                 expr_typecheck(st->size);
-                if (st->size->kind != EXPR_INTEGERLIT) {
-                    ++type_errors;
-                    fprintf(stdout, "type error: array function parameter cannot have nonliteral nor noninteger size.\n");
-                }
+                ++type_errors;
+                fprintf(stdout, "type error: parameter array must not have an explicit size");
             }
             st = st->subtype;
         }
