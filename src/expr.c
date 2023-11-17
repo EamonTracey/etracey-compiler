@@ -534,7 +534,7 @@ struct type *expr_typecheck(struct expr *e) {
         }
         if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
             ++type_errors;
-            fprintf(stdout, "type error: cannot perform assignment with non-atomic type ");
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic, non-array type ");
             type_print(rt);
             fprintf(stdout, " (");
             expr_print(e->right, 0);
