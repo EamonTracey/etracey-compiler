@@ -1,0 +1,4 @@
+func: function void () = {
+    arr: array [] integer;
+    arr[1.5];
+}

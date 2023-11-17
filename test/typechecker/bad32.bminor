@@ -1,0 +1,4 @@
+func: function void () = {
+    c = 'q';
+    c();
+}
