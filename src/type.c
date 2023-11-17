@@ -70,6 +70,16 @@ int type_equals(struct type *t1, struct type *t2) {
         return 0;
 
     if (t1->kind == TYPE_ARRAY) {
+        /* 
+         * mismatching sizes.
+         * I take a very conservative approach here
+         * by only comparing array sizes if both arrays
+         * have an integer literal size.
+         */
+        if (t1->size && t2->size && t1->size->kind == EXPR_INTEGERLIT && t2->size->kind == EXPR_INTEGERLIT) {
+            if (t1->size->literal_value != t2->size->literal_value)
+                return 0;
+        }
         return type_equals(t1->subtype, t2->subtype);
     }
 

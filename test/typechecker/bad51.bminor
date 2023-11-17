@@ -1,0 +1,3 @@
+funcarr: function array [] integer () = {}
+
+funcfunc: function function void () ();

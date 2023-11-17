@@ -72,7 +72,6 @@ void param_list_typecheck(struct param_list *a) {
                 type_print(st);
                 fprintf(stdout, ".\n");
             }
-            /* TODO?: array without size? */
             if (st->size != NULL) {
                 expr_typecheck(st->size);
                 if (st->size->kind != EXPR_INTEGERLIT) {

@@ -165,7 +165,6 @@ void decl_typecheck(struct decl *d) {
         param_list_typecheck(d->type->params);
     }
 
-    /* TODO: array typechecking, will need recursive call */
     if (d->type->kind == TYPE_ARRAY) {
         /* array subtypes must be atomic or array */
         struct type *st = d->type;
@@ -176,7 +175,6 @@ void decl_typecheck(struct decl *d) {
                 type_print(st);
                 fprintf(stdout, ".\n");
             }
-            /* TODO?: array without size? */
             if (st->size != NULL) {
                 if (d->symbol->kind == SYMBOL_GLOBAL) {
                     if (st->size->kind != EXPR_INTEGERLIT) {
@@ -194,6 +192,9 @@ void decl_typecheck(struct decl *d) {
                         fprintf(stdout, ") must evaluate to an integer.\n");
                     }
                 }
+            } else if (st->kind == TYPE_ARRAY ) {
+                ++type_errors;
+                fprintf(stdout, "type error: array must have explicit size.\n");
             }
             st = st->subtype;
         }

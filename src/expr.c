@@ -265,6 +265,9 @@ struct type *expr_typecheck(struct expr *e) {
     struct type *rt = expr_typecheck(e->right);
 
     struct expr *q;
+    struct expr *si;
+
+    int count = 0;
 
     switch (e->kind) {
     case EXPR_INC:
@@ -521,7 +524,22 @@ struct type *expr_typecheck(struct expr *e) {
             expr_print(e->left, 0);
             fprintf(stdout, ").\n");
         }
-        /* TODO: nonatomics? */
+        if (!type_is_atomic(lt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        if (!type_is_atomic(rt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
         return type_create(lt->kind, NULL, NULL, NULL);
     case EXPR_POS:
     case EXPR_NEG:
@@ -615,7 +633,9 @@ struct type *expr_typecheck(struct expr *e) {
     case EXPR_ARRLIT:
         q = e->left;
         lt = expr_typecheck(q->left);
+        count = 0;
         while (q != NULL) {
+            ++count;
             rt = expr_typecheck(q->left);
             if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
                 ++type_errors;
@@ -635,7 +655,9 @@ struct type *expr_typecheck(struct expr *e) {
             }
             q = q->right;
         }
-        return type_create(TYPE_ARRAY, lt, NULL, NULL);
+        si = expr_create(EXPR_INTEGERLIT, NULL, NULL);
+        si->literal_value = count;
+        return type_create(TYPE_ARRAY, lt, NULL, si);
     default:
         return NULL;
     }
