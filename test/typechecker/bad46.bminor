@@ -1,0 +1,3 @@
+func: function string () = {
+    return 'E';
+}

@@ -29,5 +29,9 @@ clean:
 	rm -f src/parser.c
 	rm -f src/parser.output
 	rm -f include/parser.h
-	rm -f test/encoder/*.out
-	rm -f test/scanner/*.out
+	rm -f test/encode/*.out*
+	rm -f test/scanner/*.out*
+	rm -f test/parser/*.out*
+	rm -f test/printer/*.out*
+	rm -f test/resolver/*.out*
+	rm -f test/typechecker/*.out*

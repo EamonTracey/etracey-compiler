@@ -59,3 +59,54 @@ void type_print(struct type *t) {
         break;
     }
 }
+
+int type_equals(struct type *t1, struct type *t2) {
+    if ((t1 == NULL && t2 != NULL) || (t1 != NULL && t2 == NULL))
+        return 0;
+    if (t1 == NULL && t2 == NULL)
+        return 1;
+
+    if (t1->kind != t2->kind)
+        return 0;
+
+    if (t1->kind == TYPE_ARRAY) {
+        /* 
+         * mismatching sizes.
+         * I take a very conservative approach here
+         * by only comparing array sizes if both arrays
+         * have an integer literal size.
+         */
+        if (t1->size && t2->size && t1->size->kind == EXPR_INTEGERLIT && t2->size->kind == EXPR_INTEGERLIT) {
+            if (t1->size->literal_value != t2->size->literal_value)
+                return 0;
+        }
+        return type_equals(t1->subtype, t2->subtype);
+    }
+
+    if (t1->kind == TYPE_FUNCTION) {
+        return type_equals(t1->subtype, t2->subtype) && type_param_equals(t1->params, t2->params);
+    }
+
+    return 1;
+}
+
+int type_param_equals(struct param_list *p1, struct param_list *p2) {
+    if (p1 == NULL && p2 == NULL)
+        return 1;
+    if (p1 == NULL && p2 != NULL)
+        return 0;
+    if (p1 != NULL && p2 == NULL)
+        return 0;
+    if (!type_equals(p1->type, p2->type))
+        return 0;
+
+    return type_param_equals(p1->next, p2->next);
+}
+
+int type_is_atomic(struct type *t) {
+    return t->kind == TYPE_INTEGER
+        || t->kind == TYPE_FLOAT
+        || t->kind == TYPE_CHARACTER
+        || t->kind == TYPE_STRING
+        || t->kind == TYPE_BOOLEAN;
+}

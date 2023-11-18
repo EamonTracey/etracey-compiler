@@ -19,7 +19,10 @@ extern int yyparse();
 
 extern struct decl *ast;
 
+extern int verb;
+
 int resolve_errors = 0;
+int type_errors = 0;
 
 int encode_file(const char *path) {
     char line[2048];
@@ -176,9 +179,36 @@ int resolve_file(const char *path) {
     fclose(yyin);
 
     // Enter global scope, resolve program, exit global scope.
+    verb = 1;
     scope_enter();
     decl_resolve(ast);
     scope_exit();
+    verb = 0;
 
     return resolve_errors == 0 ? 0 : -1;
+}
+
+int typecheck_file(const char *path) {
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stdout, "error: failed to open file %s.\n", path);
+        return -1;
+    }
+    
+    // Perform parsing.
+    if (yyparse() != 0)
+        return -1;
+    fclose(yyin);
+
+    // Perform name resolution.
+    scope_enter();
+    decl_resolve(ast);
+    scope_exit();
+    if (resolve_errors > 0)
+        return -1;
+
+    // Perform typechecking.
+    decl_typecheck(ast);
+
+    return type_errors == 0 ? 0 : -1;
 }

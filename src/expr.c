@@ -6,6 +6,7 @@
 #include "scope.h"
 
 extern int resolve_errors;
+extern int type_errors;
 
 struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
@@ -254,6 +255,430 @@ void expr_resolve(struct expr *e) {
         expr_resolve(e->left);
         expr_resolve(e->right);
     }
+}
+
+struct type *expr_typecheck(struct expr *e) {
+    if (e == NULL)
+        return NULL;
+
+    struct type *lt = expr_typecheck(e->left);
+    struct type *rt = expr_typecheck(e->right);
+
+    struct expr *q;
+    struct expr *si;
+
+    int count = 0;
+
+    switch (e->kind) {
+    case EXPR_INC:
+        if (e->left->symbol == NULL) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot increment a non-variable.\n");
+        }
+        if (lt->kind != TYPE_INTEGER) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot increment a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_DEC:
+        if (e->left->symbol == NULL) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot decrement a non-variable.\n");
+        }
+        if (lt->kind != TYPE_INTEGER) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot decrement a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_NOT:
+        if (lt->kind != TYPE_BOOLEAN) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot apply logical not to a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_EXP:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot exponentiate a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_MULT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot multiply a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_DIV:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot divide a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") by a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_MOD:
+        if (!(lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot take the modulus of a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_PLUS:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot add a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") with a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_MINUS:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot subtract a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") by a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind == TYPE_FLOAT ? TYPE_FLOAT : TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_LT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform less-than comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_LTE:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform less-than-equal comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_GT:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform greater-than comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_GTE:
+        if (!((lt->kind == TYPE_INTEGER && rt->kind == TYPE_INTEGER) || (lt->kind == TYPE_FLOAT && rt->kind == TYPE_FLOAT))) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform greater-than-equal comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_EQ:
+    case EXPR_NOTEQ:
+        if (!type_equals(lt, rt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform equality comparison between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        if (!type_is_atomic(lt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: non-atomic type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") cannot be compared.\n");
+        }
+        if (!type_is_atomic(rt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: non-atomic type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ") cannot be compared.\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_AND:
+        if (!(lt->kind == TYPE_BOOLEAN && rt->kind == TYPE_BOOLEAN)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform logical and between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_OR:
+        if (!(lt->kind == TYPE_BOOLEAN && rt->kind == TYPE_BOOLEAN)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform logical or between a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ") and a ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_ASSIGN:
+        if (e->left->symbol == NULL) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot assign to a non-variable.\n");
+        }
+        if (!type_equals(lt, rt)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot assign non-matching type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ") to a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        if (!(type_is_atomic(lt) || lt->kind == TYPE_ARRAY)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic, non-array type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform assignment with non-atomic, non-array type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind, NULL, NULL, NULL);
+    case EXPR_POS:
+    case EXPR_NEG:
+        if (lt->kind != TYPE_INTEGER && lt->kind != TYPE_FLOAT) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot apply unary operator to a ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        return type_create(lt->kind, NULL, NULL, NULL);
+    case EXPR_IDENT:
+        return type_create(e->symbol->type->kind, e->symbol->type->subtype, e->symbol->type->params, e->symbol->type->size);
+    case EXPR_INTEGERLIT:
+        return type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_FLOATLIT:
+        return type_create(TYPE_FLOAT, NULL, NULL, NULL);
+    case EXPR_CHARLIT:
+        return type_create(TYPE_CHARACTER, NULL, NULL, NULL);
+    case EXPR_STRINGLIT:
+        return type_create(TYPE_STRING, NULL, NULL, NULL);
+    case EXPR_BOOLLIT:
+        return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
+    case EXPR_ARRACC:
+        if (lt->kind != TYPE_ARRAY) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform array access on non-array type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        }
+        if (rt->kind != TYPE_INTEGER) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot index array with type ");
+            type_print(rt);
+            fprintf(stdout, " (");
+            expr_print(e->right, 0);
+            fprintf(stdout, ").\n");
+        }
+        return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_FUNCCALL:
+        /* TODO: fix double error issue when argument has type error */
+        if (lt->kind != TYPE_FUNCTION) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot perform function call on non-function type ");
+            type_print(lt);
+            fprintf(stdout, " (");
+            expr_print(e->left, 0);
+            fprintf(stdout, ").\n");
+        } else {
+            struct param_list *par = lt->params;
+            struct expr *arg = e->right;
+            while (par != NULL && arg != NULL) {
+                struct type *argtype = expr_typecheck(arg->left);
+                if (!type_equals(par->type, argtype)) {
+                    ++type_errors;
+                    fprintf(stdout, "type error: argument of type ");
+                    type_print(argtype);
+                    fprintf(stdout, " (");
+                    expr_print(arg->left, 0);
+                    fprintf(stdout, ") does not match function %s's parameter %s's type ", e->left->name, par->name);
+                    type_print(par->type);
+                    fprintf(stdout, ".\n");
+                }
+                par = par->next;
+                arg = arg->right;
+            }
+            if (par == NULL && arg != NULL) {
+                ++type_errors;
+                int count = 0;
+                while (arg != NULL) {
+                    ++count;
+                    expr_typecheck(arg);
+                    arg = arg->right;
+                }
+                fprintf(stdout, "type error: function %s received %d extra arguments.\n", e->left->name, count);
+            }
+            if (par != NULL && arg == NULL) {
+                ++type_errors;
+                int count = 0;
+                while (par != NULL) {
+                    ++count;
+                    par = par->next;
+                }
+                fprintf(stdout, "type error: function %s requires %d more arguments.\n", e->left->name, count);
+            }
+        }
+        return lt->subtype != NULL ? lt->subtype : type_create(TYPE_INTEGER, NULL, NULL, NULL);
+    case EXPR_ARRLIT:
+        q = e->left;
+        lt = expr_typecheck(q->left);
+        count = 0;
+        while (q != NULL) {
+            ++count;
+            rt = expr_typecheck(q->left);
+            if (!(type_is_atomic(rt) || rt->kind == TYPE_ARRAY)) {
+                ++type_errors;
+                fprintf(stdout, "type error: array literal cannot have element with type ");
+                type_print(rt);
+                fprintf(stdout, " (");
+                expr_print(q->left, 0);
+                fprintf(stdout, ").\n");
+            }
+            if (!type_equals(lt, rt)) {
+                ++type_errors;
+                fprintf(stdout, "type error: array literal cannot have mismatching types ");
+                type_print(lt);
+                fprintf(stdout, " and ");
+                type_print(rt);
+                fprintf(stdout, "\n");
+            }
+            q = q->right;
+        }
+        si = expr_create(EXPR_INTEGERLIT, NULL, NULL);
+        si->literal_value = count;
+        return type_create(TYPE_ARRAY, lt, NULL, si);
+    default:
+        return NULL;
+    }
+}
+
+int expr_is_literal(struct expr *e) {
+    if (e->kind == EXPR_ARRLIT) {
+        e = e->left;
+        while (e != NULL) {
+            if (!expr_is_literal(e->left))
+                return 0;
+            e = e->right;
+        }
+        return 1;
+    }
+
+    return e->kind == EXPR_INTEGERLIT
+        || e->kind == EXPR_FLOATLIT
+        || e->kind == EXPR_CHARLIT
+        || e->kind == EXPR_STRINGLIT
+        || e->kind == EXPR_BOOLLIT;
 }
 
 int precedences[] = {
