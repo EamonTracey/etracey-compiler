@@ -1,0 +1,17 @@
+fizzbuzz: function void (n: integer) = {
+    if (n % 3 == 0 && n % 5 == 0)
+        print "FizzBuzz";
+    else if (n % 3 == 0)
+        print "Fizz";
+    else if (n % 5 == 0)
+        print "Buzz";
+    else
+        print n;
+}
+
+main: function void () = {
+    i: integer;
+    for (i = 1; i <= 100; i++)
+        fizzbuzz(i);
+    return;
+}

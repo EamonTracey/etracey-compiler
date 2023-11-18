@@ -1,4 +1,4 @@
 func: function void () = {
-    c = 'q';
+    c: char = 'q';
     c();
 }
