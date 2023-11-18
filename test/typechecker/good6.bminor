@@ -1,0 +1,5 @@
+PI: float = 3.14159265358979323846264338327950288419716939937510;
+
+sphere_volume: function float (radius: float) = {
+    return 4.0 / 3.0 * PI * (radius ^ 3.0);
+}

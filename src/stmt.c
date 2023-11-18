@@ -6,6 +6,9 @@
 #include "indent.h"
 #include "scope.h"
 #include "stmt.h"
+#include "type.h"
+
+extern int type_errors;
 
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
     struct stmt *stmt = (struct stmt *)malloc(sizeof(struct stmt));
@@ -143,4 +146,92 @@ void stmt_resolve(struct stmt *s) {
     }
 
     stmt_resolve(s->next);
+}
+
+void stmt_typecheck(struct stmt *s, struct type *ret) {
+    if (s == NULL)
+        return;
+
+    struct type *t;
+    struct expr *e;
+
+    switch (s->kind) {
+    case STMT_DECL:
+        decl_typecheck(s->decl);
+        break;
+    case STMT_IF_ELSE:
+        t = expr_typecheck(s->expr);
+        if (t->kind != TYPE_BOOLEAN) {
+            ++type_errors;
+            fprintf(stdout, "type error: if condition cannot be type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ").\n");
+        }
+        stmt_typecheck(s->body, ret);
+        stmt_typecheck(s->else_body, ret);
+        break;
+    case STMT_FOR:
+        expr_typecheck(s->init_expr);
+        t = expr_typecheck(s->expr);
+        if (t->kind != TYPE_BOOLEAN) {
+            ++type_errors;
+            fprintf(stdout, "type error: for condition cannot be type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ").\n");
+        }
+        expr_typecheck(s->next_expr);
+        break;
+    case STMT_EXPR:
+        expr_typecheck(s->expr);
+        break;
+    case STMT_PRINT:
+        e = s->expr;
+        while (e != NULL) {
+            t = expr_typecheck(e->left);
+            if (!type_is_atomic(t)) {
+                ++type_errors;
+                fprintf(stdout, "type error: cannot pass non-atomic type ");
+                type_print(t);
+                fprintf(stdout, " (");
+                expr_print(e->left, 0);
+                fprintf(stdout, ") to print statement.\n");
+            }
+            e = e->right;
+        }
+        break;
+    case STMT_RETURN:
+        t = expr_typecheck(s->expr);
+        if (t == NULL) {
+            if (ret->kind != TYPE_VOID) {
+                ++type_errors;
+                fprintf(stdout, "type error: must return a value in non-void function.\n");
+            }
+        } else if (ret->kind == TYPE_VOID) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot return type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ") from void function.\n");
+        } else if (!type_equals(t, ret)) {
+            ++type_errors;
+            fprintf(stdout, "type error: cannot return type ");
+            type_print(t);
+            fprintf(stdout, " (");
+            expr_print(s->expr, 0);
+            fprintf(stdout, ") from function with return type ");
+            type_print(ret);
+            fprintf(stdout, ".\n");
+        }
+        break;
+    case STMT_BLOCK:
+        stmt_typecheck(s->body, ret);
+        break;
+    }
+
+    stmt_typecheck(s->next, ret);
 }

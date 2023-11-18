@@ -1,0 +1,3 @@
+func: function void () = {
+    arr: array ['c'] integer;
+}

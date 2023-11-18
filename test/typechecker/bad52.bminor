@@ -1,0 +1,1 @@
+func: function void (a: float, b: char, c: integer, d: function void (), e: boolean) = {}

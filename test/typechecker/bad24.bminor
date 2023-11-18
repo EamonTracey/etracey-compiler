@@ -1,0 +1,5 @@
+func: function void () = {
+    x: array [] integer;
+    v: function void ();
+    x == v;
+}

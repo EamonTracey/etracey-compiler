@@ -1,0 +1,6 @@
+EXIT_SUCCESS: integer = 0;
+
+main: function integer (argc: integer, argv: array [] string) = {
+    print "Hello, world!";
+    return EXIT_SUCCESS;
+}

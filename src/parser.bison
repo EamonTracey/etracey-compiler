@@ -245,7 +245,7 @@ expr_opt: expr
 expr_seq: expr TOKEN_COMMA expr_seq
           { $$ = expr_create(EXPR_LIST, $1, $3); }
         | expr
-          { $$ = $1; }
+          { $$ = expr_create(EXPR_LIST, $1, NULL); }
         ;
 
 /* Optional expression sequence. */
