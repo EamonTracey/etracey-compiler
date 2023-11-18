@@ -508,7 +508,7 @@ struct type *expr_typecheck(struct expr *e) {
         }
         return type_create(TYPE_BOOLEAN, NULL, NULL, NULL);
     case EXPR_ASSIGN:
-        if (e->left->symbol == NULL) {
+        if (e->left->symbol == NULL && e->left->kind != EXPR_ARRACC) {
             ++type_errors;
             fprintf(stdout, "type error: cannot assign to a non-variable.\n");
         }
