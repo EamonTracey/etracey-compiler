@@ -191,8 +191,6 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
     case STMT_PRINT:
         e = s->expr;
         while (e != NULL) {
-            expr_print(e->left, 0);
-            fprintf(stdout, "\n");
             t = expr_typecheck(e->left);
             if (!type_is_atomic(t)) {
                 ++type_errors;
