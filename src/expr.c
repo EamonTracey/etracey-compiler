@@ -452,7 +452,7 @@ struct type *expr_typecheck(struct expr *e) {
     case EXPR_NOTEQ:
         if (!type_equals(lt, rt)) {
             ++type_errors;
-            fprintf(stdout, "cannot perform equality comparison between a ");
+            fprintf(stdout, "type error: cannot perform equality comparison between a ");
             type_print(lt);
             fprintf(stdout, " (");
             expr_print(e->left, 0);
