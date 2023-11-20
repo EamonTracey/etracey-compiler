@@ -1,0 +1,1698 @@
+=====STUDENT TESTS=====
+====Good Tests====
+===[STUDENT TESTS/good0.bminor Input]===
+
+===[STUDENT TESTS/good0.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good0.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good1.bminor Input]===
+EXIT_SUCCESS: integer = 0;
+
+main: function integer (argc: integer, argv: array [] string) = {
+    print "Hello, world!";
+    return EXIT_SUCCESS;
+}
+
+===[STUDENT TESTS/good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good1.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good10.bminor Input]===
+fizzbuzz: function void (n: integer) = {
+    if (n % 3 == 0 && n % 5 == 0)
+        print "FizzBuzz";
+    else if (n % 3 == 0)
+        print "Fizz";
+    else if (n % 5 == 0)
+        print "Buzz";
+    else
+        print n;
+}
+
+main: function void () = {
+    i: integer;
+    for (i = 1; i <= 100; i++)
+        fizzbuzz(i);
+    return;
+}
+
+===[STUDENT TESTS/good10.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good10.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good2.bminor Input]===
+mult: array [5] array [5] integer = {
+    {0, 0, 0, 0, 0},
+    {0, 1, 2, 3, 4},
+    {0, 2, 4, 6, 8},
+    {0, 3, 6, 9, 12},
+    {0, 4, 8, 12, 16}
+};
+
+main: function integer () = {
+    i: integer;
+    j: integer;
+    for (i = 0; i < 5; i++)
+        for (j = 0; j < 5; j++)
+            print i, " * ", j, " = ", mult[i][j];
+    
+    return 0;
+}
+
+===[STUDENT TESTS/good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good2.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good3.bminor Input]===
+sqrt: function integer (n: integer);
+
+is_prime: function boolean (n: integer) = {
+    i: integer;
+    for (i = 0; i <= sqrt(n); i++)
+        if (n % i == 0)
+            return false;
+    return true;
+}
+
+main: function void () = {
+    i: integer = 0;
+    for (i = 0; i < 1000; i++)
+        if (is_prime(i))
+            print i;
+
+    return;
+}
+
+===[STUDENT TESTS/good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good3.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good4.bminor Input]===
+everything: function void (a: boolean, b: integer, c: float, d: string, e: char, f: array [] float) = {
+    return;
+}
+
+main: function integer () = {
+    a: array [100] float;
+
+    everything(
+        1 < 2 && 3 <= 4 || 5 > 6 || 7 >= 8,
+        1 - 2 * 3 + 4 / 5 ^ 6,
+        0.1 - 0.2 * 0.3 + 0.4 / 0.5 ^ 0.6,
+        "wow",
+        'Q',
+        a
+    );
+}
+
+===[STUDENT TESTS/good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good4.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good5.bminor Input]===
+fibonacci: function integer (n: integer) =  {
+    if (n <= 1)
+        return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+===[STUDENT TESTS/good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good5.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good6.bminor Input]===
+PI: float = 3.14159265358979323846264338327950288419716939937510;
+
+sphere_volume: function float (radius: float) = {
+    return 4.0 / 3.0 * PI * (radius ^ 3.0);
+}
+
+===[STUDENT TESTS/good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good6.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good7.bminor Input]===
+insertion_sort: function void (arr: array [] integer, n: integer) = {
+    i: integer;
+    j: integer;
+    key: integer;
+
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+
+        /* Move elements of arr[0..i-1], that are
+          greater than key, to one position ahead
+          ahead of their current position */
+        for (; j >= 0 && arr[j] > key ;) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+print_array: function void(arr: array [] integer, n: integer) = {
+    i: integer;
+    for (i = 0; i < n; i++)
+        print arr[i], " ";
+    print "\n";
+}
+
+===[STUDENT TESTS/good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good7.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good8.bminor Input]===
+zeros: array [5] array [5] array [5] array [5] array [5] integer = {{{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}}},{{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}}},{{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}}},{{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}}},{{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}},{{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}},{{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}}}};
+
+===[STUDENT TESTS/good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good8.bminor Output]===
+
+
+
+
+===[STUDENT TESTS/good9.bminor Input]===
+n: integer = 0;
+
+main: function integer () = {
+    expr: boolean = (
+        (1 * 2 + 3 / 4 - 5 ^ 6 % 2 != 0)
+        ||
+        ("not" == "equal" && 'q' == 'q')
+        ||
+        (1 <= 2 && 2 <= 3 && 3>=4 && 4>5)
+        ||
+        (1 ^ 2 ^ 3 ^ 4 ^ 5 < 99999)
+        ||
+        !(!(!(!(!(!(true))))))
+        ||
+        (n++ == n++)
+        ||
+        (1.0 + 2.0 == 3.0)
+    );
+
+    if (expr)
+        return 0;
+    return 1;
+}
+
+===[STUDENT TESTS/good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[STUDENT TESTS/good9.bminor Output]===
+
+
+
+
+====Bad Tests====
+===[STUDENT TESTS/bad0.bminor Input]===
+x: void;
+
+===[STUDENT TESTS/bad0.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad0.bminor Output]===
+type error: standalone variable x cannot have type void.
+
+
+
+
+===[STUDENT TESTS/bad1.bminor Input]===
+x: integer = "string";
+
+===[STUDENT TESTS/bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad1.bminor Output]===
+type error: type string ("string") does not match x's declaration type integer.
+
+
+
+
+===[STUDENT TESTS/bad10.bminor Input]===
+func: function void () = {
+    s: string = "wow";
+    s++;
+}
+
+===[STUDENT TESTS/bad10.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad10.bminor Output]===
+type error: cannot increment a string (s).
+
+
+
+
+===[STUDENT TESTS/bad11.bminor Input]===
+func: function void () = {
+    5--;
+}
+
+===[STUDENT TESTS/bad11.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad11.bminor Output]===
+type error: cannot decrement a non-variable.
+
+
+
+
+===[STUDENT TESTS/bad12.bminor Input]===
+func: function void () = {
+    s: string = "wow";
+    s--;
+}
+
+===[STUDENT TESTS/bad12.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad12.bminor Output]===
+type error: cannot decrement a string (s).
+
+
+
+
+===[STUDENT TESTS/bad13.bminor Input]===
+func: function void () = {
+    !'q';
+}
+
+===[STUDENT TESTS/bad13.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad13.bminor Output]===
+type error: cannot apply logical not to a char ('\0x71').
+
+
+
+
+===[STUDENT TESTS/bad14.bminor Input]===
+func: function void () = {
+    1 ^ "";
+}
+
+===[STUDENT TESTS/bad14.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad14.bminor Output]===
+type error: cannot exponentiate a integer (1) with a string ("").
+
+
+
+
+===[STUDENT TESTS/bad15.bminor Input]===
+func: function void () = {
+    1 * "";
+}
+
+===[STUDENT TESTS/bad15.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad15.bminor Output]===
+type error: cannot multiply a integer (1) with a string ("").
+
+
+
+
+===[STUDENT TESTS/bad16.bminor Input]===
+func: function void () = {
+    1 / "";
+}
+
+===[STUDENT TESTS/bad16.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad16.bminor Output]===
+type error: cannot divide a integer (1) by a string ("").
+
+
+
+
+===[STUDENT TESTS/bad17.bminor Input]===
+func: function void () = {
+    1 % "";
+}
+
+===[STUDENT TESTS/bad17.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad17.bminor Output]===
+type error: cannot take the modulus of a integer (1) with a string ("").
+
+
+
+
+===[STUDENT TESTS/bad18.bminor Input]===
+func: function void () = {
+    1 + "";
+}
+
+===[STUDENT TESTS/bad18.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad18.bminor Output]===
+type error: cannot add a integer (1) with a string ("").
+
+
+
+
+===[STUDENT TESTS/bad19.bminor Input]===
+func: function void () = {
+    1 < "";
+}
+
+===[STUDENT TESTS/bad19.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad19.bminor Output]===
+type error: cannot perform less-than comparison between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad2.bminor Input]===
+x: float = 3.14 * 1;
+
+===[STUDENT TESTS/bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad2.bminor Output]===
+type error: cannot multiply a float (3.140000) with a integer (1).
+type error: global expression (3.140000*1) cannot be nonliteral.
+
+
+
+
+===[STUDENT TESTS/bad20.bminor Input]===
+func: function void () = {
+    1 <= "";
+}
+
+===[STUDENT TESTS/bad20.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad20.bminor Output]===
+type error: cannot perform less-than-equal comparison between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad21.bminor Input]===
+func: function void () = {
+    1 > "";
+}
+
+===[STUDENT TESTS/bad21.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad21.bminor Output]===
+type error: cannot perform greater-than comparison between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad22.bminor Input]===
+func: function void () = {
+    1 >= "";
+}
+
+===[STUDENT TESTS/bad22.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad22.bminor Output]===
+type error: cannot perform greater-than-equal comparison between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad23.bminor Input]===
+func: function void () = {
+    1 == "";
+}
+
+===[STUDENT TESTS/bad23.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad23.bminor Output]===
+type error: cannot perform equality comparison between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad24.bminor Input]===
+func: function void () = {
+    x: array [] integer;
+    v: function void ();
+    x == v;
+}
+
+===[STUDENT TESTS/bad24.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad24.bminor Output]===
+type error: array must have explicit size.
+type error: function v cannot be declared in a local scope.
+type error: cannot perform equality comparison between a array [] integer (x) and a function void () (v).
+type error: non-atomic type array [] integer (x) cannot be compared.
+type error: non-atomic type function void () (v) cannot be compared.
+
+
+
+
+===[STUDENT TESTS/bad25.bminor Input]===
+func: function void () = {
+    1 && "";
+}
+
+===[STUDENT TESTS/bad25.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad25.bminor Output]===
+type error: cannot perform logical and between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad26.bminor Input]===
+func: function void () = {
+    1 || "";
+}
+
+===[STUDENT TESTS/bad26.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad26.bminor Output]===
+type error: cannot perform logical or between a integer (1) and a string ("").
+
+
+
+
+===[STUDENT TESTS/bad27.bminor Input]===
+func: function void () = {
+    1 = 1;
+}
+
+===[STUDENT TESTS/bad27.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad27.bminor Output]===
+type error: cannot assign to a non-variable.
+
+
+
+
+===[STUDENT TESTS/bad28.bminor Input]===
+func: function void () = {
+    f: float = 5.0;
+    f = 0;
+}
+
+===[STUDENT TESTS/bad28.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad28.bminor Output]===
+type error: cannot assign non-matching type integer (0) to a float (f).
+
+
+
+
+===[STUDENT TESTS/bad29.bminor Input]===
+func: function void () = {
+    +"plus";
+}
+
+===[STUDENT TESTS/bad29.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad29.bminor Output]===
+type error: cannot apply unary operator to a string ("plus").
+
+
+
+
+===[STUDENT TESTS/bad3.bminor Input]===
+outer: function void () = {
+    inner: function void ();
+}
+
+===[STUDENT TESTS/bad3.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad3.bminor Output]===
+type error: function inner cannot be declared in a local scope.
+
+
+
+
+===[STUDENT TESTS/bad30.bminor Input]===
+func: function void () = {
+    -"minus";
+}
+
+===[STUDENT TESTS/bad30.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad30.bminor Output]===
+type error: cannot apply unary operator to a string ("minus").
+
+
+
+
+===[STUDENT TESTS/bad31.bminor Input]===
+func: function void () = {
+    arr: array [] integer;
+    arr[1.5];
+}
+
+===[STUDENT TESTS/bad31.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad31.bminor Output]===
+type error: array must have explicit size.
+type error: cannot index array with type float (1.500000).
+
+
+
+
+===[STUDENT TESTS/bad32.bminor Input]===
+func: function void () = {
+    c: char = 'q';
+    c();
+}
+
+===[STUDENT TESTS/bad32.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad32.bminor Output]===
+type error: cannot perform function call on non-function type char (c).
+
+
+
+
+===[STUDENT TESTS/bad33.bminor Input]===
+func: function void (a: integer) = {
+    func("not integer");
+}
+
+===[STUDENT TESTS/bad33.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad33.bminor Output]===
+type error: argument of type string ("not integer") does not match function func's parameter a's type integer.
+
+
+
+
+===[STUDENT TESTS/bad34.bminor Input]===
+func: function void () = {
+    func(1, "2", 3.0);
+}
+
+===[STUDENT TESTS/bad34.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad34.bminor Output]===
+type error: function func received 3 extra arguments.
+
+
+
+
+===[STUDENT TESTS/bad35.bminor Input]===
+func: function void (a: integer, b: string, c: float) = {
+    func(100);
+}
+
+===[STUDENT TESTS/bad35.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad35.bminor Output]===
+type error: function func requires 2 more arguments.
+
+
+
+
+===[STUDENT TESTS/bad36.bminor Input]===
+func: function void () = {
+    {func};
+}
+
+===[STUDENT TESTS/bad36.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad36.bminor Output]===
+type error: array literal cannot have element with type function void () (func).
+
+
+
+
+===[STUDENT TESTS/bad37.bminor Input]===
+func: function void () = {
+    {1, "2", 3.0};
+}
+
+===[STUDENT TESTS/bad37.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad37.bminor Output]===
+type error: array literal cannot have mismatching types integer and string
+type error: array literal cannot have mismatching types integer and float
+
+
+
+
+===[STUDENT TESTS/bad38.bminor Input]===
+func: function void (a: array [] function void ());
+
+===[STUDENT TESTS/bad38.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad38.bminor Output]===
+type error: array cannot contain non-atomic, non-array type function void ().
+type error: array cannot contain non-atomic, non-array type void.
+
+
+
+
+===[STUDENT TESTS/bad39.bminor Input]===
+func: function void (a: array [1 + 2] integer);
+
+===[STUDENT TESTS/bad39.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad39.bminor Output]===
+type error: parameter array must not have an explicit size
+
+
+
+===[STUDENT TESTS/bad4.bminor Input]===
+func: function function void () ();
+
+===[STUDENT TESTS/bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad4.bminor Output]===
+type error: function func cannot return non-atomic, non-void type function void ().
+
+
+
+
+===[STUDENT TESTS/bad40.bminor Input]===
+func: function void (f: function void ());
+
+===[STUDENT TESTS/bad40.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad40.bminor Output]===
+type error: function parameter f cannot be non-atomic, non-array type function void ().
+
+
+
+
+===[STUDENT TESTS/bad41.bminor Input]===
+func: function void () = {
+    if (0) {}
+}
+
+===[STUDENT TESTS/bad41.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad41.bminor Output]===
+type error: if condition cannot be type integer (0).
+
+
+
+
+===[STUDENT TESTS/bad42.bminor Input]===
+func: function void () = {
+    for (;"";) {}
+}
+
+===[STUDENT TESTS/bad42.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad42.bminor Output]===
+type error: for condition cannot be type string ("").
+
+
+
+
+===[STUDENT TESTS/bad43.bminor Input]===
+func: function void () = {
+    print 1, 2, {3, 4, 5};
+}
+
+===[STUDENT TESTS/bad43.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad43.bminor Output]===
+type error: cannot pass non-atomic type array [3] integer ({3,4,5}) to print statement.
+
+
+
+
+===[STUDENT TESTS/bad44.bminor Input]===
+func: function float () = {
+    return;
+}
+
+===[STUDENT TESTS/bad44.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad44.bminor Output]===
+type error: must return a value in non-void function.
+
+
+
+
+===[STUDENT TESTS/bad45.bminor Input]===
+func: function void () = {
+    return 0;
+}
+
+===[STUDENT TESTS/bad45.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad45.bminor Output]===
+type error: cannot return type integer (0) from void function.
+
+
+
+
+===[STUDENT TESTS/bad46.bminor Input]===
+func: function string () = {
+    return 'E';
+}
+
+===[STUDENT TESTS/bad46.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad46.bminor Output]===
+type error: cannot return type char ('\0x45') from function with return type string.
+
+
+
+
+===[STUDENT TESTS/bad47.bminor Input]===
+func: function void () = {
+    arr: array [] integer = {1, 2, 3};
+}
+
+===[STUDENT TESTS/bad47.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad47.bminor Output]===
+type error: array must have explicit size.
+type error: cannot initialize array arr in a local scope.
+
+
+
+
+===[STUDENT TESTS/bad48.bminor Input]===
+arr: array [] integer;
+
+===[STUDENT TESTS/bad48.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad48.bminor Output]===
+type error: array must have explicit size.
+
+
+
+
+===[STUDENT TESTS/bad49.bminor Input]===
+main: function void () = {
+    main = main;
+}
+
+===[STUDENT TESTS/bad49.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad49.bminor Output]===
+type error: cannot perform assignment with non-atomic, non-array type function void () (main).
+type error: cannot perform assignment with non-atomic, non-array type function void () (main).
+
+
+
+
+===[STUDENT TESTS/bad5.bminor Input]===
+arr: array [] function void ();
+
+===[STUDENT TESTS/bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad5.bminor Output]===
+type error: array must have explicit size.
+type error: array cannot contain non-atomic, non-array type function void ().
+type error: array cannot contain non-atomic, non-array type void.
+
+
+
+
+===[STUDENT TESTS/bad50.bminor Input]===
+arr: array [3] array [3] integer = {
+    {1, 2},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+===[STUDENT TESTS/bad50.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad50.bminor Output]===
+type error: array literal cannot have mismatching types array [2] integer and array [3] integer
+type error: array literal cannot have mismatching types array [2] integer and array [3] integer
+type error: type array [3] array [2] integer ({{1,2},{4,5,6},{7,8,9}}) does not match arr's declaration type array [3] array [3] integer.
+
+
+
+
+===[STUDENT TESTS/bad51.bminor Input]===
+funcarr: function array [] integer () = {}
+
+funcfunc: function function void () ();
+
+===[STUDENT TESTS/bad51.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad51.bminor Output]===
+type error: function funcarr cannot return non-atomic, non-void type array [] integer.
+type error: function funcfunc cannot return non-atomic, non-void type function void ().
+
+
+
+
+===[STUDENT TESTS/bad52.bminor Input]===
+func: function void (a: float, b: char, c: integer, d: function void (), e: boolean) = {}
+
+===[STUDENT TESTS/bad52.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad52.bminor Output]===
+type error: function parameter d cannot be non-atomic, non-array type function void ().
+
+
+
+
+===[STUDENT TESTS/bad53.bminor Input]===
+arr: array [1] array [1] function void ();
+
+===[STUDENT TESTS/bad53.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad53.bminor Output]===
+type error: array cannot contain non-atomic, non-array type function void ().
+type error: array cannot contain non-atomic, non-array type void.
+
+
+
+
+===[STUDENT TESTS/bad54.bminor Input]===
+func: function void (a: array [true-""] integer);
+
+===[STUDENT TESTS/bad54.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad54.bminor Output]===
+type error: cannot subtract a boolean (true) by a string ("").
+type error: parameter array must not have an explicit size
+
+
+
+===[STUDENT TESTS/bad6.bminor Input]===
+arr: array [1 + 2] float;
+
+===[STUDENT TESTS/bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad6.bminor Output]===
+type error: global array size expression (1+2) must be an integer literal.
+
+
+
+
+===[STUDENT TESTS/bad7.bminor Input]===
+func: function void () = {
+    arr: array ['c'] integer;
+}
+
+===[STUDENT TESTS/bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad7.bminor Output]===
+type error: array size expression ('\0x63') must evaluate to an integer.
+
+
+
+
+===[STUDENT TESTS/bad8.bminor Input]===
+x: integer = {}
+
+===[STUDENT TESTS/bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad8.bminor Output]===
+type error: non-function type integer (x) cannot have a function body.
+
+
+
+
+===[STUDENT TESTS/bad9.bminor Input]===
+func: function void () = {
+    5++;
+}
+
+===[STUDENT TESTS/bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[STUDENT TESTS/bad9.bminor Output]===
+type error: cannot increment a non-variable.
+
+
+
+
+=====HIDDEN TESTS=====
+====Good Tests====
+===[HIDDEN TESTS/good1.bminor Input]===
+/*
+Correct: The parameter name can vary as long as the type is the same.
+*/
+
+x: function integer(a:integer);
+
+x: function integer(b:integer) = {
+	return 0;
+}
+
+x: function integer(c:integer);
+
+===[HIDDEN TESTS/good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good1.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good2.bminor Input]===
+/*
+Correct: Test various nested definitions.
+*/
+
+f: function void() = {
+	x: integer = 1;
+	{
+		print x;
+		x: integer = x + 1;
+		print x;
+	}
+	print x;
+}
+
+===[HIDDEN TESTS/good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good2.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good3.bminor Input]===
+/*
+Correct: Test various function return types.
+*/
+
+A: function boolean(x: integer, y: integer);
+B: function integer(x: char);
+C: function char(a: string);
+
+main: function integer() = {
+	i: integer;
+	for (i = 0; i < 10; i++)
+		if (i % 2 == 0)
+			print i;
+		else
+			return i;
+
+	if (A(B('d') - 1, 10)) {
+		x: integer = 0;
+		return 2 * B('c') + x;
+	}
+
+	return B(C("hello")) % 3;
+}
+
+===[HIDDEN TESTS/good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good3.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good4.bminor Input]===
+/*
+Correct: Test combinations of boolean operators.
+*/
+
+func: function void(
+		a: integer,
+		b: integer,
+		c: boolean,
+		d: boolean
+	) = {
+
+	print a -b;
+	print c && d;
+	print a + b * a - a ^ b /a;
+
+	print a < b && d;
+	print (a < b) || (c && d);
+}
+
+===[HIDDEN TESTS/good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good4.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good5.bminor Input]===
+/*
+Correct: Test array assignments.
+*/
+
+x:array [5] integer = {1,2,3,4,5};
+y:array [5] array [5] integer;
+
+main:function void () =
+{
+	y[1] = x;
+	count:integer;
+	for(count = 0; count < 5; count++)
+	{
+		y[count] = x;
+	} 	
+}
+
+===[HIDDEN TESTS/good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good5.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good7.bminor Input]===
+/*
+Correct: Test if-expression and return-expression.
+*/
+
+main: function integer() = {
+	m: integer = 2;
+	n: boolean = true;
+
+	if (!n) return 0; else return -m;
+
+	print 10 * (-1 + m);
+}
+
+===[HIDDEN TESTS/good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good7.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good8.bminor Input]===
+/*
+Correct: Boolean expression in several places.
+*/
+
+x: function integer(a:boolean) = {
+	if (a) for (;a;) print a;
+}
+
+===[HIDDEN TESTS/good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good8.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good9.bminor Input]===
+/*
+Correct: A program to plot a quadratic function. 
+*/
+
+/* Make use of atoi from the standard library */
+
+atoi: function integer( s: string );
+
+quadratic: function integer ( a: integer, b: integer, c: integer, x: integer ) = {
+	return a*x*x + b*x + c*x;
+}
+
+main: function integer ( argc: integer, argv: array [] string ) =  {
+
+      if(argc<3) {
+          print "use: ", argv[0], "[a] [b] [c] [start] [end]\n";
+      }
+
+      a: integer = atoi(argv[0]);
+      b: integer = atoi(argv[1]);
+      c: integer = atoi(argv[2]);
+      start: integer = atoi(argv[3]);
+      end: integer = atoi(argv[4]);
+
+
+      x: integer;
+      
+      for(x=start;x<end;x++) {
+          print x, " ", quadratic(a,b,c,x), "\n";
+      }
+
+      return 0;
+}
+
+===[HIDDEN TESTS/good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good9.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good10.bminor Input]===
+/*
+
+Testing float typechecking
+
+*/
+
+main: function integer() = {
+    m: float = 3.1;
+    n: float = 5.2;
+    
+    x: float = m + n;
+
+    print x;
+}
+
+===[HIDDEN TESTS/good10.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good10.bminor Output]===
+
+
+
+
+===[HIDDEN TESTS/good6.bminor Input]===
+/*
+Correct: Test assignment of array literals.
+*/
+
+main: function void (a: integer) = {
+	x: array [1] boolean;
+	y: array [1] integer;
+	if (x[y[a]]) return;
+	{
+		z: integer;
+		zz: integer = z;
+	}
+}
+
+===[HIDDEN TESTS/good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[HIDDEN TESTS/good6.bminor Output]===
+
+
+
+
+====Bad Tests====
+===[HIDDEN TESTS/bad1.bminor Input]===
+/*
+Incorrect: Mismatched types in forward declaration
+*/
+
+x: function integer(a:char);
+x: function integer(a:integer) = {
+	return 0;
+}
+
+===[HIDDEN TESTS/bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad1.bminor Output]===
+resolve error: function x cannot be redeclared with different parameters.
+
+
+
+
+===[HIDDEN TESTS/bad2.bminor Input]===
+/*
+Incorrect: Variable redefined within a scope.
+*/
+
+f: function void() = {
+	x: integer = 1;
+	{
+		print x;
+		x: integer = x + 1;
+		print x;
+	}
+	x: integer = 2;
+	print x;
+}
+
+===[HIDDEN TESTS/bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad2.bminor Output]===
+resolve error: x was previously declared as type integer in same scope.
+
+
+
+
+===[HIDDEN TESTS/bad3.bminor Input]===
+/*
+Incorrect: Mismatched function return types.
+*/
+
+main: function void() = {
+	return i;
+}
+
+func: function integer() = {
+	return;
+}
+
+===[HIDDEN TESTS/bad3.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad3.bminor Output]===
+resolve error: i is not defined.
+
+
+
+
+===[HIDDEN TESTS/bad4.bminor Input]===
+/*
+Incorrect: Mismatched operators.
+*/
+
+
+func: function void(
+		a: integer,
+		b: integer,
+		c: boolean,
+		d: boolean
+	) = {
+
+	print a -c;
+	print c * d;
+	print a + b * a - a ^ b /d;
+
+	print a < b && a;
+	print (a < b) + (c && d);
+}
+
+===[HIDDEN TESTS/bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad4.bminor Output]===
+type error: cannot subtract a integer (a) by a boolean (c).
+type error: cannot multiply a boolean (c) with a boolean (d).
+type error: cannot divide a integer (a^b) by a boolean (d).
+type error: cannot perform logical and between a boolean (a<b) and a integer (a).
+type error: cannot add a boolean (a<b) with a boolean (c&&d).
+
+
+
+
+===[HIDDEN TESTS/bad5.bminor Input]===
+/*
+Incorrect: Cannot subscript a value which is not an array.
+*/
+
+main: function void() = {
+	s : boolean = false;
+	c : char = s[1];
+	print c;
+}
+
+===[HIDDEN TESTS/bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad5.bminor Output]===
+type error: cannot perform array access on non-array type boolean (s).
+type error: type integer (s[1]) does not match c's declaration type char.
+
+
+
+
+===[HIDDEN TESTS/bad6.bminor Input]===
+/*
+Incorrect: Cannot assign an array to an atomic type.
+*/
+
+main: function void () = {
+	// array of one boolean != boolean
+	x: array [1] boolean = {true};
+	if (x) return;
+}
+
+===[HIDDEN TESTS/bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad6.bminor Output]===
+type error: cannot initialize array x in a local scope.
+type error: if condition cannot be type array [1] boolean (x).
+
+
+
+
+===[HIDDEN TESTS/bad7.bminor Input]===
+/*
+Incorrect: Improper operators on values.
+*/
+
+main: function integer() = {
+	m: integer = 2;
+	n: boolean = true;
+
+	// wrong negation
+	if (-n) return 0; else return !m;
+
+	// arithmetic on boolean
+	print 10 * (-1 + n);
+}
+
+===[HIDDEN TESTS/bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad7.bminor Output]===
+type error: cannot apply unary operator to a boolean (n).
+type error: cannot apply logical not to a integer (m).
+type error: cannot return type boolean (!m) from function with return type integer.
+type error: cannot add a integer (-1) with a boolean (n).
+
+
+
+
+===[HIDDEN TESTS/bad8.bminor Input]===
+/*
+Incorrect: Cannot use an integer in place of a boolean.
+*/
+
+x: function integer(a:integer) = {
+	if (a) return 10;
+	for (;a;) print a;
+}
+
+===[HIDDEN TESTS/bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad8.bminor Output]===
+type error: if condition cannot be type integer (a).
+type error: for condition cannot be type integer (a).
+
+
+
+
+===[HIDDEN TESTS/bad9.bminor Input]===
+/*
+Incorrect: Several type mismatches throughout.
+*/
+
+/* Make use of atoi from the standard library */
+
+atoi: function boolean ( s: string );
+
+quadratic: function void ( a: char, b: string, c: boolean, x: integer ) = {
+	return a*x*x + b*x + c*x;
+}
+
+main: function integer ( argc: integer, argv: array [] string ) =  {
+
+      if(argc<3) {
+          print "use: ", argv[0], "[a] [b] [c] [start] [end]\n";
+      }
+
+      a: integer = atoi(argv[0]);
+      b: integer = atoi(argv[1]);
+      c: integer = atoi(argv[2]);
+      start: integer = atoi(argv[3]);
+      end: integer = atoi(argv[4]);
+
+
+      x: integer;
+      
+      for(x=start;x<end;x++) {
+          print x, " ", quadratic(a,b,c,x), "\n";
+      }
+
+      return 0;
+}
+
+===[HIDDEN TESTS/bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad9.bminor Output]===
+type error: cannot multiply a char (a) with a integer (x).
+type error: cannot multiply a string (b) with a integer (x).
+type error: cannot multiply a boolean (c) with a integer (x).
+type error: cannot return type integer (a*x*x+b*x+c*x) from void function.
+type error: type boolean (atoi(argv[0])) does not match a's declaration type integer.
+type error: type boolean (atoi(argv[1])) does not match b's declaration type integer.
+type error: type boolean (atoi(argv[2])) does not match c's declaration type integer.
+type error: type boolean (atoi(argv[3])) does not match start's declaration type integer.
+type error: type boolean (atoi(argv[4])) does not match end's declaration type integer.
+
+
+
+
+===[HIDDEN TESTS/bad10.bminor Input]===
+/*
+Incorrect: Several type errors throughout.
+*/
+
+abs: function string (n: integer);
+
+digits: array [6] char = {
+	14,
+	8,
+	6168,
+	42,
+	0,
+	74546
+};
+
+main:function integer () = {
+	digits[4] = -468;
+	i: boolean = 0;
+	for (; abs(digits[i]) == digits[i];) {
+		print digits[i];
+		i = i + 1;
+		print ' ';
+	}
+	print '\n';
+        z: float = 1.0 + 2;
+	return 0;
+}
+
+===[HIDDEN TESTS/bad10.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[HIDDEN TESTS/bad10.bminor Output]===
+type error: type array [6] integer ({14,8,6168,42,0,74546}) does not match digits's declaration type array [6] char.
+type error: cannot assign non-matching type integer (-468) to a char (digits[4]).
+type error: type integer (0) does not match i's declaration type boolean.
+type error: cannot index array with type boolean (i).
+type error: cannot index array with type boolean (i).
+type error: argument of type char (digits[i]) does not match function abs's parameter n's type integer.
+type error: cannot index array with type boolean (i).
+type error: cannot perform equality comparison between a string (abs(digits[i])) and a char (digits[i]).
+type error: cannot add a float (1.000000) with a integer (2).
+
+
+
+
+===== SUMMARIZED PRINTER RESULTS =====
+{
+  "student_tests": {
+    "Good": {
+      "correct": 11,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 55,
+      "incorrect": 0
+    }
+  },
+  "hidden_tests": {
+    "Good": {
+      "correct": 10,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 10,
+      "incorrect": 0
+    }
+  }
+}
+
+Printer Project
+---------------
+
+Continued correctness of the -scan, -parse, -print, and -resolve options (30/30 points)
+----------------------------------------------
+Scanning, parsing, printing, and resolving all seem to be correct.
+
+General correctness of the -typecheck option. (20/20 points)
+----------------------------------------------
+Typechecking looks to be done correctly
+
+Student Tests (20/20 points)
+------------------------------------------
+Nice test coverage
+
+Hidden Tests (20/20 points)
+------------------------------------------
+Good work passing all of the hidden tests
+
+Coding Style (10/10 points)
+------------------------------------------
+Coding style looks quite nice. Well done!
+
+---------------
