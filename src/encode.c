@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "constants.h"
 #include "encode.h"
@@ -11,21 +12,27 @@ int integer_decode(const char *eint, int *bmint) {
     if (errno == ERANGE)
         return _bmint == 0 ? ERROR_INTENC_UNDERFLOW : ERROR_INTENC_OVERFLOW;
 
-    *bmint = _bmint;
+    if (bmint != NULL)
+        *bmint = _bmint;
 
     return 0;
 }
 
 int float_decode(const char *efloat, double *bmfloat) {
-    *bmfloat = strtod(efloat, NULL); 
+    double _bmfloat = strtod(efloat, NULL); 
 
     if (errno == ERANGE)
-        return *bmfloat == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
+        return _bmfloat == 0 ? ERROR_FLOATENC_UNDERFLOW : ERROR_FLOATENC_OVERFLOW;
+
+    if (bmfloat != NULL)
+        *bmfloat = _bmfloat;
 
     return 0;
 }
 
 int char_decode(const char *echar, char *bmchar) {
+    char _bmchar;
+
     // Ensure the character begins with a single quotation mark.
     if (*echar++ != '\'')
         return ERROR_CHARENC_BQUOTE;
@@ -41,37 +48,37 @@ int char_decode(const char *echar, char *bmchar) {
         ++echar;
         switch (*echar++) {
         case 'a':
-            *bmchar = 7;
+            _bmchar = 7;
             break;
         case 'b':
-            *bmchar = 8;
+            _bmchar = 8;
             break;
         case 'e':
-            *bmchar = 27;
+            _bmchar = 27;
             break;
         case 'f':
-            *bmchar = 12;
+            _bmchar = 12;
             break;
         case 'n':
-            *bmchar = 10;
+            _bmchar = 10;
             break;
         case 'r':
-            *bmchar = 13;
+            _bmchar = 13;
             break;
         case 't':
-            *bmchar = 9;
+            _bmchar = 9;
             break;
         case 'v':
-            *bmchar = 11;
+            _bmchar = 11;
             break;
         case '\\':
-            *bmchar = 92;
+            _bmchar = 92;
             break;
         case '\'':
-            *bmchar = 39;
+            _bmchar = 39;
             break;
         case '"':
-            *bmchar = 34;
+            _bmchar = 34;
             break;
         case '0':
             if (*echar++ != 'x')
@@ -83,13 +90,13 @@ int char_decode(const char *echar, char *bmchar) {
             if (val2 == -1)
                 return ERROR_CHARENC_HEX;
             char val = val1 * 16 + val2;
-            *bmchar = val;
+            _bmchar = val;
             break;
         default:
             return ERROR_CHARENC_CODE;
         }
     } else {
-        *bmchar = *echar++;
+        _bmchar = *echar++;
     }
 
     // The character after the ending quotation mark must be NUL.
@@ -99,10 +106,15 @@ int char_decode(const char *echar, char *bmchar) {
     if (*echar != '\0')
         return ERROR_CHARENC_TRAIL;
 
+    if (bmchar != NULL)
+        *bmchar = _bmchar;
+
     return 0;
 }
 
 int string_decode(const char *es, char *s) {
+    char *_s = (char *)malloc(256 * sizeof(char));
+
     // Ensure the string begins with a quotation mark.
     if (*es++ != '"')
         return ERROR_STRENC_BQUOTE;
@@ -125,37 +137,37 @@ int string_decode(const char *es, char *s) {
             ++es;
             switch (*es++) {
             case 'a':
-                *s++ = 7;
+                *_s++ = 7;
                 break;
             case 'b':
-                *s++ = 8;
+                *_s++ = 8;
                 break;
             case 'e':
-                *s++ = 27;
+                *_s++ = 27;
                 break;
             case 'f':
-                *s++ = 12;
+                *_s++ = 12;
                 break;
             case 'n':
-                *s++ = 10;
+                *_s++ = 10;
                 break;
             case 'r':
-                *s++ = 13;
+                *_s++ = 13;
                 break;
             case 't':
-                *s++ = 9;
+                *_s++ = 9;
                 break;
             case 'v':
-                *s++ = 11;
+                *_s++ = 11;
                 break;
             case '\\':
-                *s++ = 92;
+                *_s++ = 92;
                 break;
             case '\'':
-                *s++ = 39;
+                *_s++ = 39;
                 break;
             case '"':
-                *s++ = 34;
+                *_s++ = 34;
                 break;
             case '0':
                 if (*es++ != 'x')
@@ -167,13 +179,13 @@ int string_decode(const char *es, char *s) {
                 if (val2 == -1)
                     return ERROR_STRENC_HEX;
                 char val = val1 * 16 + val2;
-                *s++ = val;
+                *_s++ = val;
                 break;
             default:
                 return ERROR_STRENC_CODE;
             }
         } else {
-            *s++ = *es++;
+            *_s++ = *es++;
         }
 
     }
@@ -182,7 +194,13 @@ int string_decode(const char *es, char *s) {
     if (*++es != '\0')
         return ERROR_STRENC_TRAIL;
 
-    *s = '\0';
+    *_s = '\0';
+    _s -= length;
+
+    if (s != NULL)
+        strcpy(s, _s);
+    free(_s);
+
 
     return 0;
 }

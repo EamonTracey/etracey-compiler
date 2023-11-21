@@ -1,5 +1,6 @@
 %{
 
+#include "encode.h"
 #include "parser.h"
 
 %}
@@ -60,10 +61,33 @@ while       { return TOKEN_WHILE; }
 ,           { return TOKEN_COMMA; }
 
 
-[0-9]+                                                              { return TOKEN_INTEGERLIT; }
-([0-9]+(e|E)(\+|-)?[0-9]+)|([0-9]*\.[0-9]+((e|E)(\+|-)?[0-9]+)?)    { return TOKEN_FLOATLIT; }
-'\\''|'[^']*'                                                       { return TOKEN_CHARLIT; }
-\"(\\\"|[^"])*\"                                                    { return TOKEN_STRINGLIT; }
+[0-9]+ {
+    if (integer_decode(yytext, NULL) != 0)
+        return TOKEN_INVALID_ANY;
+
+    return TOKEN_INTEGERLIT;
+}
+
+([0-9]+(e|E)(\+|-)?[0-9]+)|([0-9]*\.[0-9]+((e|E)(\+|-)?[0-9]+)?) {
+    if (float_decode(yytext, NULL) != 0)
+        return TOKEN_INVALID_ANY;
+
+    return TOKEN_FLOATLIT;
+}
+
+'\\''|'[^']*' {
+    if (char_decode(yytext, NULL) != 0)
+        return TOKEN_INVALID_ANY;
+
+    return TOKEN_CHARLIT;
+}
+
+\"(\\\"|[^"])*\" {
+    if (string_decode(yytext, NULL) != 0)
+        return TOKEN_INVALID_ANY;
+
+    return TOKEN_STRINGLIT;
+}
 
 [_a-zA-Z][_a-zA-Z0-9]* { 
     if (yyleng > 255)
