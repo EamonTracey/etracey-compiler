@@ -227,7 +227,7 @@ expr_atom: ident
          | TOKEN_STRINGLIT
            { $$ = expr_create_string_literal(strdup(yytext)); }
          | TOKEN_TRUE
-           { $$ = expr_create_boolean_literal(1); }
+           { $$ = expr_create_boolean_literal(-1); }
          | TOKEN_FALSE
            { $$ = expr_create_boolean_literal(0); }
          | TOKEN_LBRACE expr_seq TOKEN_RBRACE
