@@ -37,11 +37,12 @@ void symbol_print(struct symbol *s) {
     }
 }
 
-const char *symbol_name(struct symbol *s) {
+const char *symbol_codegen(struct symbol *s) {
     switch (s->kind) {
     case SYMBOL_LOCAL:
     case SYMBOL_PARAM:
     case SYMBOL_GLOBAL:
+        break;
     }
 
     return "";
