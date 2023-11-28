@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "expr.h"
+#include "scratch.h"
 #include "scope.h"
 
 extern int resolve_errors;
@@ -710,4 +711,23 @@ int precdif(expr_t kind1, expr_t kind2) {
 }
 
 void expr_codegen(struct expr *e) {
+    int reg;
+
+    switch (e->kind) {
+    case EXPR_PLUS:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "ADDQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
+    case EXPR_INTEGERLIT:
+        reg = scratch_alloc();
+        fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
+        e->reg = reg;
+        break;
+    default:
+        fprintf(stdout, "codegen error: missing support.\n");
+        exit(1);
+    }
 }
