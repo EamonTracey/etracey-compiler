@@ -5,6 +5,7 @@
 #include "expr.h"
 #include "indent.h"
 #include "scope.h"
+#include "scratch.h"
 #include "stmt.h"
 #include "type.h"
 
@@ -234,4 +235,21 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
     }
 
     stmt_typecheck(s->next, ret);
+}
+
+void stmt_codegen(struct stmt *s) {
+    if (s == NULL)
+        return;
+
+    switch (s->kind) {
+    case STMT_EXPR:
+        expr_codegen(s->expr);
+        scratch_free(s->expr->reg);
+        break;
+    default:
+        fprintf(stdout, "codegen error: missing support.\n");
+        exit(1);
+    }
+
+    stmt_codegen(s->next);
 }

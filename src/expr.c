@@ -731,6 +731,7 @@ void expr_codegen(struct expr *e) {
         expr_codegen(e->left);
         expr_codegen(e->right);
         fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "CQO\n");
         fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->right->reg));
         scratch_free(e->left->reg);
@@ -740,6 +741,7 @@ void expr_codegen(struct expr *e) {
         expr_codegen(e->left);
         expr_codegen(e->right);
         fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "CQO\n");
         fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
         fprintf(stdout, "MOVQ %%rdx, %s\n", scratch_name(e->right->reg));
         scratch_free(e->left->reg);
@@ -755,9 +757,9 @@ void expr_codegen(struct expr *e) {
     case EXPR_MINUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "SUBQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-        scratch_free(e->left->reg);
-        e->reg = e->right->reg;
+        fprintf(stdout, "SUBQ %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+        scratch_free(e->right->reg);
+        e->reg = e->left->reg;
         break;
     case EXPR_LT:
     case EXPR_LTE:
@@ -790,12 +792,31 @@ void expr_codegen(struct expr *e) {
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
+    case EXPR_AND:
+    case EXPR_OR:
+    case EXPR_NOT:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        if (e->kind == EXPR_AND)
+            fprintf(stdout, "ANDQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        else if (e->kind == EXPR_OR)
+            fprintf(stdout, "ORQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        else if (e->kind == EXPR_NOT)
+            fprintf(stdout, "NOTQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
     case EXPR_IDENT:
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ $%s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
+        reg = scratch_alloc();
+        fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
+        e->reg = reg;
+        break;
+    case EXPR_BOOLLIT:
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
         e->reg = reg;
