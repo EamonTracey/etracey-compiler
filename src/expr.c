@@ -708,3 +708,6 @@ int right_assoc[] = {
 int precdif(expr_t kind1, expr_t kind2) {
     return precedences[kind1] - precedences[kind2];
 }
+
+void expr_codegen(struct expr *e) {
+}

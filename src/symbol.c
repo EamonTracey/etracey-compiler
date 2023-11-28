@@ -40,10 +40,13 @@ void symbol_print(struct symbol *s) {
 const char *symbol_codegen(struct symbol *s) {
     switch (s->kind) {
     case SYMBOL_LOCAL:
+        break;
     case SYMBOL_PARAM:
+        break;
     case SYMBOL_GLOBAL:
+        return s->name;
         break;
     }
 
-    return "";
+    return "TODO";
 }
