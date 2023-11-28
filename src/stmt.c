@@ -246,6 +246,9 @@ void stmt_codegen(struct stmt *s) {
         expr_codegen(s->expr);
         scratch_free(s->expr->reg);
         break;
+    case STMT_BLOCK:
+        stmt_codegen(s->body);
+        break;
     default:
         fprintf(stdout, "codegen error: missing support.\n");
         exit(1);

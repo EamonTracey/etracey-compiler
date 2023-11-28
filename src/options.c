@@ -237,8 +237,7 @@ int codegen_file(const char *path) {
     if (type_errors > 0)
         return -1;
 
-    /* decl_codegen(ast); */
-    stmt_codegen(ast->code->body);
+    decl_codegen(ast);
 
     return 0;
 }

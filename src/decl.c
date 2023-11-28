@@ -246,5 +246,9 @@ void decl_codegen(struct decl *d) {
         }
     }
 
+    if (d->code != NULL) {
+        stmt_codegen(d->code);
+    }
+
     decl_codegen(d->next);
 }

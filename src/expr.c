@@ -727,6 +727,7 @@ void expr_codegen(struct expr *e) {
         e->reg = e->left->reg;
         break;
     case EXPR_DEC:
+        /* TODO: ensure works with arracc */
         expr_codegen(e->left);
         fprintf(stdout, "DECQ %s\n", scratch_name(e->left->reg));
         fprintf(stdout, "MOVQ %s %s", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
@@ -843,7 +844,7 @@ void expr_codegen(struct expr *e) {
         break;
     case EXPR_IDENT:
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ $%s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        fprintf(stdout, "MOVQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
