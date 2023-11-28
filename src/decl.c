@@ -218,5 +218,33 @@ void decl_typecheck(struct decl *d) {
 }
 
 void decl_codegen(struct decl *d) {
+    if (d == NULL)
+        return;
 
+    /* TODO: global variables without initialization */
+    if (d->value != NULL) {
+        if (d->value->kind == EXPR_INTEGERLIT || d->value->kind == EXPR_BOOLLIT)
+            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value->literal_value);
+        else if (d->value->kind == EXPR_CHARLIT)
+            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value->char_value);
+        else if (d->value->kind == EXPR_STRINGLIT) {
+            fprintf(stdout, "%s: .string ", d->symbol->name);
+            expr_print(d->value, 0);
+            fprintf(stdout, "\n");
+        } else if (d->value->kind == EXPR_ARRLIT) {
+            if (d->type->subtype->kind != TYPE_INTEGER) {
+                fprintf(stdout, "codegen error: missing support for non-integer arrays.\n");
+                exit(1);
+            }
+            fprintf(stdout, "%s: .quad ", d->symbol->name);
+            expr_print(d->value->left, 0);
+            fprintf(stdout, "\n");
+        }
+        else {
+            fprintf(stdout, "codegen error: missing support for floats.\n");
+            exit(1);
+        }
+    }
+
+    decl_codegen(d->next);
 }
