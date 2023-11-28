@@ -806,6 +806,25 @@ void expr_codegen(struct expr *e) {
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
+    case EXPR_ASSIGN:
+        /* TODO: array assignment */
+        expr_codegen(e->right);
+        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
+        e->reg = e->right->reg;
+        break;
+    case EXPR_POS:
+        expr_codegen(e->left);
+        e->reg = e->left->reg;
+        break;
+    case EXPR_NEG:
+        reg = scratch_alloc();
+        expr_codegen(e->left);
+        fprintf(stdout, "MOVQ $-1, %s\n", scratch_name(reg));
+        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "IMULQ %s\n", scratch_name(reg));
+        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->left->reg));
+        scratch_free(reg);
+        break;
     case EXPR_IDENT:
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ $%s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
