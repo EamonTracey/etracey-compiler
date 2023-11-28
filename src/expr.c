@@ -718,6 +718,10 @@ void expr_codegen(struct expr *e) {
     int done_label;
 
     switch (e->kind) {
+    case EXPR_INC:
+    case EXPR_DEC:
+        /* TODO: increment and decrement */
+        break;
     case EXPR_MULT:
         expr_codegen(e->left);
         expr_codegen(e->right);
@@ -824,6 +828,7 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "IMULQ %s\n", scratch_name(reg));
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->left->reg));
         scratch_free(reg);
+        e->reg = e->left->reg;
         break;
     case EXPR_IDENT:
         reg = scratch_alloc();
