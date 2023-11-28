@@ -4,10 +4,11 @@
 #include "scratch.h"
 
 /* We have 6 scratch registers. */
-static int scratch_registers[6] = { 0, 0, 0, 0, 0, 0 };
+static int scratch_registers[7] = { 0, 0, 0, 0, 0, 0 };
 
-static const char *scratch_names[6] = {
+static const char *scratch_names[7] = {
     "%rbx",
+    "%r10",
     "%r11",
     "%r12",
     "%r13",
@@ -17,7 +18,7 @@ static const char *scratch_names[6] = {
 
 int scratch_alloc() {
     int i;
-    for (i = 0; i < 6; ++i)
+    for (i = 0; i < 7; ++i)
         if (scratch_registers[i] == 0) {
             scratch_registers[i] = 1;
             break;
