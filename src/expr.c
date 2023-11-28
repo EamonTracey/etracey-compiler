@@ -719,8 +719,19 @@ void expr_codegen(struct expr *e) {
 
     switch (e->kind) {
     case EXPR_INC:
+        /* TODO: ensure works with arracc */
+        expr_codegen(e->left);
+        fprintf(stdout, "INCQ %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "MOVQ %s %s", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        fprintf(stdout, "DECQ %s\n", scratch_name(e->left->reg));
+        e->reg = e->left->reg;
+        break;
     case EXPR_DEC:
-        /* TODO: increment and decrement */
+        expr_codegen(e->left);
+        fprintf(stdout, "DECQ %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "MOVQ %s %s", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        fprintf(stdout, "INCQ %s\n", scratch_name(e->left->reg));
+        e->reg = e->left->reg;
         break;
     case EXPR_MULT:
         expr_codegen(e->left);
