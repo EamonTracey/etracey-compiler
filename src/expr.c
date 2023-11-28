@@ -785,7 +785,7 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "MOVQ $0, %s\n", scratch_name(e->right->reg));
         fprintf(stdout, "JMP %s\n", label_name(done_label));
         fprintf(stdout, "%s:\n", label_name(true_label));
-        fprintf(stdout, "MOVQ $1, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "MOVQ $-1, %s\n", scratch_name(e->right->reg));
         fprintf(stdout, "%s:\n", label_name(done_label));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
