@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "expr.h"
+#include "label.h"
 #include "scratch.h"
 #include "scope.h"
 
@@ -712,14 +713,87 @@ int precdif(expr_t kind1, expr_t kind2) {
 
 void expr_codegen(struct expr *e) {
     int reg;
+    int true_label;
+    /* int false_label; */
+    int done_label;
 
     switch (e->kind) {
+    case EXPR_MULT:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->right->reg));
+        fprintf(stdout, "IMULQ %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
+    case EXPR_DIV:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
+    case EXPR_MOD:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "MOVQ %%rdx, %s\n", scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
     case EXPR_PLUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
         fprintf(stdout, "ADDQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
+        break;
+    case EXPR_MINUS:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "SUBQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
+    case EXPR_LT:
+    case EXPR_LTE:
+    case EXPR_GT:
+    case EXPR_GTE:
+    case EXPR_EQ:
+    case EXPR_NOTEQ:
+        true_label = label_create();
+        done_label = label_create();
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "CMPQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        if (e->kind == EXPR_LT)
+            fprintf(stdout, "JL %s\n", label_name(true_label));
+        else if (e->kind == EXPR_LTE)
+            fprintf(stdout, "JLE %s\n", label_name(true_label));
+        else if (e->kind == EXPR_GT)
+            fprintf(stdout, "JG %s\n", label_name(true_label));
+        else if (e->kind == EXPR_GTE)
+            fprintf(stdout, "JGE %s\n", label_name(true_label));
+        else if (e->kind == EXPR_EQ)
+            fprintf(stdout, "JE %s\n", label_name(true_label));
+        else if (e->kind == EXPR_NOTEQ)
+            fprintf(stdout, "JNE %s\n", label_name(true_label));
+        fprintf(stdout, "MOVQ $0, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "JMP %s\n", label_name(done_label));
+        fprintf(stdout, "%s:\n", label_name(true_label));
+        fprintf(stdout, "MOVQ $1, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "%s:\n", label_name(done_label));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
+        break;
+    case EXPR_IDENT:
+        reg = scratch_alloc();
+        fprintf(stdout, "MOVQ $%s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
         reg = scratch_alloc();
