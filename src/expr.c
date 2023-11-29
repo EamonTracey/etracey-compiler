@@ -714,7 +714,6 @@ int precdif(expr_t kind1, expr_t kind2) {
 void expr_codegen(struct expr *e) {
     int reg;
     int true_label;
-    /* int false_label; */
     int done_label;
 
     struct expr *elist;
@@ -792,7 +791,7 @@ void expr_codegen(struct expr *e) {
         done_label = label_create();
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "CMPQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        fprintf(stdout, "CMPQ %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
         if (e->kind == EXPR_LT)
             fprintf(stdout, "JL %s\n", label_name(true_label));
         else if (e->kind == EXPR_LTE)
@@ -862,6 +861,7 @@ void expr_codegen(struct expr *e) {
         elist = e->right;
         while (elist != NULL) {
             fprintf(stdout, "MOVQ %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
+            scratch_free(elist->left->reg);
             elist = elist->right;
         }
         /* third, save caller-saved registers to stack. */
