@@ -717,6 +717,11 @@ void expr_codegen(struct expr *e) {
     /* int false_label; */
     int done_label;
 
+    struct expr *elist;
+
+    int arg = 0;
+    static char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+
     switch (e->kind) {
     case EXPR_INC:
         /* TODO: ensure works with arracc */
@@ -841,6 +846,36 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->left->reg));
         scratch_free(reg);
         e->reg = e->left->reg;
+        break;
+    case EXPR_FUNCCALL:
+        if (e->left->symbol->n_params > 6) {
+            fprintf(stdout, "codegen error: missing support for function calls with greater than 6 arguments.\n");
+            exit(1);
+        }
+        /* first, evaluate the arguments. */
+        elist = e->right;
+        while (elist != NULL) {
+            expr_codegen(elist->left);
+            elist = elist->right;
+        }
+        /* second, pass arguments into registers. */
+        elist = e->right;
+        while (elist != NULL) {
+            fprintf(stdout, "MOVQ %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
+            elist = elist->right;
+        }
+        /* third, save caller-saved registers to stack. */
+        fprintf(stdout, "PUSHQ %%r10\n");
+        fprintf(stdout, "PUSHQ %%r11\n");
+        /* fourth, call the function */
+        fprintf(stdout, "CALL %s\n", e->left->symbol->name);
+        /* fifth, pop caller-saved registers from the stack. */
+        fprintf(stdout, "POPQ %%r11\n");
+        fprintf(stdout, "POPQ %%r10\n");
+        /* sixth (finally), set expression value to function return value. */
+        reg = scratch_alloc();
+        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(reg));
+        e->reg = reg;
         break;
     case EXPR_IDENT:
         reg = scratch_alloc();
