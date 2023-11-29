@@ -178,7 +178,7 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
     case STMT_FOR:
         expr_typecheck(s->init_expr);
         t = expr_typecheck(s->expr);
-        if (t->kind != TYPE_BOOLEAN) {
+        if (t != NULL && t->kind != TYPE_BOOLEAN) {
             ++type_errors;
             fprintf(stdout, "type error: for condition cannot be type ");
             type_print(t);
@@ -244,6 +244,7 @@ void stmt_codegen(struct stmt *s) {
         return;
 
     int else_label;
+    int top_label;
     int done_label;
     struct expr *elist;
 
@@ -262,6 +263,23 @@ void stmt_codegen(struct stmt *s) {
         fprintf(stdout, "JMP %s\n", label_name(done_label));
         fprintf(stdout, "%s:\n", label_name(else_label));
         stmt_codegen(s->else_body);
+        fprintf(stdout, "%s:\n", label_name(done_label));
+        break;
+    case STMT_FOR:
+        top_label = label_create();
+        done_label = label_create();
+        if (s->init_expr != NULL)
+            expr_codegen(s->init_expr);
+        fprintf(stdout, "%s:\n", label_name(top_label));
+        if (s->expr != NULL) {
+            expr_codegen(s->expr);
+            fprintf(stdout, "CMPQ $0, %s\n", scratch_name(s->expr->reg));
+            fprintf(stdout, "JE %s\n", label_name(done_label));
+        }
+        stmt_codegen(s->body);
+        if (s->next_expr != NULL)
+            expr_codegen(s->next_expr);
+        fprintf(stdout, "JMP %s\n", label_name(top_label));
         fprintf(stdout, "%s:\n", label_name(done_label));
         break;
     case STMT_EXPR:
@@ -302,9 +320,6 @@ void stmt_codegen(struct stmt *s) {
     case STMT_BLOCK:
         stmt_codegen(s->body);
         break;
-    default:
-        fprintf(stdout, "codegen error: missing support.\n");
-        exit(1);
     }
 
     stmt_codegen(s->next);
