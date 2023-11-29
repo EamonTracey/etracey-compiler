@@ -267,6 +267,10 @@ void decl_codegen(struct decl *d) {
 
     /* Function definition. */
     else if (d->code != NULL) {
+        if (d->symbol->n_params > 6) {
+            fprintf(stdout, "codegen error: missing support for functions with greater than 6 parameters.\n");
+            exit(1);
+        }
         /*
          * Functions must do multiple things:
          * 1. Save and update the base pointer.
