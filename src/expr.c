@@ -718,6 +718,9 @@ void expr_codegen(struct expr *e) {
 
     struct expr *elist;
 
+    int r10_before;
+    int r11_before;
+
     int arg = 0;
     static char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
@@ -875,7 +878,7 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "POPQ %%r11\n");
         fprintf(stdout, "POPQ %%r10\n");
         scratch_set(1, r10_before);
-        scratch_set(2, r10_before);
+        scratch_set(2, r11_before);
         /* sixth (finally), set expression value to function return value. */
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(reg));

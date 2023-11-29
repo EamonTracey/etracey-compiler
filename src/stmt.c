@@ -248,6 +248,9 @@ void stmt_codegen(struct stmt *s) {
     int done_label;
     struct expr *elist;
 
+    int r10_before;
+    int r11_before;
+
     switch (s->kind) {
     case STMT_DECL:
         decl_codegen(s->decl);
