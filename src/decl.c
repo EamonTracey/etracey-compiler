@@ -329,5 +329,7 @@ void decl_codegen(struct decl *d) {
         fprintf(stdout, "RET\n");
     }
 
+    /* TODO: function prototypes */
+
     decl_codegen(d->next);
 }
