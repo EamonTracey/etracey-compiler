@@ -4,6 +4,7 @@
 #include "decl.h"
 #include "expr.h"
 #include "indent.h"
+#include "label.h"
 #include "scope.h"
 #include "scratch.h"
 #include "stmt.h"
@@ -242,9 +243,25 @@ void stmt_codegen(struct stmt *s) {
     if (s == NULL)
         return;
 
+    int else_label;
+    int done_label;
+
     switch (s->kind) {
     case STMT_DECL:
         decl_codegen(s->decl);
+        break;
+    case STMT_IF_ELSE:
+        else_label = label_create();
+        done_label = label_create();
+        expr_codegen(s->expr);
+        fprintf(stdout, "CMP $0, %s\n", scratch_name(s->expr->reg));
+        fprintf(stdout, "JE %s\n", label_name(else_label));
+        scratch_free(s->expr->reg);
+        stmt_codegen(s->body);
+        fprintf(stdout, "JMP %s\n", label_name(done_label));
+        fprintf(stdout, "%s:\n", label_name(else_label));
+        stmt_codegen(s->else_body);
+        fprintf(stdout, "%s:\n", label_name(done_label));
         break;
     case STMT_EXPR:
         expr_codegen(s->expr);
