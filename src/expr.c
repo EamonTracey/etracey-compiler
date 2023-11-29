@@ -892,6 +892,11 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
         e->reg = reg;
         break;
+    case EXPR_CHARLIT:
+        reg = scratch_alloc();
+        fprintf(stdout, "MOVQ $%d, %s\n", e->char_value, scratch_name(reg));
+        e->reg = reg;
+        break;
     default:
         fprintf(stdout, "codegen error: missing support.\n");
         exit(1);

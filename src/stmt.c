@@ -245,6 +245,7 @@ void stmt_codegen(struct stmt *s) {
 
     int else_label;
     int done_label;
+    struct expr *elist;
 
     switch (s->kind) {
     case STMT_DECL:
@@ -266,6 +267,31 @@ void stmt_codegen(struct stmt *s) {
     case STMT_EXPR:
         expr_codegen(s->expr);
         scratch_free(s->expr->reg);
+        break;
+    case STMT_PRINT:
+        elist = s->expr;
+        while (elist != NULL) {
+            expr_codegen(elist->left);
+            /* call linked print function. */
+            fprintf(stdout, "MOVQ %s, %%rdi\n", scratch_name(elist->left->reg));
+            fprintf(stdout, "PUSHQ %%r10\n");
+            fprintf(stdout, "PUSHQ %%r11\n");
+            if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
+                fprintf(stdout, "CALL print_integer\n");
+            else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
+                fprintf(stdout, "CALL print_boolean\n");
+            else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
+                fprintf(stdout, "CALL print_character\n");
+            else {
+                /* TODO implement printing strings (and floats). */
+                exit(1);
+            }
+            fprintf(stdout, "POPQ %%r11\n");
+            fprintf(stdout, "POPQ %%r10\n");
+
+            scratch_free(elist->left->reg);
+            elist = elist->right;
+        }
         break;
     case STMT_RETURN:
         expr_codegen(s->expr);
