@@ -37,8 +37,10 @@ void param_list_print(struct param_list *a) {
 }
 
 void param_list_resolve(struct param_list *a) {
-    if (a == NULL)
+    if (a == NULL) {
+        which = 0;
         return;
+    }
 
     expr_resolve(a->type->size);
 

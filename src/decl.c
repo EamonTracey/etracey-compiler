@@ -3,6 +3,7 @@
 
 #include "expr.h"
 #include "indent.h"
+#include "scratch.h"
 #include "scope.h"
 #include "stmt.h"
 #include "symbol.h"
@@ -109,8 +110,15 @@ void decl_resolve(struct decl *d) {
         param_list_resolve(d->type->params);
         scope_enter();
         stmt_resolve(d->code);
+        s->n_locals = which;
         scope_exit();
         scope_exit();
+        struct param_list *p = d->type->params;
+        s->n_params = 0;
+        while (p != NULL) {
+            ++s->n_params;
+            p = p->next;
+        }
     } else if (d->type->params) {
         scope_enter();
         param_list_resolve(d->type->params);
@@ -221,8 +229,9 @@ void decl_codegen(struct decl *d) {
     if (d == NULL)
         return;
 
+    /* Global variable declaration. */
     /* TODO: global variables without initialization */
-    if (d->value != NULL) {
+    if (d->symbol->kind == SYMBOL_GLOBAL && d->type->kind != TYPE_FUNCTION) {
         if (d->value->kind == EXPR_INTEGERLIT || d->value->kind == EXPR_BOOLLIT)
             fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value->literal_value);
         else if (d->value->kind == EXPR_CHARLIT)
@@ -246,8 +255,57 @@ void decl_codegen(struct decl *d) {
         }
     }
 
-    if (d->code != NULL) {
+    /* Local variable declaration with initialization. */
+    else if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
+        expr_codegen(d->value);
+        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
+        scratch_free(d->value->reg);
+    }
+
+    /* Function definition. */
+    else if (d->code != NULL) {
+        /*
+         * Functions must do multiple things:
+         * 1. Save and update the base pointer.
+         * 2. Save arguments onto the stack.
+         * 3. Allocate space for local variables on stack.
+         * 4. Save callee-saved registers.
+         * 5. Function body.
+         * 6. Restore callee-saved registers.
+         * 7. Reset stack.
+         * 8. Return.
+         */
+        /* Write function label. */
+        fprintf(stdout, ".global %s\n", d->name);
+        fprintf(stdout, "%s:\n", d->name);
+        /* 1. Save and update the base pointer. */
+        fprintf(stdout, "PUSHQ %%rbp\n");
+        fprintf(stdout, "MOVQ %%rsp, %%rbp\n");
+        /* 2. Save arguments onto stack. */
+        static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+        for (int i = 0; i < d->symbol->n_params; ++i)
+            fprintf(stdout, "PUSHQ %s\n", arg_regs[i]);
+        /* 3. Allocate space for local variables on stack. */
+        fprintf(stdout, "SUBQ $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        /* 4. Save callee-saved registers. */
+        fprintf(stdout, "PUSHQ %%rbx\n");
+        fprintf(stdout, "PUSHQ %%r12\n");
+        fprintf(stdout, "PUSHQ %%r13\n");
+        fprintf(stdout, "PUSHQ %%r14\n");
+        fprintf(stdout, "PUSHQ %%r15\n");
+        /* 5. Function body. */
         stmt_codegen(d->code);
+        /* 6. Restore callee-saved registers. */
+        fprintf(stdout, "POPQ %%r15\n");
+        fprintf(stdout, "POPQ %%r14\n");
+        fprintf(stdout, "POPQ %%r13\n");
+        fprintf(stdout, "POPQ %%r12\n");
+        fprintf(stdout, "POPQ %%rbx\n");
+        /* 7. Reset stack. */
+        fprintf(stdout, "MOVQ %%rbp, %%rsp\n");
+        fprintf(stdout, "POPQ %%rbp\n");
+        /* 8. Return */
+        fprintf(stdout, "RET\n");
     }
 
     decl_codegen(d->next);

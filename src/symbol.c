@@ -37,6 +37,8 @@ void symbol_print(struct symbol *s) {
     }
 }
 
+const char *q = "TODO";
+
 const char *symbol_codegen(struct symbol *s) {
     switch (s->kind) {
     case SYMBOL_LOCAL:
@@ -48,5 +50,5 @@ const char *symbol_codegen(struct symbol *s) {
         break;
     }
 
-    return "TODO";
+    return q;
 }

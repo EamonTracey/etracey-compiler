@@ -242,8 +242,17 @@ void stmt_codegen(struct stmt *s) {
         return;
 
     switch (s->kind) {
+    case STMT_DECL:
+        decl_codegen(s->decl);
+        break;
     case STMT_EXPR:
         expr_codegen(s->expr);
+        scratch_free(s->expr->reg);
+        break;
+    case STMT_RETURN:
+        expr_codegen(s->expr);
+        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(s->expr->reg));
+        /* TODO: how do we actually leave function here? */
         scratch_free(s->expr->reg);
         break;
     case STMT_BLOCK:
