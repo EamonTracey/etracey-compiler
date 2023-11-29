@@ -285,42 +285,36 @@ void decl_codegen(struct decl *d) {
         /* Write function label. */
         fprintf(stdout, ".global %s\n", d->name);
         fprintf(stdout, "%s:\n", d->name);
-        /* main does not need all the prologue. */
-        if (strcmp(d->name, "main") != 0) {
-            /* 1. Save and update the base pointer. */
-            fprintf(stdout, "PUSHQ %%rbp\n");
-            fprintf(stdout, "MOVQ %%rsp, %%rbp\n");
-            /* 2. Save arguments onto stack. */
-            static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
-            for (int i = 0; i < d->symbol->n_params; ++i)
-                fprintf(stdout, "PUSHQ %s\n", arg_regs[i]);
-            /* 3. Allocate space for local variables on stack. */
-            fprintf(stdout, "SUBQ $%d, %%rsp\n", 8 * d->symbol->n_locals);
-            /* 4. Save callee-saved registers. */
-            fprintf(stdout, "PUSHQ %%rbx\n");
-            fprintf(stdout, "PUSHQ %%r12\n");
-            fprintf(stdout, "PUSHQ %%r13\n");
-            fprintf(stdout, "PUSHQ %%r14\n");
-            fprintf(stdout, "PUSHQ %%r15\n");
-        }
+        /* 1. Save and update the base pointer. */
+        fprintf(stdout, "PUSHQ %%rbp\n");
+        fprintf(stdout, "MOVQ %%rsp, %%rbp\n");
+        /* 2. Save arguments onto stack. */
+        static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+        for (int i = 0; i < d->symbol->n_params; ++i)
+            fprintf(stdout, "PUSHQ %s\n", arg_regs[i]);
+        /* 3. Allocate space for local variables on stack. */
+        fprintf(stdout, "SUBQ $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        /* 4. Save callee-saved registers. */
+        fprintf(stdout, "PUSHQ %%rbx\n");
+        fprintf(stdout, "PUSHQ %%r12\n");
+        fprintf(stdout, "PUSHQ %%r13\n");
+        fprintf(stdout, "PUSHQ %%r14\n");
+        fprintf(stdout, "PUSHQ %%r15\n");
         /* Code generation within function must know about the function. */
         codegen_func_symbol = d->symbol;
         /* 5. Function body. */
         stmt_codegen(d->code);
         /* Label the function epilogue to support return statements. */
         fprintf(stdout, ".%s_epilogue:\n", d->name);
-        /* main does not need all the epilogue. */
-        if (strcmp(d->name, "main") != 0) {
-            /* 6. Restore callee-saved registers. */
-            fprintf(stdout, "POPQ %%r15\n");
-            fprintf(stdout, "POPQ %%r14\n");
-            fprintf(stdout, "POPQ %%r13\n");
-            fprintf(stdout, "POPQ %%r12\n");
-            fprintf(stdout, "POPQ %%rbx\n");
-            /* 7. Reset stack. */
-            fprintf(stdout, "MOVQ %%rbp, %%rsp\n");
-            fprintf(stdout, "POPQ %%rbp\n");
-        }
+        /* 6. Restore callee-saved registers. */
+        fprintf(stdout, "POPQ %%r15\n");
+        fprintf(stdout, "POPQ %%r14\n");
+        fprintf(stdout, "POPQ %%r13\n");
+        fprintf(stdout, "POPQ %%r12\n");
+        fprintf(stdout, "POPQ %%rbx\n");
+        /* 7. Reset stack. */
+        fprintf(stdout, "MOVQ %%rbp, %%rsp\n");
+        fprintf(stdout, "POPQ %%rbp\n");
         /* 8. Return */
         fprintf(stdout, "RET\n");
     }
