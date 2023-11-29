@@ -867,11 +867,15 @@ void expr_codegen(struct expr *e) {
         /* third, save caller-saved registers to stack. */
         fprintf(stdout, "PUSHQ %%r10\n");
         fprintf(stdout, "PUSHQ %%r11\n");
+        r10_before = scratch_check(1); scratch_free(1);
+        r11_before = scratch_check(2); scratch_free(2);
         /* fourth, call the function */
         fprintf(stdout, "CALL %s\n", e->left->symbol->name);
         /* fifth, pop caller-saved registers from the stack. */
         fprintf(stdout, "POPQ %%r11\n");
         fprintf(stdout, "POPQ %%r10\n");
+        scratch_set(1, r10_before);
+        scratch_set(2, r10_before);
         /* sixth (finally), set expression value to function return value. */
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(reg));

@@ -36,6 +36,14 @@ void scratch_free(int reg) {
     scratch_registers[reg] = 0;
 }
 
+int scratch_check(int reg) {
+    return scratch_registers[reg];
+}
+
+void scratch_set(int reg, int val) {
+    scratch_registers[reg] = val;
+}
+
 const char *scratch_name(int reg) {
     return scratch_names[reg];
 }

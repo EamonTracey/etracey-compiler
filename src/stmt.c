@@ -294,6 +294,8 @@ void stmt_codegen(struct stmt *s) {
             fprintf(stdout, "MOVQ %s, %%rdi\n", scratch_name(elist->left->reg));
             fprintf(stdout, "PUSHQ %%r10\n");
             fprintf(stdout, "PUSHQ %%r11\n");
+            r10_before = scratch_check(1); scratch_free(1);
+            r11_before = scratch_check(2); scratch_free(2);
             if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
                 fprintf(stdout, "CALL print_integer\n");
             else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
@@ -306,7 +308,8 @@ void stmt_codegen(struct stmt *s) {
             }
             fprintf(stdout, "POPQ %%r11\n");
             fprintf(stdout, "POPQ %%r10\n");
-
+            scratch_set(1, r10_before);
+            scratch_set(2, r11_before);
             scratch_free(elist->left->reg);
             elist = elist->right;
         }

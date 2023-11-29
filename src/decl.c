@@ -300,6 +300,11 @@ void decl_codegen(struct decl *d) {
         fprintf(stdout, "PUSHQ %%r13\n");
         fprintf(stdout, "PUSHQ %%r14\n");
         fprintf(stdout, "PUSHQ %%r15\n");
+        int rbx_before = scratch_check(0); scratch_free(0);
+        int r12_before = scratch_check(3); scratch_free(3);
+        int r13_before = scratch_check(4); scratch_free(4);
+        int r14_before = scratch_check(5); scratch_free(5);
+        int r15_before = scratch_check(6); scratch_free(6);
         /* Code generation within function must know about the function. */
         codegen_func_symbol = d->symbol;
         /* 5. Function body. */
@@ -312,6 +317,11 @@ void decl_codegen(struct decl *d) {
         fprintf(stdout, "POPQ %%r13\n");
         fprintf(stdout, "POPQ %%r12\n");
         fprintf(stdout, "POPQ %%rbx\n");
+        scratch_set(0, rbx_before);
+        scratch_set(3, r12_before);
+        scratch_set(4, r13_before);
+        scratch_set(5, r14_before);
+        scratch_set(6, r15_before);
         /* 7. Reset stack. */
         fprintf(stdout, "MOVQ %%rbp, %%rsp\n");
         fprintf(stdout, "POPQ %%rbp\n");
