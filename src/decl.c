@@ -287,7 +287,7 @@ void decl_codegen(struct decl *d) {
             fprintf(stdout, "PUSHQ %%rbp\n");
             fprintf(stdout, "MOVQ %%rsp, %%rbp\n");
             /* 2. Save arguments onto stack. */
-            static const char *arg_regs[] = { "%%rdi", "%%rsi", "%%rdx", "%%rcx", "%%r8", "%%r9" };
+            static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
             for (int i = 0; i < d->symbol->n_params; ++i)
                 fprintf(stdout, "PUSHQ %s\n", arg_regs[i]);
             /* 3. Allocate space for local variables on stack. */
