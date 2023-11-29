@@ -10,6 +10,7 @@
 #include "type.h"
 
 extern int type_errors;
+extern struct symbol *codegen_func_symbol;
 
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
     struct stmt *stmt = (struct stmt *)malloc(sizeof(struct stmt));
@@ -252,7 +253,7 @@ void stmt_codegen(struct stmt *s) {
     case STMT_RETURN:
         expr_codegen(s->expr);
         fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(s->expr->reg));
-        /* TODO: how do we actually leave function here? */
+        fprintf(stdout, "JMP .%s_epilogue\n", codegen_func_symbol->name);
         scratch_free(s->expr->reg);
         break;
     case STMT_BLOCK:

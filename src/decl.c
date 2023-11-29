@@ -14,6 +14,8 @@ int which = 0;
 extern int resolve_errors;
 extern int type_errors;
 
+struct symbol *codegen_func_symbol;
+
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
     struct decl *decl = (struct decl *)malloc(sizeof(struct decl));
     
@@ -293,8 +295,12 @@ void decl_codegen(struct decl *d) {
         fprintf(stdout, "PUSHQ %%r13\n");
         fprintf(stdout, "PUSHQ %%r14\n");
         fprintf(stdout, "PUSHQ %%r15\n");
+        /* Code generation within function must know about the function. */
+        codegen_func_symbol = d->symbol;
         /* 5. Function body. */
         stmt_codegen(d->code);
+        /* Label the function epilogue to support return statements. */
+        fprintf(stdout, ".%s_epilogue:\n", d->name);
         /* 6. Restore callee-saved registers. */
         fprintf(stdout, "POPQ %%r15\n");
         fprintf(stdout, "POPQ %%r14\n");
