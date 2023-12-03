@@ -239,11 +239,8 @@ void decl_codegen(struct decl *d) {
     if (d == NULL)
         return;
 
-    /* TODO: string max size? */
     char s[2048];
 
-    /* Global variable declaration. */
-    /* TODO: global variables without initialization */
     if (d->symbol->kind == SYMBOL_GLOBAL && d->type->kind != TYPE_FUNCTION) {
         fprintf(stdout, ".data\n");
         if (d->type->kind == TYPE_INTEGER || d->type->kind == TYPE_BOOLEAN)
@@ -352,8 +349,6 @@ void decl_codegen(struct decl *d) {
         /* 8. Return */
         fprintf(stdout, "    ret\n");
     }
-
-    /* TODO: function prototypes */
 
     decl_codegen(d->next);
 }

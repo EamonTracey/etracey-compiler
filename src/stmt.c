@@ -269,17 +269,22 @@ void stmt_codegen(struct stmt *s) {
     case STMT_FOR:
         top_label = label_create();
         done_label = label_create();
-        if (s->init_expr != NULL)
+        if (s->init_expr != NULL) {
             expr_codegen(s->init_expr);
+            scratch_free(s->init_expr->reg);
+        }
         fprintf(stdout, "%s:\n", label_name(top_label));
         if (s->expr != NULL) {
             expr_codegen(s->expr);
             fprintf(stdout, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
             fprintf(stdout, "    je %s\n", label_name(done_label));
+            scratch_free(s->expr->reg);
         }
         stmt_codegen(s->body);
-        if (s->next_expr != NULL)
+        if (s->next_expr != NULL) {
             expr_codegen(s->next_expr);
+            scratch_free(s->next_expr->reg);
+        }
         fprintf(stdout, "    jmp %s\n", label_name(top_label));
         fprintf(stdout, "%s:\n", label_name(done_label));
         break;
