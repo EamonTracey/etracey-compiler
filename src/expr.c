@@ -907,7 +907,7 @@ void expr_codegen(struct expr *e) {
     case EXPR_IDENT:
         /* TODO: string and array? */
         reg = scratch_alloc();
-        if (e->symbol->type->kind == TYPE_ARRAY)
+        if (e->symbol->type->kind == TYPE_ARRAY || (e->symbol->type->kind == TYPE_STRING && e->symbol->kind == SYMBOL_GLOBAL))
             fprintf(stdout, "    leaq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         else
             fprintf(stdout, "    movq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
