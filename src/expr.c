@@ -804,7 +804,7 @@ void expr_codegen(struct expr *e) {
         if (e->kind == EXPR_LT)
             fprintf(stdout, "    jl %s\n", label_name(true_label));
         else if (e->kind == EXPR_LTE)
-            fprintf(stdout, "    je %s\n", label_name(true_label));
+            fprintf(stdout, "    jle %s\n", label_name(true_label));
         else if (e->kind == EXPR_GT)
             fprintf(stdout, "    jg %s\n", label_name(true_label));
         else if (e->kind == EXPR_GTE)
