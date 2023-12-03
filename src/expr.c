@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "encode.h"
 #include "expr.h"
 #include "label.h"
 #include "scratch.h"
@@ -77,7 +78,7 @@ struct expr *expr_create_string_literal(const char *str) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
 
     expr->kind = EXPR_STRINGLIT;
-    expr->string_literal = str;
+    expr->string_literal = strdup(str);
 
     return expr;
 }
@@ -85,6 +86,8 @@ struct expr *expr_create_string_literal(const char *str) {
 void expr_print(struct expr *e, int paren) {
     if (e == NULL)
         return;
+
+    char s[2048];
 
     /* 
      * Parentheticals are necssary if the parent operator
@@ -218,7 +221,8 @@ void expr_print(struct expr *e, int paren) {
         fprintf(stdout, "'\\0x%02x'", e->char_value);
         break;
     case EXPR_STRINGLIT:
-        fprintf(stdout, "%s", e->string_literal);
+        string_encode(e->string_literal, s);
+        fprintf(stdout, "%s", s);
         break;
     case EXPR_BOOLLIT:
         fprintf(stdout, e->literal_value ? "true" : "false");
@@ -713,6 +717,7 @@ int precdif(expr_t kind1, expr_t kind2) {
 
 void expr_codegen(struct expr *e) {
     int reg;
+    int label;
     int true_label;
     int done_label;
 
@@ -723,6 +728,7 @@ void expr_codegen(struct expr *e) {
 
     int arg = 0;
     static char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+    char s[2048];
 
     switch (e->kind) {
     case EXPR_INC:
@@ -830,7 +836,7 @@ void expr_codegen(struct expr *e) {
         e->reg = e->right->reg;
         break;
     case EXPR_ASSIGN:
-        /* TODO: array assignment */
+        /* TODO: string and array assignment */
         expr_codegen(e->right);
         fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
         e->reg = e->right->reg;
@@ -885,6 +891,7 @@ void expr_codegen(struct expr *e) {
         e->reg = reg;
         break;
     case EXPR_IDENT:
+        /* TODO: string and array? */
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
@@ -902,6 +909,16 @@ void expr_codegen(struct expr *e) {
     case EXPR_CHARLIT:
         reg = scratch_alloc();
         fprintf(stdout, "MOVQ $%d, %s\n", e->char_value, scratch_name(reg));
+        e->reg = reg;
+        break;
+    case EXPR_STRINGLIT:
+        reg = scratch_alloc();
+        label = label_create();
+        string_encode(e->string_literal, s);
+        fprintf(stdout, ".data\n");
+        fprintf(stdout, "%s: .string %s\n", label_name(label), s);
+        fprintf(stdout, ".text\n");
+        fprintf(stdout, "LEAQ %s, %s\n", label_name(label), scratch_name(reg));
         e->reg = reg;
         break;
     default:

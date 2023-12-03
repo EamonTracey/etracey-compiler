@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "encode.h"
 #include "expr.h"
 #include "indent.h"
 #include "scratch.h"
@@ -203,6 +204,12 @@ void decl_typecheck(struct decl *d) {
                         fprintf(stdout, ") must evaluate to an integer.\n");
                     }
                 }
+                if (st->size->literal_value <= 0) {
+                    ++type_errors;
+                    fprintf(stdout, "type error: array size (");
+                    expr_print(st->size, 0);
+                    fprintf(stdout, ") must be positive.\n");
+                }
             } else if (st->kind == TYPE_ARRAY ) {
                 ++type_errors;
                 fprintf(stdout, "type error: array must have explicit size.\n");
@@ -232,25 +239,41 @@ void decl_codegen(struct decl *d) {
     if (d == NULL)
         return;
 
+    /* TODO: string max size? */
+    char s[2048];
+
     /* Global variable declaration. */
     /* TODO: global variables without initialization */
     if (d->symbol->kind == SYMBOL_GLOBAL && d->type->kind != TYPE_FUNCTION) {
-        if (d->value->kind == EXPR_INTEGERLIT || d->value->kind == EXPR_BOOLLIT)
-            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value->literal_value);
-        else if (d->value->kind == EXPR_CHARLIT)
-            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value->char_value);
-        else if (d->value->kind == EXPR_STRINGLIT) {
-            fprintf(stdout, "%s: .string ", d->symbol->name);
-            expr_print(d->value, 0);
-            fprintf(stdout, "\n");
-        } else if (d->value->kind == EXPR_ARRLIT) {
+        fprintf(stdout, ".data\n");
+        if (d->type->kind == TYPE_INTEGER || d->type->kind == TYPE_BOOLEAN)
+            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value != NULL ? d->value->literal_value : 0);
+        else if (d->type->kind == TYPE_CHARACTER)
+            fprintf(stdout, "%s: .quad %d\n", d->symbol->name, d->value != NULL ? d->value->char_value: 0);
+        else if (d->type->kind == TYPE_STRING) {
+            if (d->value != NULL) {
+                string_encode(d->value->string_literal, s);
+                fprintf(stdout, "%s: .string %s\n", d->symbol->name, s);
+            } else{
+                fprintf(stdout, "%s: .string \"\"\n", d->symbol->name);
+            }
+        } else if (d->type->kind == TYPE_ARRAY) {
             if (d->type->subtype->kind != TYPE_INTEGER) {
                 fprintf(stdout, "codegen error: missing support for non-integer arrays.\n");
                 exit(1);
             }
             fprintf(stdout, "%s: .quad ", d->symbol->name);
-            expr_print(d->value->left, 0);
-            fprintf(stdout, "\n");
+            if (d->value != NULL) {
+                expr_print(d->value->left, 0);
+                fprintf(stdout, "\n");
+            } else {
+                for (int c = 0; c < d->type->size->literal_value; ++c) {
+                    fprintf(stdout, "0");
+                    if (c != d->type->size->literal_value - 1)
+                        fprintf(stdout, ",");
+                }
+                fprintf(stdout, "\n");
+            }
         }
         else {
             fprintf(stdout, "codegen error: missing support for floats.\n");
@@ -283,6 +306,7 @@ void decl_codegen(struct decl *d) {
          * 8. Return.
          */
         /* Write function label. */
+        fprintf(stdout, ".text\n");
         fprintf(stdout, ".global %s\n", d->name);
         fprintf(stdout, "%s:\n", d->name);
         /* 1. Save and update the base pointer. */

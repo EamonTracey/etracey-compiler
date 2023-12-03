@@ -305,8 +305,10 @@ void stmt_codegen(struct stmt *s) {
                 fprintf(stdout, "CALL print_boolean\n");
             else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
                 fprintf(stdout, "CALL print_character\n");
+            else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
+                fprintf(stdout, "CALL print_string\n");
             else {
-                /* TODO implement printing strings (and floats). */
+                /* TODO implement printing floats? */
                 exit(1);
             }
             fprintf(stdout, "POPQ %%r11\n");
