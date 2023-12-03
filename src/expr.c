@@ -734,59 +734,59 @@ void expr_codegen(struct expr *e) {
     case EXPR_INC:
         /* TODO: ensure works with arracc */
         expr_codegen(e->left);
-        fprintf(stdout, "INCQ %s\n", scratch_name(e->left->reg));
-        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
-        fprintf(stdout, "DECQ %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    incq %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        fprintf(stdout, "    decq %s\n", scratch_name(e->left->reg));
         e->reg = e->left->reg;
         break;
     case EXPR_DEC:
         /* TODO: ensure works with arracc */
         expr_codegen(e->left);
-        fprintf(stdout, "DECQ %s\n", scratch_name(e->left->reg));
-        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
-        fprintf(stdout, "INCQ %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    decq %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        fprintf(stdout, "    incq %s\n", scratch_name(e->left->reg));
         e->reg = e->left->reg;
         break;
     case EXPR_MULT:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->right->reg));
-        fprintf(stdout, "IMULQ %s\n", scratch_name(e->left->reg));
-        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    imulq %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
     case EXPR_DIV:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
-        fprintf(stdout, "CQO\n");
-        fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
-        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    cqo\n");
+        fprintf(stdout, "    idivq %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
     case EXPR_MOD:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
-        fprintf(stdout, "CQO\n");
-        fprintf(stdout, "IDIVQ %s\n", scratch_name(e->right->reg));
-        fprintf(stdout, "MOVQ %%rdx, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    cqo\n");
+        fprintf(stdout, "    idivq %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq %%rdx, %s\n", scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
     case EXPR_PLUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "ADDQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+        fprintf(stdout, "    addq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
     case EXPR_MINUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "SUBQ %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+        fprintf(stdout, "    subq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
         scratch_free(e->right->reg);
         e->reg = e->left->reg;
         break;
@@ -800,23 +800,23 @@ void expr_codegen(struct expr *e) {
         done_label = label_create();
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "CMPQ %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+        fprintf(stdout, "    cmpq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
         if (e->kind == EXPR_LT)
-            fprintf(stdout, "JL %s\n", label_name(true_label));
+            fprintf(stdout, "    jl %s\n", label_name(true_label));
         else if (e->kind == EXPR_LTE)
-            fprintf(stdout, "JLE %s\n", label_name(true_label));
+            fprintf(stdout, "    je %s\n", label_name(true_label));
         else if (e->kind == EXPR_GT)
-            fprintf(stdout, "JG %s\n", label_name(true_label));
+            fprintf(stdout, "    jg %s\n", label_name(true_label));
         else if (e->kind == EXPR_GTE)
-            fprintf(stdout, "JGE %s\n", label_name(true_label));
+            fprintf(stdout, "    jge %s\n", label_name(true_label));
         else if (e->kind == EXPR_EQ)
-            fprintf(stdout, "JE %s\n", label_name(true_label));
+            fprintf(stdout, "    je %s\n", label_name(true_label));
         else if (e->kind == EXPR_NOTEQ)
-            fprintf(stdout, "JNE %s\n", label_name(true_label));
-        fprintf(stdout, "MOVQ $0, %s\n", scratch_name(e->right->reg));
-        fprintf(stdout, "JMP %s\n", label_name(done_label));
+            fprintf(stdout, "    jne %s\n", label_name(true_label));
+        fprintf(stdout, "    movq $0, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    jmp %s\n", label_name(done_label));
         fprintf(stdout, "%s:\n", label_name(true_label));
-        fprintf(stdout, "MOVQ $-1, %s\n", scratch_name(e->right->reg));
+        fprintf(stdout, "    movq $-1, %s\n", scratch_name(e->right->reg));
         fprintf(stdout, "%s:\n", label_name(done_label));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
@@ -827,11 +827,11 @@ void expr_codegen(struct expr *e) {
         expr_codegen(e->left);
         expr_codegen(e->right);
         if (e->kind == EXPR_AND)
-            fprintf(stdout, "ANDQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+            fprintf(stdout, "    andq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         else if (e->kind == EXPR_OR)
-            fprintf(stdout, "ORQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+            fprintf(stdout, "    orq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         else if (e->kind == EXPR_NOT)
-            fprintf(stdout, "NOTQ %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+            fprintf(stdout, "    notq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
@@ -841,9 +841,11 @@ void expr_codegen(struct expr *e) {
         if (e->left->kind == EXPR_ARRACC) {
             expr_codegen(e->left->left);
             expr_codegen(e->left->right);
-            fprintf(stdout, "MOVQ %s, 0(%s, %s, 8)\n", scratch_name(e->right->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
+            fprintf(stdout, "    movq %s, 0(%s, %s, 8)\n", scratch_name(e->right->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
+            scratch_free(e->left->left->reg);
+            scratch_free(e->left->right->reg);
         } else
-            fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
+            fprintf(stdout, "    movq %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
         e->reg = e->right->reg;
         break;
     case EXPR_POS:
@@ -853,17 +855,17 @@ void expr_codegen(struct expr *e) {
     case EXPR_NEG:
         reg = scratch_alloc();
         expr_codegen(e->left);
-        fprintf(stdout, "MOVQ $-1, %s\n", scratch_name(reg));
-        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(e->left->reg));
-        fprintf(stdout, "IMULQ %s\n", scratch_name(reg));
-        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    movq $-1, %s\n", scratch_name(reg));
+        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    imulq %s\n", scratch_name(reg));
+        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->left->reg));
         scratch_free(reg);
         e->reg = e->left->reg;
         break;
     case EXPR_ARRACC:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(stdout, "MOVQ 0(%s, %s, 8), %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg), scratch_name(e->right->reg));
+        fprintf(stdout, "    movq 0(%s, %s, 8), %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
         break;
@@ -881,49 +883,49 @@ void expr_codegen(struct expr *e) {
         /* second, pass arguments into registers. */
         elist = e->right;
         while (elist != NULL) {
-            fprintf(stdout, "MOVQ %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
+            fprintf(stdout, "    movq %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
             scratch_free(elist->left->reg);
             elist = elist->right;
         }
         /* third, save caller-saved registers to stack. */
-        fprintf(stdout, "PUSHQ %%r10\n");
-        fprintf(stdout, "PUSHQ %%r11\n");
+        fprintf(stdout, "    pushq %%r10\n");
+        fprintf(stdout, "    pushq %%r11\n");
         r10_before = scratch_check(1); scratch_free(1);
         r11_before = scratch_check(2); scratch_free(2);
         /* fourth, call the function */
-        fprintf(stdout, "CALL %s\n", e->left->symbol->name);
+        fprintf(stdout, "    call %s\n", e->left->symbol->name);
         /* fifth, pop caller-saved registers from the stack. */
-        fprintf(stdout, "POPQ %%r11\n");
-        fprintf(stdout, "POPQ %%r10\n");
+        fprintf(stdout, "    popq %%r11\n");
+        fprintf(stdout, "    popq %%r10\n");
         scratch_set(1, r10_before);
         scratch_set(2, r11_before);
         /* sixth (finally), set expression value to function return value. */
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(reg));
+        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_IDENT:
         /* TODO: string and array? */
         reg = scratch_alloc();
         if (e->symbol->type->kind == TYPE_ARRAY)
-            fprintf(stdout, "LEAQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+            fprintf(stdout, "    leaq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         else
-            fprintf(stdout, "MOVQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+            fprintf(stdout, "    movq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
+        fprintf(stdout, "    movq $%d, %s\n", e->literal_value, scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_BOOLLIT:
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ $%d, %s\n", e->literal_value, scratch_name(reg));
+        fprintf(stdout, "    movq $%d, %s\n", e->literal_value, scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_CHARLIT:
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ $%d, %s\n", e->char_value, scratch_name(reg));
+        fprintf(stdout, "    movq $%d, %s\n", e->char_value, scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_STRINGLIT:
@@ -933,7 +935,7 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, ".data\n");
         fprintf(stdout, "%s: .string %s\n", label_name(label), s);
         fprintf(stdout, ".text\n");
-        fprintf(stdout, "LEAQ %s, %s\n", label_name(label), scratch_name(reg));
+        fprintf(stdout, "    leaq %s, %s\n", label_name(label), scratch_name(reg));
         e->reg = reg;
         break;
     default:

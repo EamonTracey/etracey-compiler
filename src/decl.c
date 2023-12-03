@@ -284,7 +284,7 @@ void decl_codegen(struct decl *d) {
     /* Local variable declaration with initialization. */
     else if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
         expr_codegen(d->value);
-        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
+        fprintf(stdout, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
         scratch_free(d->value->reg);
     }
 
@@ -310,20 +310,20 @@ void decl_codegen(struct decl *d) {
         fprintf(stdout, ".global %s\n", d->name);
         fprintf(stdout, "%s:\n", d->name);
         /* 1. Save and update the base pointer. */
-        fprintf(stdout, "PUSHQ %%rbp\n");
-        fprintf(stdout, "MOVQ %%rsp, %%rbp\n");
+        fprintf(stdout, "    pushq %%rbp\n");
+        fprintf(stdout, "    movq %%rsp, %%rbp\n");
         /* 2. Save arguments onto stack. */
         static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
         for (int i = 0; i < d->symbol->n_params; ++i)
-            fprintf(stdout, "PUSHQ %s\n", arg_regs[i]);
+            fprintf(stdout, "    pushq %s\n", arg_regs[i]);
         /* 3. Allocate space for local variables on stack. */
-        fprintf(stdout, "SUBQ $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        fprintf(stdout, "    subq $%d, %%rsp\n", 8 * d->symbol->n_locals);
         /* 4. Save callee-saved registers. */
-        fprintf(stdout, "PUSHQ %%rbx\n");
-        fprintf(stdout, "PUSHQ %%r12\n");
-        fprintf(stdout, "PUSHQ %%r13\n");
-        fprintf(stdout, "PUSHQ %%r14\n");
-        fprintf(stdout, "PUSHQ %%r15\n");
+        fprintf(stdout, "    pushq %%rbx\n");
+        fprintf(stdout, "    pushq %%r12\n");
+        fprintf(stdout, "    pushq %%r13\n");
+        fprintf(stdout, "    pushq %%r14\n");
+        fprintf(stdout, "    pushq %%r15\n");
         int rbx_before = scratch_check(0); scratch_free(0);
         int r12_before = scratch_check(3); scratch_free(3);
         int r13_before = scratch_check(4); scratch_free(4);
@@ -336,21 +336,21 @@ void decl_codegen(struct decl *d) {
         /* Label the function epilogue to support return statements. */
         fprintf(stdout, ".%s_epilogue:\n", d->name);
         /* 6. Restore callee-saved registers. */
-        fprintf(stdout, "POPQ %%r15\n");
-        fprintf(stdout, "POPQ %%r14\n");
-        fprintf(stdout, "POPQ %%r13\n");
-        fprintf(stdout, "POPQ %%r12\n");
-        fprintf(stdout, "POPQ %%rbx\n");
+        fprintf(stdout, "    popq %%r15\n");
+        fprintf(stdout, "    popq %%r14\n");
+        fprintf(stdout, "    popq %%r13\n");
+        fprintf(stdout, "    popq %%r12\n");
+        fprintf(stdout, "    popq %%rbx\n");
         scratch_set(0, rbx_before);
         scratch_set(3, r12_before);
         scratch_set(4, r13_before);
         scratch_set(5, r14_before);
         scratch_set(6, r15_before);
         /* 7. Reset stack. */
-        fprintf(stdout, "MOVQ %%rbp, %%rsp\n");
-        fprintf(stdout, "POPQ %%rbp\n");
+        fprintf(stdout, "    movq %%rbp, %%rsp\n");
+        fprintf(stdout, "    popq %%rbp\n");
         /* 8. Return */
-        fprintf(stdout, "RET\n");
+        fprintf(stdout, "    ret\n");
     }
 
     /* TODO: function prototypes */

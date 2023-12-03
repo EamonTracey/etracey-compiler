@@ -259,11 +259,11 @@ void stmt_codegen(struct stmt *s) {
         else_label = label_create();
         done_label = label_create();
         expr_codegen(s->expr);
-        fprintf(stdout, "CMP $0, %s\n", scratch_name(s->expr->reg));
-        fprintf(stdout, "JE %s\n", label_name(else_label));
+        fprintf(stdout, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+        fprintf(stdout, "    je %s\n", label_name(else_label));
         scratch_free(s->expr->reg);
         stmt_codegen(s->body);
-        fprintf(stdout, "JMP %s\n", label_name(done_label));
+        fprintf(stdout, "    jmp %s\n", label_name(done_label));
         fprintf(stdout, "%s:\n", label_name(else_label));
         stmt_codegen(s->else_body);
         fprintf(stdout, "%s:\n", label_name(done_label));
@@ -276,13 +276,13 @@ void stmt_codegen(struct stmt *s) {
         fprintf(stdout, "%s:\n", label_name(top_label));
         if (s->expr != NULL) {
             expr_codegen(s->expr);
-            fprintf(stdout, "CMPQ $0, %s\n", scratch_name(s->expr->reg));
-            fprintf(stdout, "JE %s\n", label_name(done_label));
+            fprintf(stdout, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+            fprintf(stdout, "    je %s\n", label_name(done_label));
         }
         stmt_codegen(s->body);
         if (s->next_expr != NULL)
             expr_codegen(s->next_expr);
-        fprintf(stdout, "JMP %s\n", label_name(top_label));
+        fprintf(stdout, "    jmp %s\n", label_name(top_label));
         fprintf(stdout, "%s:\n", label_name(done_label));
         break;
     case STMT_EXPR:
@@ -294,25 +294,25 @@ void stmt_codegen(struct stmt *s) {
         while (elist != NULL) {
             expr_codegen(elist->left);
             /* call linked print function. */
-            fprintf(stdout, "MOVQ %s, %%rdi\n", scratch_name(elist->left->reg));
-            fprintf(stdout, "PUSHQ %%r10\n");
-            fprintf(stdout, "PUSHQ %%r11\n");
+            fprintf(stdout, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
+            fprintf(stdout, "    pushq %%r10\n");
+            fprintf(stdout, "    pushq %%r11\n");
             r10_before = scratch_check(1); scratch_free(1);
             r11_before = scratch_check(2); scratch_free(2);
             if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
-                fprintf(stdout, "CALL print_integer\n");
+                fprintf(stdout, "    call print_integer\n");
             else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
-                fprintf(stdout, "CALL print_boolean\n");
+                fprintf(stdout, "    call print_boolean\n");
             else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
-                fprintf(stdout, "CALL print_character\n");
+                fprintf(stdout, "    call print_character\n");
             else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
-                fprintf(stdout, "CALL print_string\n");
+                fprintf(stdout, "    call print_string\n");
             else {
                 /* TODO implement printing floats? */
                 exit(1);
             }
-            fprintf(stdout, "POPQ %%r11\n");
-            fprintf(stdout, "POPQ %%r10\n");
+            fprintf(stdout, "    popq %%r11\n");
+            fprintf(stdout, "    popq %%r10\n");
             scratch_set(1, r10_before);
             scratch_set(2, r11_before);
             scratch_free(elist->left->reg);
@@ -321,8 +321,8 @@ void stmt_codegen(struct stmt *s) {
         break;
     case STMT_RETURN:
         expr_codegen(s->expr);
-        fprintf(stdout, "MOVQ %s, %%rax\n", scratch_name(s->expr->reg));
-        fprintf(stdout, "JMP .%s_epilogue\n", codegen_func_symbol->name);
+        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(s->expr->reg));
+        fprintf(stdout, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
         scratch_free(s->expr->reg);
         break;
     case STMT_BLOCK:
