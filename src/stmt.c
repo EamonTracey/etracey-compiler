@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "codegen.h"
 #include "decl.h"
 #include "expr.h"
 #include "indent.h"
@@ -248,9 +249,6 @@ void stmt_codegen(struct stmt *s) {
     int done_label;
     struct expr *elist;
 
-    int r10_before;
-    int r11_before;
-
     switch (s->kind) {
     case STMT_DECL:
         decl_codegen(s->decl);
@@ -295,26 +293,18 @@ void stmt_codegen(struct stmt *s) {
             expr_codegen(elist->left);
             /* call linked print function. */
             fprintf(stdout, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
-            fprintf(stdout, "    pushq %%r10\n");
-            fprintf(stdout, "    pushq %%r11\n");
-            r10_before = scratch_check(1); scratch_free(1);
-            r11_before = scratch_check(2); scratch_free(2);
             if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
-                fprintf(stdout, "    call print_integer\n");
+                codegen_funccall("print_integer");
             else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
-                fprintf(stdout, "    call print_boolean\n");
+                codegen_funccall("print_boolean");
             else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
-                fprintf(stdout, "    call print_character\n");
+                codegen_funccall("print_character");
             else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
-                fprintf(stdout, "    call print_string\n");
+                codegen_funccall("print_string");
             else {
                 /* TODO implement printing floats? */
                 exit(1);
             }
-            fprintf(stdout, "    popq %%r11\n");
-            fprintf(stdout, "    popq %%r10\n");
-            scratch_set(1, r10_before);
-            scratch_set(2, r11_before);
             scratch_free(elist->left->reg);
             elist = elist->right;
         }

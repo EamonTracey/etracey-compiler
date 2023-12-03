@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "codegen.h"
 #include "encode.h"
 #include "expr.h"
 #include "label.h"
@@ -723,9 +724,6 @@ void expr_codegen(struct expr *e) {
 
     struct expr *elist;
 
-    int r10_before;
-    int r11_before;
-
     int arg = 0;
     static char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
     char s[2048];
@@ -746,6 +744,16 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
         fprintf(stdout, "    incq %s\n", scratch_name(e->left->reg));
         e->reg = e->left->reg;
+        break;
+    case EXPR_EXP:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "    movq %s, %%rdi\n", scratch_name(e->left->reg));
+        fprintf(stdout, "    movq %s, %%rsi\n", scratch_name(e->right->reg));
+        codegen_funccall("integer_power");
+        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
         break;
     case EXPR_MULT:
         expr_codegen(e->left);
@@ -874,32 +882,21 @@ void expr_codegen(struct expr *e) {
             fprintf(stdout, "codegen error: missing support for function calls with greater than 6 arguments.\n");
             exit(1);
         }
-        /* first, evaluate the arguments. */
+        /* evaluate the arguments. */
         elist = e->right;
         while (elist != NULL) {
             expr_codegen(elist->left);
             elist = elist->right;
         }
-        /* second, pass arguments into registers. */
+        /* pass arguments into registers. */
         elist = e->right;
         while (elist != NULL) {
             fprintf(stdout, "    movq %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
             scratch_free(elist->left->reg);
             elist = elist->right;
         }
-        /* third, save caller-saved registers to stack. */
-        fprintf(stdout, "    pushq %%r10\n");
-        fprintf(stdout, "    pushq %%r11\n");
-        r10_before = scratch_check(1); scratch_free(1);
-        r11_before = scratch_check(2); scratch_free(2);
-        /* fourth, call the function */
-        fprintf(stdout, "    call %s\n", e->left->symbol->name);
-        /* fifth, pop caller-saved registers from the stack. */
-        fprintf(stdout, "    popq %%r11\n");
-        fprintf(stdout, "    popq %%r10\n");
-        scratch_set(1, r10_before);
-        scratch_set(2, r11_before);
-        /* sixth (finally), set expression value to function return value. */
+        /* helper :) */
+        codegen_funccall(e->left->symbol->name);
         reg = scratch_alloc();
         fprintf(stdout, "    movq %%rax, %s\n", scratch_name(reg));
         e->reg = reg;
