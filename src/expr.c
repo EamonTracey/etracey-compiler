@@ -838,7 +838,12 @@ void expr_codegen(struct expr *e) {
     case EXPR_ASSIGN:
         /* TODO: string and array assignment */
         expr_codegen(e->right);
-        fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
+        if (e->left->kind == EXPR_ARRACC) {
+            expr_codegen(e->left->left);
+            expr_codegen(e->left->right);
+            fprintf(stdout, "MOVQ %s, 0(%s, %s, 8)\n", scratch_name(e->right->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
+        } else
+            fprintf(stdout, "MOVQ %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
         e->reg = e->right->reg;
         break;
     case EXPR_POS:
@@ -854,6 +859,13 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "MOVQ %%rax, %s\n", scratch_name(e->left->reg));
         scratch_free(reg);
         e->reg = e->left->reg;
+        break;
+    case EXPR_ARRACC:
+        expr_codegen(e->left);
+        expr_codegen(e->right);
+        fprintf(stdout, "MOVQ 0(%s, %s, 8), %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg), scratch_name(e->right->reg));
+        scratch_free(e->left->reg);
+        e->reg = e->right->reg;
         break;
     case EXPR_FUNCCALL:
         if (e->left->symbol->n_params > 6) {
@@ -893,7 +905,10 @@ void expr_codegen(struct expr *e) {
     case EXPR_IDENT:
         /* TODO: string and array? */
         reg = scratch_alloc();
-        fprintf(stdout, "MOVQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        if (e->symbol->type->kind == TYPE_ARRAY)
+            fprintf(stdout, "LEAQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        else
+            fprintf(stdout, "MOVQ %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
