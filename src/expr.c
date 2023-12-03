@@ -78,7 +78,7 @@ struct expr *expr_create_string_literal(const char *str) {
     struct expr *expr = (struct expr *)malloc(sizeof(struct expr));
 
     expr->kind = EXPR_STRINGLIT;
-    expr->string_literal = strdup(str);
+    expr->string_literal = str;
 
     return expr;
 }
