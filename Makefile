@@ -35,3 +35,4 @@ clean:
 	rm -f test/printer/*.out*
 	rm -f test/resolver/*.out*
 	rm -f test/typechecker/*.out*
+	rm -f test/codegen/*.out*
