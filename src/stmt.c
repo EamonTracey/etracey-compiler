@@ -14,6 +14,8 @@
 extern int type_errors;
 extern struct symbol *codegen_func_symbol;
 
+extern FILE *codegen_out;
+
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
     struct stmt *stmt = (struct stmt *)malloc(sizeof(struct stmt));
 
@@ -257,14 +259,14 @@ void stmt_codegen(struct stmt *s) {
         else_label = label_create();
         done_label = label_create();
         expr_codegen(s->expr);
-        fprintf(stdout, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
-        fprintf(stdout, "    je %s\n", label_name(else_label));
+        fprintf(codegen_out, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+        fprintf(codegen_out, "    je %s\n", label_name(else_label));
         scratch_free(s->expr->reg);
         stmt_codegen(s->body);
-        fprintf(stdout, "    jmp %s\n", label_name(done_label));
-        fprintf(stdout, "%s:\n", label_name(else_label));
+        fprintf(codegen_out, "    jmp %s\n", label_name(done_label));
+        fprintf(codegen_out, "%s:\n", label_name(else_label));
         stmt_codegen(s->else_body);
-        fprintf(stdout, "%s:\n", label_name(done_label));
+        fprintf(codegen_out, "%s:\n", label_name(done_label));
         break;
     case STMT_FOR:
         top_label = label_create();
@@ -273,11 +275,11 @@ void stmt_codegen(struct stmt *s) {
             expr_codegen(s->init_expr);
             scratch_free(s->init_expr->reg);
         }
-        fprintf(stdout, "%s:\n", label_name(top_label));
+        fprintf(codegen_out, "%s:\n", label_name(top_label));
         if (s->expr != NULL) {
             expr_codegen(s->expr);
-            fprintf(stdout, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
-            fprintf(stdout, "    je %s\n", label_name(done_label));
+            fprintf(codegen_out, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+            fprintf(codegen_out, "    je %s\n", label_name(done_label));
             scratch_free(s->expr->reg);
         }
         stmt_codegen(s->body);
@@ -285,8 +287,8 @@ void stmt_codegen(struct stmt *s) {
             expr_codegen(s->next_expr);
             scratch_free(s->next_expr->reg);
         }
-        fprintf(stdout, "    jmp %s\n", label_name(top_label));
-        fprintf(stdout, "%s:\n", label_name(done_label));
+        fprintf(codegen_out, "    jmp %s\n", label_name(top_label));
+        fprintf(codegen_out, "%s:\n", label_name(done_label));
         break;
     case STMT_EXPR:
         expr_codegen(s->expr);
@@ -297,7 +299,7 @@ void stmt_codegen(struct stmt *s) {
         while (elist != NULL) {
             expr_codegen(elist->left);
             /* call linked print function. */
-            fprintf(stdout, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
+            fprintf(codegen_out, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
             if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
                 codegen_funccall("print_integer");
             else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
@@ -316,8 +318,8 @@ void stmt_codegen(struct stmt *s) {
         break;
     case STMT_RETURN:
         expr_codegen(s->expr);
-        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(s->expr->reg));
-        fprintf(stdout, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
+        fprintf(codegen_out,  "    movq %s, %%rax\n", scratch_name(s->expr->reg));
+        fprintf(codegen_out, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
         scratch_free(s->expr->reg);
         break;
     case STMT_BLOCK:

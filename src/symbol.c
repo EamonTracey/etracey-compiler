@@ -6,6 +6,8 @@
 extern int verb;
 extern struct symbol *codegen_func_symbol;
 
+extern FILE *codegen_out;
+
 struct symbol *symbol_create(symbol_t kind, struct type *type, char *name) {
     struct symbol *symbol = (struct symbol *)malloc(sizeof(struct symbol));
 
