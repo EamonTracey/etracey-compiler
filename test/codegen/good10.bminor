@@ -5,8 +5,9 @@ input: string = "                                ";
 get_input: function string ();
 
 main: function integer () = {
-    for (; strcmp(input, "exit") != 0 ;)
-        print get_input(), "\n";
+    if (false)
+        for (; strcmp(input, "exit") != 0 ;)
+            print get_input(), "\n";
     return 0;
 }
 
