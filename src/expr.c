@@ -956,6 +956,12 @@ void expr_codegen(struct expr *e) {
         fprintf(stdout, "    leaq %s, %s\n", label_name(label), scratch_name(reg));
         e->reg = reg;
         break;
+    case EXPR_FLOATLIT:
+        fprintf(stdout, "codegen error: missing support for floats.\n");
+        exit(1);
+    case EXPR_ARRLIT:
+        fprintf(stdout, "codegen error: missing support for dynamic arrays.\n");
+        exit(1);
     default:
         fprintf(stdout, "codegen error: missing support.\n");
         exit(1);
