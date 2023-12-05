@@ -278,7 +278,7 @@ struct type *expr_typecheck(struct expr *e) {
 
     switch (e->kind) {
     case EXPR_INC:
-        if (e->left->symbol == NULL) {
+        if (e->left->symbol == NULL && e->left->kind != EXPR_ARRACC) {
             ++type_errors;
             fprintf(stdout, "type error: cannot increment a non-variable.\n");
         }
@@ -292,7 +292,7 @@ struct type *expr_typecheck(struct expr *e) {
         }
         return type_create(TYPE_INTEGER, NULL, NULL, NULL);
     case EXPR_DEC:
-        if (e->left->symbol == NULL) {
+        if (e->left->symbol == NULL && e->left->kind != EXPR_ARRACC) {
             ++type_errors;
             fprintf(stdout, "type error: cannot decrement a non-variable.\n");
         }
@@ -685,7 +685,8 @@ int expr_is_literal(struct expr *e) {
         || e->kind == EXPR_FLOATLIT
         || e->kind == EXPR_CHARLIT
         || e->kind == EXPR_STRINGLIT
-        || e->kind == EXPR_BOOLLIT;
+        || e->kind == EXPR_BOOLLIT
+        || (e->kind == EXPR_NEG && e->left->kind == EXPR_INTEGERLIT);
 }
 
 int precedences[] = {
@@ -730,18 +731,32 @@ void expr_codegen(struct expr *e) {
 
     switch (e->kind) {
     case EXPR_INC:
-        /* TODO: ensure works with arracc */
         expr_codegen(e->left);
         fprintf(stdout, "    incq %s\n", scratch_name(e->left->reg));
-        fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        if (e->left->kind == EXPR_IDENT)
+            fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        else /* array access */ {
+            expr_codegen(e->left->left);
+            expr_codegen(e->left->right);
+            fprintf(stdout, "    movq %s, 0(%s, %s, 8)\n", scratch_name(e->left->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
+            scratch_free(e->left->left->reg);
+            scratch_free(e->left->right->reg);
+        }
         fprintf(stdout, "    decq %s\n", scratch_name(e->left->reg));
         e->reg = e->left->reg;
         break;
     case EXPR_DEC:
-        /* TODO: ensure works with arracc */
         expr_codegen(e->left);
         fprintf(stdout, "    decq %s\n", scratch_name(e->left->reg));
-        fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        if (e->left->kind == EXPR_IDENT)
+            fprintf(stdout, "    movq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
+        else /* array access */ {
+            expr_codegen(e->left->left);
+            expr_codegen(e->left->right);
+            fprintf(stdout, "    movq %s, 0(%s, %s, 8)\n", scratch_name(e->left->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
+            scratch_free(e->left->left->reg);
+            scratch_free(e->left->right->reg);
+        }
         fprintf(stdout, "    incq %s\n", scratch_name(e->left->reg));
         e->reg = e->left->reg;
         break;
@@ -831,17 +846,19 @@ void expr_codegen(struct expr *e) {
         break;
     case EXPR_AND:
     case EXPR_OR:
-    case EXPR_NOT:
         expr_codegen(e->left);
         expr_codegen(e->right);
         if (e->kind == EXPR_AND)
             fprintf(stdout, "    andq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-        else if (e->kind == EXPR_OR)
+        else
             fprintf(stdout, "    orq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-        else if (e->kind == EXPR_NOT)
-            fprintf(stdout, "    notq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
+        break;
+    case EXPR_NOT:
+        expr_codegen(e->left);
+        fprintf(stdout, "    notq %s\n", scratch_name(e->left->reg));
+        e->reg = e->left->reg;
         break;
     case EXPR_ASSIGN:
         /* TODO: string and array assignment */
@@ -861,13 +878,17 @@ void expr_codegen(struct expr *e) {
         e->reg = e->left->reg;
         break;
     case EXPR_NEG:
-        reg = scratch_alloc();
         expr_codegen(e->left);
-        fprintf(stdout, "    movq $-1, %s\n", scratch_name(reg));
-        fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->left->reg));
-        fprintf(stdout, "    imulq %s\n", scratch_name(reg));
-        fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->left->reg));
-        scratch_free(reg);
+        if (e->left->kind == EXPR_INTEGERLIT)
+            fprintf(stdout, "    movq $-%d, %s\n", e->left->literal_value, scratch_name(e->left->reg));
+        else {
+            reg = scratch_alloc();
+            fprintf(stdout, "    movq $-1, %s\n", scratch_name(reg));
+            fprintf(stdout, "    movq %s, %%rax\n", scratch_name(e->left->reg));
+            fprintf(stdout, "    imulq %s\n", scratch_name(reg));
+            fprintf(stdout, "    movq %%rax, %s\n", scratch_name(e->left->reg));
+            scratch_free(reg);
+        }
         e->reg = e->left->reg;
         break;
     case EXPR_ARRACC:
