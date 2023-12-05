@@ -1,0 +1,30 @@
+digits_reversed: function integer (n: integer);
+
+a: array [10] integer = {0, 4576, 10101, 9989, 23, 111111, 5454, 1234567654321, -101, 3113};
+
+main: function integer () = {
+    i: integer;
+    reversed: integer;
+
+    for (i = 0; i < 10; i++) {
+        reversed = digits_reversed(a[i]);
+        if (a[i] == reversed)
+            print a[i], " is a palindrome (", reversed, ")\n";
+        else
+            print a[i], " is not a palindrome (", reversed, ")\n";
+    }
+        
+    return 0;
+}
+
+digits_reversed: function integer (n: integer) = {
+    reversed: integer = 0;
+
+    for (; n != 0 ;) {
+        remainder: integer = n % 10;
+        reversed = reversed * 10 + remainder;
+        n = n / 10;
+    }
+
+    return reversed;
+}
