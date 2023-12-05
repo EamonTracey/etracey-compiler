@@ -36,5 +36,5 @@ clean:
 	rm -f test/resolver/*.out*
 	rm -f test/typechecker/*.out*
 	rm -f test/codegen/*.out*
-	rm -f .test.s
-	rm -f .test.be
+	rm -f test/codegen/*.s
+	rm -f test/codegen/*.exe
