@@ -111,6 +111,7 @@ void decl_resolve(struct decl *d) {
         if (s)
             s->funcdef = 1;
         scope_enter();
+        which = 0;
         param_list_resolve(d->type->params);
         scope_enter();
         stmt_resolve(d->code);
@@ -290,6 +291,14 @@ void decl_codegen(struct decl *d) {
         if (d->symbol->n_params > 6) {
             fprintf(stdout, "codegen error: missing support for functions with greater than 6 parameters.\n");
             exit(1);
+        }
+        struct param_list *p = d->type->params;
+        while (p != NULL) {
+            if (p->type->kind == TYPE_ARRAY) {
+                fprintf(stdout, "codegen error: missing support for array function parameters.\n");
+                exit(1);
+            }
+            p = p->next;
         }
         /*
          * Functions must do multiple things:
