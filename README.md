@@ -1,7 +1,7 @@
 # B-Minor
 
 ### Build and Test
-This B-Minor compiler currently supports encoding, scanning, parsing, printing, name resolution, and typechecking.
+This B-Minor compiler currently supports encoding, scanning, parsing, printing, name resolution, typechecking, and code generation. That is ... everything!
 ```sh
 make test
 ./bminor --encode <FILE>
@@ -25,4 +25,8 @@ make test
 ```sh
 make test
 ./bminor --typecheck <FILE>
+```
+```sh
+make test
+./bminor --codegen <FILE> <FILE>
 ```
