@@ -688,7 +688,8 @@ int expr_is_literal(struct expr *e) {
         || e->kind == EXPR_CHARLIT
         || e->kind == EXPR_STRINGLIT
         || e->kind == EXPR_BOOLLIT
-        || (e->kind == EXPR_NEG && e->left->kind == EXPR_INTEGERLIT);
+        || (e->kind == EXPR_NEG && e->left->kind == EXPR_INTEGERLIT)
+        || (e->kind == EXPR_POS && e->left->kind == EXPR_INTEGERLIT);
 }
 
 int precedences[] = {

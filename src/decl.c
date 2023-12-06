@@ -162,7 +162,10 @@ void decl_typecheck(struct decl *d) {
                 fprintf(stdout, "type error: global expression (");
                 expr_print(d->value, 0);
                 fprintf(stdout, ") cannot be nonliteral.\n");
-            }
+            } else if (d->value->kind == EXPR_NEG)
+                d->value->literal_value = -d->value->left->literal_value;
+            else if (d->value->kind == EXPR_POS)
+                d->value->literal_value = d->value->left->literal_value;
         }
     }
 
