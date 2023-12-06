@@ -51,6 +51,9 @@ struct expr {
     double float_value;
 	const char *string_literal;
 	struct symbol *symbol;
+
+    /* track register in which expression is stored */
+    int reg;
 };
 
 struct expr *expr_create(expr_t kind, struct expr *left, struct expr *right);
@@ -69,5 +72,7 @@ struct type *expr_typecheck(struct expr *e);
 int expr_is_literal(struct expr *e);
 
 int precdif(expr_t kind1, expr_t kind2);
+
+void expr_codegen(struct expr *e);
 
 #endif

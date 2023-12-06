@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "encode.h"
 #include "expr.h"
 #include "indent.h"
+#include "scratch.h"
 #include "scope.h"
 #include "stmt.h"
 #include "symbol.h"
@@ -12,6 +15,10 @@ int which = 0;
 
 extern int resolve_errors;
 extern int type_errors;
+
+struct symbol *codegen_func_symbol;
+
+extern FILE *codegen_out;
 
 struct decl *decl_create(char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next) {
     struct decl *decl = (struct decl *)malloc(sizeof(struct decl));
@@ -106,11 +113,19 @@ void decl_resolve(struct decl *d) {
         if (s)
             s->funcdef = 1;
         scope_enter();
+        which = 0;
         param_list_resolve(d->type->params);
         scope_enter();
         stmt_resolve(d->code);
+        s->n_locals = which;
         scope_exit();
         scope_exit();
+        struct param_list *p = d->type->params;
+        s->n_params = 0;
+        while (p != NULL) {
+            ++s->n_params;
+            p = p->next;
+        }
     } else if (d->type->params) {
         scope_enter();
         param_list_resolve(d->type->params);
@@ -147,7 +162,10 @@ void decl_typecheck(struct decl *d) {
                 fprintf(stdout, "type error: global expression (");
                 expr_print(d->value, 0);
                 fprintf(stdout, ") cannot be nonliteral.\n");
-            }
+            } else if (d->value->kind == EXPR_NEG)
+                d->value->literal_value = -d->value->left->literal_value;
+            else if (d->value->kind == EXPR_POS)
+                d->value->literal_value = d->value->left->literal_value;
         }
     }
 
@@ -192,6 +210,12 @@ void decl_typecheck(struct decl *d) {
                         fprintf(stdout, ") must evaluate to an integer.\n");
                     }
                 }
+                if (st->size->literal_value <= 0) {
+                    ++type_errors;
+                    fprintf(stdout, "type error: array size (");
+                    expr_print(st->size, 0);
+                    fprintf(stdout, ") must be positive.\n");
+                }
             } else if (st->kind == TYPE_ARRAY ) {
                 ++type_errors;
                 fprintf(stdout, "type error: array must have explicit size.\n");
@@ -215,4 +239,134 @@ void decl_typecheck(struct decl *d) {
     }
 
     decl_typecheck(d->next);
+}
+
+void decl_codegen(struct decl *d) {
+    if (d == NULL)
+        return;
+
+    char s[2048];
+
+    if (d->symbol->kind == SYMBOL_GLOBAL && d->type->kind != TYPE_FUNCTION) {
+        fprintf(codegen_out, ".data\n");
+        if (d->type->kind == TYPE_INTEGER || d->type->kind == TYPE_BOOLEAN)
+            fprintf(codegen_out, "%s: .quad %d\n", d->symbol->name, d->value != NULL ? d->value->literal_value : 0);
+        else if (d->type->kind == TYPE_CHARACTER)
+            fprintf(codegen_out, "%s: .quad %d\n", d->symbol->name, d->value != NULL ? d->value->char_value: 0);
+        else if (d->type->kind == TYPE_STRING) {
+            if (d->value != NULL) {
+                string_encode(d->value->string_literal, s);
+                fprintf(codegen_out, "%s: .string %s\n", d->symbol->name, s);
+            } else{
+                fprintf(codegen_out, "%s: .string \"\"\n", d->symbol->name);
+            }
+        } else if (d->type->kind == TYPE_ARRAY) {
+            if (d->type->subtype->kind != TYPE_INTEGER) {
+                fprintf(stdout, "codegen error: missing support for non-integer arrays.\n");
+                exit(1);
+            }
+            fprintf(codegen_out, "%s: .quad ", d->symbol->name);
+            if (d->value != NULL) {
+                /* perhaps the hackiest of hacks */
+                FILE *oldstdout = stdout;
+                stdout = codegen_out;
+                expr_print(d->value->left, 0);
+                stdout = oldstdout;
+                fprintf(codegen_out, "\n");
+            } else {
+                for (int c = 0; c < d->type->size->literal_value; ++c) {
+                    fprintf(codegen_out, "0");
+                    if (c != d->type->size->literal_value - 1)
+                        fprintf(codegen_out, ",");
+                }
+                fprintf(codegen_out, "\n");
+            }
+        }
+        else {
+            fprintf(stdout, "codegen error: missing support for floats.\n");
+            exit(1);
+        }
+    }
+
+    /* Local variable declaration with initialization. */
+    else if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
+        expr_codegen(d->value);
+        fprintf(codegen_out, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
+        scratch_free(d->value->reg);
+    }
+
+    /* Function definition. */
+    else if (d->code != NULL) {
+        if (d->symbol->n_params > 6) {
+            fprintf(stdout, "codegen error: missing support for functions with greater than 6 parameters.\n");
+            exit(1);
+        }
+        struct param_list *p = d->type->params;
+        while (p != NULL) {
+            if (p->type->kind == TYPE_ARRAY) {
+                fprintf(stdout, "codegen error: missing support for array function parameters.\n");
+                exit(1);
+            }
+            p = p->next;
+        }
+        /*
+         * Functions must do multiple things:
+         * 1. Save and update the base pointer.
+         * 2. Save arguments onto the stack.
+         * 3. Allocate space for local variables on stack.
+         * 4. Save callee-saved registers.
+         * 5. Function body.
+         * 6. Restore callee-saved registers.
+         * 7. Reset stack.
+         * 8. Return.
+         */
+        /* Write function label. */
+        fprintf(codegen_out, ".text\n");
+        fprintf(codegen_out, ".global %s\n", d->name);
+        fprintf(codegen_out, "%s:\n", d->name);
+        /* 1. Save and update the base pointer. */
+        fprintf(codegen_out, "    pushq %%rbp\n");
+        fprintf(codegen_out, "    movq %%rsp, %%rbp\n");
+        /* 2. Save arguments onto stack. */
+        static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+        for (int i = 0; i < d->symbol->n_params; ++i)
+            fprintf(codegen_out, "    pushq %s\n", arg_regs[i]);
+        /* 3. Allocate space for local variables on stack. */
+        fprintf(codegen_out, "    subq $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        /* 4. Save callee-saved registers. */
+        fprintf(codegen_out, "    pushq %%rbx\n");
+        fprintf(codegen_out, "    pushq %%r12\n");
+        fprintf(codegen_out, "    pushq %%r13\n");
+        fprintf(codegen_out, "    pushq %%r14\n");
+        fprintf(codegen_out, "    pushq %%r15\n");
+        int rbx_before = scratch_check(0); scratch_free(0);
+        int r12_before = scratch_check(3); scratch_free(3);
+        int r13_before = scratch_check(4); scratch_free(4);
+        int r14_before = scratch_check(5); scratch_free(5);
+        int r15_before = scratch_check(6); scratch_free(6);
+        /* Code generation within function must know about the function. */
+        codegen_func_symbol = d->symbol;
+        /* 5. Function body. */
+        stmt_codegen(d->code);
+        /* Label the function epilogue to support return statements. */
+        fprintf(codegen_out, ".%s_epilogue:\n", d->name);
+        /* 6. Restore callee-saved registers. */
+        fprintf(codegen_out, "    popq %%r15\n");
+        fprintf(codegen_out, "    popq %%r14\n");
+        fprintf(codegen_out, "    popq %%r13\n");
+        fprintf(codegen_out, "    popq %%r12\n");
+        fprintf(codegen_out, "    popq %%rbx\n");
+        scratch_set(0, rbx_before);
+        scratch_set(3, r12_before);
+        scratch_set(4, r13_before);
+        scratch_set(5, r14_before);
+        scratch_set(6, r15_before);
+        /* 7. Reset stack. */
+        fprintf(codegen_out, "    movq %%rbp, %%rsp\n");
+        fprintf(codegen_out, "    popq %%rbp\n");
+        /* 8. Return */
+        fprintf(codegen_out, "    ret\n");
+    }
+
+    decl_codegen(d->next);
 }

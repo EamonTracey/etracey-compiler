@@ -24,6 +24,8 @@ extern int verb;
 int resolve_errors = 0;
 int type_errors = 0;
 
+FILE *codegen_out;
+
 int encode_file(const char *path) {
     char line[2048];
 
@@ -211,4 +213,40 @@ int typecheck_file(const char *path) {
     decl_typecheck(ast);
 
     return type_errors == 0 ? 0 : -1;
+}
+
+int codegen_file(const char *path, const char *out) {
+    codegen_out = fopen(out, "w");
+    if (codegen_out == NULL) {
+        fprintf(stdout, "error: failed to open file %s.\n", out);
+        return -1;
+    }
+
+    yyin = fopen(path, "r");
+    if (yyin == NULL) {
+        fprintf(stdout, "error: failed to open file %s.\n", path);
+        return -1;
+    }
+
+    // Perform parsing.
+    if (yyparse() != 0)
+        return -1;
+    fclose(yyin);
+
+    // Perform name resolution.
+    scope_enter();
+    decl_resolve(ast);
+    scope_exit();
+    if (resolve_errors > 0)
+        return -1;
+
+    // Perform typechecking.
+    decl_typecheck(ast);
+    if (type_errors > 0)
+        return -1;
+
+    // Generate assembly code.
+    decl_codegen(ast);
+
+    return 0;
 }

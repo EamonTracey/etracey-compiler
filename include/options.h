@@ -7,5 +7,6 @@ int parse_file(const char *);
 int print_file(const char *);
 int resolve_file(const char *);
 int typecheck_file(const char *);
+int codegen_file(const char *, const char *);
 
 #endif

@@ -1,0 +1,55 @@
+f0: function integer ();
+f1: function integer ();
+f2: function integer ();
+f3: function integer ();
+f4: function integer ();
+f5: function integer ();
+f6: function integer ();
+f7: function integer ();
+f8: function integer ();
+f9: function integer ();
+
+main: function integer () = {
+    print ( f0() ), ( "\n" );
+    return 0;
+}
+
+f0: function integer () = {
+    return 1 + f1();
+}
+
+f1: function integer () = {
+    return 1 + f2();
+}
+
+f2: function integer () = {
+    return 1 + f3();
+}
+
+f3: function integer () = {
+    return 1 + f4();
+}
+
+f4: function integer () = {
+    return 1 + f5();
+}
+
+f5: function integer () = {
+    return 1 + f6();
+}
+
+f6: function integer () = {
+    return 1 + f7();
+}
+
+f7: function integer () = {
+    return 1 + f8();
+}
+
+f8: function integer () = {
+    return 1 + f9();
+}
+
+f9: function integer () = {
+    return 0;
+}

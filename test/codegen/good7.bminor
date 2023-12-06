@@ -1,0 +1,38 @@
+stack_push: function void (n: integer);
+stack_pop: function integer ();
+stack_is_empty: function boolean ();
+
+stackptr: integer;
+stack: array [100] integer;
+
+main: function integer () = {
+    i: integer;
+
+    // Push numbers to stack.
+    for (i = 0; i < 10; i++) {
+        n: integer = i * 11;
+        stack_push(n);
+        print "PUSH ", n, "\n";
+    }
+
+    // Pop numbers from stack.
+    for (; !stack_is_empty() ;) {
+        n: integer = stack_pop();
+        print "POP ", n, "\n";
+    }
+
+    return 0;
+}
+
+stack_push: function void (n: integer) = {
+    stack[stackptr++] = n;
+}
+
+stack_pop: function integer () = {
+    stackptr--;
+    return stack[stackptr];
+}
+
+stack_is_empty: function boolean () = {
+    return stackptr == 0;
+}

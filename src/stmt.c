@@ -1,14 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "codegen.h"
 #include "decl.h"
 #include "expr.h"
 #include "indent.h"
+#include "label.h"
 #include "scope.h"
+#include "scratch.h"
 #include "stmt.h"
 #include "type.h"
 
 extern int type_errors;
+extern struct symbol *codegen_func_symbol;
+
+extern FILE *codegen_out;
 
 struct stmt *stmt_create(stmt_t kind, struct decl *decl, struct expr *init_expr, struct expr *expr, struct expr *next_expr, struct stmt *body, struct stmt *else_body, struct stmt *next) {
     struct stmt *stmt = (struct stmt *)malloc(sizeof(struct stmt));
@@ -175,7 +181,7 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
     case STMT_FOR:
         expr_typecheck(s->init_expr);
         t = expr_typecheck(s->expr);
-        if (t->kind != TYPE_BOOLEAN) {
+        if (t != NULL && t->kind != TYPE_BOOLEAN) {
             ++type_errors;
             fprintf(stdout, "type error: for condition cannot be type ");
             type_print(t);
@@ -234,4 +240,92 @@ void stmt_typecheck(struct stmt *s, struct type *ret) {
     }
 
     stmt_typecheck(s->next, ret);
+}
+
+void stmt_codegen(struct stmt *s) {
+    if (s == NULL)
+        return;
+
+    int else_label;
+    int top_label;
+    int done_label;
+    struct expr *elist;
+
+    switch (s->kind) {
+    case STMT_DECL:
+        decl_codegen(s->decl);
+        break;
+    case STMT_IF_ELSE:
+        else_label = label_create();
+        done_label = label_create();
+        expr_codegen(s->expr);
+        fprintf(codegen_out, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+        fprintf(codegen_out, "    je %s\n", label_name(else_label));
+        scratch_free(s->expr->reg);
+        stmt_codegen(s->body);
+        fprintf(codegen_out, "    jmp %s\n", label_name(done_label));
+        fprintf(codegen_out, "%s:\n", label_name(else_label));
+        stmt_codegen(s->else_body);
+        fprintf(codegen_out, "%s:\n", label_name(done_label));
+        break;
+    case STMT_FOR:
+        top_label = label_create();
+        done_label = label_create();
+        if (s->init_expr != NULL) {
+            expr_codegen(s->init_expr);
+            scratch_free(s->init_expr->reg);
+        }
+        fprintf(codegen_out, "%s:\n", label_name(top_label));
+        if (s->expr != NULL) {
+            expr_codegen(s->expr);
+            fprintf(codegen_out, "    cmpq $0, %s\n", scratch_name(s->expr->reg));
+            fprintf(codegen_out, "    je %s\n", label_name(done_label));
+            scratch_free(s->expr->reg);
+        }
+        stmt_codegen(s->body);
+        if (s->next_expr != NULL) {
+            expr_codegen(s->next_expr);
+            scratch_free(s->next_expr->reg);
+        }
+        fprintf(codegen_out, "    jmp %s\n", label_name(top_label));
+        fprintf(codegen_out, "%s:\n", label_name(done_label));
+        break;
+    case STMT_EXPR:
+        expr_codegen(s->expr);
+        scratch_free(s->expr->reg);
+        break;
+    case STMT_PRINT:
+        elist = s->expr;
+        while (elist != NULL) {
+            expr_codegen(elist->left);
+            /* call linked print function. */
+            fprintf(codegen_out, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
+            if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
+                codegen_funccall("print_integer");
+            else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
+                codegen_funccall("print_boolean");
+            else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
+                codegen_funccall("print_character");
+            else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
+                codegen_funccall("print_string");
+            else {
+                /* TODO implement printing floats? */
+                exit(1);
+            }
+            scratch_free(elist->left->reg);
+            elist = elist->right;
+        }
+        break;
+    case STMT_RETURN:
+        expr_codegen(s->expr);
+        fprintf(codegen_out,  "    movq %s, %%rax\n", scratch_name(s->expr->reg));
+        fprintf(codegen_out, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
+        scratch_free(s->expr->reg);
+        break;
+    case STMT_BLOCK:
+        stmt_codegen(s->body);
+        break;
+    }
+
+    stmt_codegen(s->next);
 }

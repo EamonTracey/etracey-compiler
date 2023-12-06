@@ -1,0 +1,15 @@
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+main: function integer () = { a(1, true, 'e', "amon"); a(1, false, 'e', "amon"); }
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string) = { if (b) print a; else print c, d; print "\n"; }
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);

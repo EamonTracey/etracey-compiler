@@ -1,0 +1,9 @@
+sum: function integer (x: integer, y: integer) = {
+    return x + y;
+}
+
+main: function integer () = {
+    x: integer = sum(sum(5, sum(6 + 7, 8)), sum(1 + 2, 3 + 4));
+
+    return x;
+}

@@ -1,0 +1,4 @@
+main: function integer (argc: integer) = {
+    print "argc = ", argc, "\n";
+    return 0;
+}

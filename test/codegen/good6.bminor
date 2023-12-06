@@ -1,0 +1,52 @@
+/* C standard library functions.*/
+rand: function integer ();
+srand: function void (seed: integer);
+time: function integer (zero: integer);
+
+/* Internal functions. */
+bubble_sort: function void ();
+randomize_array: function void ();
+
+arrlen: integer = 100;
+arr: array [100] integer;
+
+main: function integer () = {
+    i: integer;
+
+    srand(time(0));
+
+    randomize_array();
+    print "Random numbers:\n";
+    for (i = 0; i < arrlen; i++)
+        print arr[i], ' ';
+    print '\n';
+
+    bubble_sort();
+    print "Sorted numbers:\n";
+    for (i = 0; i < arrlen; i++)
+        print arr[i], ' ';
+    print '\n';
+}
+
+bubble_sort: function void () = {
+    i: integer;
+    j: integer;
+    swapped: boolean = true;
+
+    for (i = 0; i < arrlen - 1 && swapped; i++) {
+        swapped = false;
+        for (j = 0; j < arrlen - i - 1; j++)
+            if (arr[j] > arr[j + 1]) {
+                tmp: integer = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+                swapped = true;
+            }
+    }
+}
+
+randomize_array: function void () = {
+    i: integer;
+    for (i = 0; i < arrlen; i++)
+        arr[i] = 1 + (rand() % arrlen);
+}

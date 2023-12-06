@@ -1,0 +1,17 @@
+scanf: function void (format: string, input: string);
+strcmp: function integer (s1: string, s2: string);
+
+input: string = "                                ";
+get_input: function string ();
+
+main: function integer () = {
+    if (false)
+        for (; strcmp(input, "exit") != 0 ;)
+            print get_input(), "\n";
+    return 0;
+}
+
+get_input: function string () = {
+    scanf("%s", input);
+    return input;
+}

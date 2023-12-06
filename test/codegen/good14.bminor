@@ -1,0 +1,21 @@
+n: integer = 0;
+
+main: function integer () = {
+    expr: boolean = (
+        (1 * 2 + 3 / 4 - 5 ^ 6 % 2 != 0)
+        ||
+        ("not" == "equal" && 'q' == 'q')
+        ||
+        (1 <= 2 && 2 <= 3 && 3>=4 && 4>5)
+        ||
+        (1 ^ 2 ^ 3 ^ 4 ^ 5 < 99999)
+        ||
+        !(!(!(!(!(!(true))))))
+        ||
+        (n++ == n++)
+    );
+
+    if (expr)
+        return 0;
+    return 1;
+}
