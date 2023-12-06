@@ -82,7 +82,7 @@ while       { return TOKEN_WHILE; }
     return TOKEN_CHARLIT;
 }
 
-\"(\\\"|[^"])*\" {
+\"(\\\"|[^"\n])*\" {
     if (string_decode(yytext, NULL) != 0)
         return TOKEN_INVALID_ANY;
 
