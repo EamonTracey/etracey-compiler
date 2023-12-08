@@ -47,6 +47,11 @@ void print_character( char c )
 	printf("%c",c);
 }
 
+void print_float( double f )
+{
+	printf("%lf", f);
+}
+
 long integer_power( long x, long y )
 {
 	long result = 1;

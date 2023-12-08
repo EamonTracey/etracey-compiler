@@ -261,11 +261,15 @@ void decl_codegen(struct decl *d) {
                 fprintf(codegen_out, "%s: .string \"\"\n", d->symbol->name);
             }
         } else if (d->type->kind == TYPE_ARRAY) {
-            if (d->type->subtype->kind != TYPE_INTEGER) {
-                fprintf(stdout, "codegen error: missing support for non-integer arrays.\n");
+            if (d->type->subtype->kind != TYPE_INTEGER && d->type->subtype->kind != TYPE_FLOAT) {
+                fprintf(stdout, "codegen error: missing support for non-integer, non-float  arrays.\n");
                 exit(1);
             }
-            fprintf(codegen_out, "%s: .quad ", d->symbol->name);
+            if (d->type->subtype->kind == TYPE_FLOAT) {
+                fprintf(codegen_out, "%s: .double ", d->symbol->name);
+            } else {
+                fprintf(codegen_out, "%s: .quad ", d->symbol->name);
+            }
             if (d->value != NULL) {
                 /* perhaps the hackiest of hacks */
                 FILE *oldstdout = stdout;
@@ -281,9 +285,11 @@ void decl_codegen(struct decl *d) {
                 }
                 fprintf(codegen_out, "\n");
             }
+        } else if (d->type->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "%s: .double %lf\n", d->symbol->name, d->value != NULL ? d->value->float_value : 0.0);
         }
         else {
-            fprintf(stdout, "codegen error: missing support for floats.\n");
+            fprintf(stdout, "codegen error: compiler issue.\n");
             exit(1);
         }
     }
@@ -291,8 +297,14 @@ void decl_codegen(struct decl *d) {
     /* Local variable declaration with initialization. */
     else if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
         expr_codegen(d->value);
-        fprintf(codegen_out, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
-        scratch_free(d->value->reg);
+        if (expr_typecheck(d->value)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "    movsd %s, %s\n", scratch_float_name(d->value->reg), symbol_codegen(d->symbol));
+            scratch_float_free(d->value->reg);
+        } else {
+            fprintf(codegen_out, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
+            scratch_free(d->value->reg);
+        }
+
     }
 
     /* Function definition. */
@@ -329,16 +341,27 @@ void decl_codegen(struct decl *d) {
         fprintf(codegen_out, "    movq %%rsp, %%rbp\n");
         /* 2. Save arguments onto stack. */
         static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
-        for (int i = 0; i < d->symbol->n_params; ++i)
-            fprintf(codegen_out, "    pushq %s\n", arg_regs[i]);
+        static const char *float_arg_regs[] = { "%xmm0", "%xmm1", "%xmm2" };
+        int argi = 0;
+        int floati = 0;
+        for (struct param_list *p = d->type->params; p != NULL; p = p->next){
+            if (p->type->kind == TYPE_FLOAT){
+                fprintf(codegen_out, "    sub $16, %%rsp\n");
+                fprintf(codegen_out, "    movdqu %s, (%%rsp)\n", float_arg_regs[floati++]);
+            }else{
+                fprintf(codegen_out, "    pushq %s\n", arg_regs[argi++]);
+            }
+        }
         /* 3. Allocate space for local variables on stack. */
-        fprintf(codegen_out, "    subq $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        fprintf(codegen_out, "    subq $%d, %%rsp\n", 16 * d->symbol->n_locals);
         /* 4. Save callee-saved registers. */
         fprintf(codegen_out, "    pushq %%rbx\n");
         fprintf(codegen_out, "    pushq %%r12\n");
         fprintf(codegen_out, "    pushq %%r13\n");
         fprintf(codegen_out, "    pushq %%r14\n");
         fprintf(codegen_out, "    pushq %%r15\n");
+        /* HACK ALIGNMENT ALERT */
+        fprintf(codegen_out, "    andq $-16, %%rsp\n");
         int rbx_before = scratch_check(0); scratch_free(0);
         int r12_before = scratch_check(3); scratch_free(3);
         int r13_before = scratch_check(4); scratch_free(4);
