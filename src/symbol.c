@@ -45,10 +45,10 @@ const char *symbol_codegen(struct symbol *s) {
 
     switch (s->kind) {
     case SYMBOL_LOCAL:
-        snprintf(sc, 64, "-%d(%%rbp)", 8 * (1 + codegen_func_symbol->n_params + s->which));
+        snprintf(sc, 64, "-%d(%%rbp)", 16 * (1 + codegen_func_symbol->n_params + s->which));
         break;
     case SYMBOL_PARAM:
-        snprintf(sc, 64, "-%d(%%rbp)", 8 * (1 + s->which));
+        snprintf(sc, 64, "-%d(%%rbp)", 16 * (1 + s->which));
         break;
     case SYMBOL_GLOBAL:
         return s->name;

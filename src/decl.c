@@ -337,10 +337,19 @@ void decl_codegen(struct decl *d) {
         fprintf(codegen_out, "    movq %%rsp, %%rbp\n");
         /* 2. Save arguments onto stack. */
         static const char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
-        for (int i = 0; i < d->symbol->n_params; ++i)
-            fprintf(codegen_out, "    pushq %s\n", arg_regs[i]);
+        static const char *float_arg_regs[] = { "%xmm0", "%xmm1", "%xmm2" };
+        int argi = 0;
+        int floati = 0;
+        for (struct param_list *p = d->type->params; p != NULL; p = p->next){
+            if (p->type->kind == TYPE_FLOAT){
+                fprintf(codegen_out, "    sub $16, %%rsp\n");
+                fprintf(codegen_out, "    movdqu %s, (%%rsp)\n", float_arg_regs[floati++]);
+            }else{
+                fprintf(codegen_out, "    pushq %s\n", arg_regs[argi++]);
+            }
+        }
         /* 3. Allocate space for local variables on stack. */
-        fprintf(codegen_out, "    subq $%d, %%rsp\n", 8 * d->symbol->n_locals);
+        fprintf(codegen_out, "    subq $%d, %%rsp\n", 16 * d->symbol->n_locals);
         /* 4. Save callee-saved registers. */
         fprintf(codegen_out, "    pushq %%rbx\n");
         fprintf(codegen_out, "    pushq %%r12\n");

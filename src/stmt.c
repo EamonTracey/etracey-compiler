@@ -306,6 +306,7 @@ void stmt_codegen(struct stmt *s) {
                 fprintf(codegen_out, "    movsd %s, %%xmm0\n", scratch_float_name(elist->left->reg));
                 fprintf(codegen_out, "    movq $1, %%rax\n");
                 codegen_funccall("print_float");
+                scratch_float_free(elist->left->reg);
             } else {
                 fprintf(codegen_out, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
                 if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
@@ -315,17 +316,23 @@ void stmt_codegen(struct stmt *s) {
                 else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
                     codegen_funccall("print_character");
                 else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
-                    codegen_funccall("print_string");
+                        codegen_funccall("print_string");
+                scratch_free(elist->left->reg);
             }
-            scratch_free(elist->left->reg);
             elist = elist->right;
         }
         break;
     case STMT_RETURN:
         expr_codegen(s->expr);
-        fprintf(codegen_out,  "    movq %s, %%rax\n", scratch_name(s->expr->reg));
-        fprintf(codegen_out, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
-        scratch_free(s->expr->reg);
+        if (expr_typecheck(s->expr)->kind == TYPE_FLOAT){
+            fprintf(codegen_out,  "    movsd %s, %%xmm0\n", scratch_float_name(s->expr->reg));
+            fprintf(codegen_out, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
+            scratch_float_free(s->expr->reg);
+        } else{
+            fprintf(codegen_out,  "    movq %s, %%rax\n", scratch_name(s->expr->reg));
+            fprintf(codegen_out, "    jmp .%s_epilogue\n", codegen_func_symbol->name);
+            scratch_free(s->expr->reg);
+        }
         break;
     case STMT_BLOCK:
         stmt_codegen(s->body);

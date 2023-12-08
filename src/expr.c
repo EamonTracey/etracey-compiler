@@ -730,6 +730,8 @@ void expr_codegen(struct expr *e) {
 
     int arg = 0;
     static char *arg_regs[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+    int float_arg = 0;
+    static char *float_arg_regs[] = { "%xmm0", "%xmm1", "%xmm2" };
     char s[2048];
 
     switch (e->kind) {
@@ -955,14 +957,24 @@ void expr_codegen(struct expr *e) {
         /* pass arguments into registers. */
         elist = e->right;
         while (elist != NULL) {
-            fprintf(codegen_out, "    movq %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
-            scratch_free(elist->left->reg);
+            if (expr_typecheck(elist->left)->kind == TYPE_FLOAT){
+                fprintf(codegen_out, "    movsd %s, %s\n", scratch_float_name(elist->left->reg), float_arg_regs[float_arg++]);
+                scratch_float_free(elist->left->reg);
+            }else{
+                fprintf(codegen_out, "    movq %s, %s\n", scratch_name(elist->left->reg), arg_regs[arg++]);
+                scratch_free(elist->left->reg);
+            }
             elist = elist->right;
         }
         /* helper :) */
         codegen_funccall(e->left->symbol->name);
-        reg = scratch_alloc();
-        fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(reg));
+        if (e->left->symbol->type->subtype->kind == TYPE_FLOAT){
+            reg = scratch_float_alloc();
+            fprintf(codegen_out, "    movsd %%xmm0, %s\n", scratch_float_name(reg));
+        }else{
+            reg = scratch_alloc();
+            fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(reg));
+        }
         e->reg = reg;
         break;
     case EXPR_IDENT:
