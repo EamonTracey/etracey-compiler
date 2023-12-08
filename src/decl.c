@@ -293,8 +293,14 @@ void decl_codegen(struct decl *d) {
     /* Local variable declaration with initialization. */
     else if (d->symbol->kind == SYMBOL_LOCAL && d->value != NULL) {
         expr_codegen(d->value);
-        fprintf(codegen_out, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
-        scratch_free(d->value->reg);
+        if (expr_typecheck(d->value)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "    movsd %s, %s\n", scratch_float_name(d->value->reg), symbol_codegen(d->symbol));
+            scratch_float_free(d->value->reg);
+        } else {
+            fprintf(codegen_out, "    movq %s, %s\n", scratch_name(d->value->reg), symbol_codegen(d->symbol));
+            scratch_free(d->value->reg);
+        }
+
     }
 
     /* Function definition. */
