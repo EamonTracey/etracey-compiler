@@ -261,11 +261,15 @@ void decl_codegen(struct decl *d) {
                 fprintf(codegen_out, "%s: .string \"\"\n", d->symbol->name);
             }
         } else if (d->type->kind == TYPE_ARRAY) {
-            if (d->type->subtype->kind != TYPE_INTEGER) {
-                fprintf(stdout, "codegen error: missing support for non-integer arrays.\n");
+            if (d->type->subtype->kind != TYPE_INTEGER && d->type->subtype->kind != TYPE_FLOAT) {
+                fprintf(stdout, "codegen error: missing support for non-integer, non-float  arrays.\n");
                 exit(1);
             }
-            fprintf(codegen_out, "%s: .quad ", d->symbol->name);
+            if (d->type->subtype->kind == TYPE_FLOAT) {
+                fprintf(codegen_out, "%s: .double ", d->symbol->name);
+            } else {
+                fprintf(codegen_out, "%s: .quad ", d->symbol->name);
+            }
             if (d->value != NULL) {
                 /* perhaps the hackiest of hacks */
                 FILE *oldstdout = stdout;

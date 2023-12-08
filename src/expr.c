@@ -939,8 +939,13 @@ void expr_codegen(struct expr *e) {
     case EXPR_ARRACC:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(codegen_out, "    movq 0(%s, %s, 8), %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg), scratch_name(e->right->reg));
+        if (expr_typecheck(e->left)->subtype->kind == TYPE_FLOAT){
+            fprintf(codegen_out, "    movsd 0(%s, %s, 8), %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg), scratch_float_name(e->right->reg));
+        scratch_float_free(e->left->reg);
+        }else{
+            fprintf(codegen_out, "    movq 0(%s, %s, 8), %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg), scratch_name(e->right->reg));
         scratch_free(e->left->reg);
+        }
         e->reg = e->right->reg;
         break;
     case EXPR_FUNCCALL:
