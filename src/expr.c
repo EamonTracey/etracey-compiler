@@ -847,6 +847,22 @@ void expr_codegen(struct expr *e) {
         done_label = label_create();
         expr_codegen(e->left);
         expr_codegen(e->right);
+        if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            if (e->kind == EXPR_LT)
+                fprintf(codegen_out, "    cmpltsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            else if (e->kind == EXPR_LTE)
+                fprintf(codegen_out, "    cmplesd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            else if (e->kind == EXPR_GT)
+                fprintf(codegen_out, "    cmpnlesd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            else if (e->kind == EXPR_GTE)
+                fprintf(codegen_out, "    cmpnltsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            else if (e->kind == EXPR_EQ)
+                fprintf(codegen_out, "    cmpeqsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            else if (e->kind == EXPR_NOTEQ)
+                fprintf(codegen_out, "    cmpneqsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            e->reg = e->right->reg;
+            scratch_float_free(e->left->reg);
+        } else{
         fprintf(codegen_out, "    cmpq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
         if (e->kind == EXPR_LT)
             fprintf(codegen_out, "    jl %s\n", label_name(true_label));
@@ -867,6 +883,7 @@ void expr_codegen(struct expr *e) {
         fprintf(codegen_out, "%s:\n", label_name(done_label));
         scratch_free(e->left->reg);
         e->reg = e->right->reg;
+        }
         break;
     case EXPR_AND:
     case EXPR_OR:
