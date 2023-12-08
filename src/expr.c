@@ -777,7 +777,7 @@ void expr_codegen(struct expr *e) {
         expr_codegen(e->left);
         expr_codegen(e->right);
         if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
-            fprintf(codegen_out, "mulsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            fprintf(codegen_out, "    mulsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
             scratch_float_free(e->left->reg);
         } else{
             fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->right->reg));
@@ -791,16 +791,17 @@ void expr_codegen(struct expr *e) {
         expr_codegen(e->left);
         expr_codegen(e->right);
         if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
-            fprintf(codegen_out, "divsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
-            scratch_float_free(e->left->reg);
+            fprintf(codegen_out, "    divsd %s, %s\n", scratch_float_name(e->right->reg), scratch_float_name(e->left->reg));
+            scratch_float_free(e->right->reg);
+        e->reg = e->left->reg;
         } else{
             fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->left->reg));
             fprintf(codegen_out, "    cqo\n");
             fprintf(codegen_out, "    idivq %s\n", scratch_name(e->right->reg));
             fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(e->right->reg));
             scratch_free(e->left->reg);
-        }
         e->reg = e->right->reg;
+        }
         break;
     case EXPR_MOD:
         expr_codegen(e->left);
