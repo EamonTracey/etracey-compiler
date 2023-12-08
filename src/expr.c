@@ -961,8 +961,10 @@ void expr_codegen(struct expr *e) {
         }
         /* pass arguments into registers. */
         elist = e->right;
+        int nfloats = 0;
         while (elist != NULL) {
             if (expr_typecheck(elist->left)->kind == TYPE_FLOAT){
+                ++nfloats;
                 fprintf(codegen_out, "    movsd %s, %s\n", scratch_float_name(elist->left->reg), float_arg_regs[float_arg++]);
                 scratch_float_free(elist->left->reg);
             }else{
@@ -972,6 +974,7 @@ void expr_codegen(struct expr *e) {
             elist = elist->right;
         }
         /* helper :) */
+        fprintf(codegen_out, "    movq $%d, %%rax\n", nfloats);
         codegen_funccall(e->left->symbol->name);
         if (e->left->symbol->type->subtype->kind == TYPE_FLOAT){
             reg = scratch_float_alloc();
