@@ -281,9 +281,11 @@ void decl_codegen(struct decl *d) {
                 }
                 fprintf(codegen_out, "\n");
             }
+        } else if (d->type->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "%s: .double %lf\n", d->symbol->name, d->value != NULL ? d->value->float_value : 0.0);
         }
         else {
-            fprintf(stdout, "codegen error: missing support for floats.\n");
+            fprintf(stdout, "codegen error: compiler issue.\n");
             exit(1);
         }
     }
@@ -334,11 +336,14 @@ void decl_codegen(struct decl *d) {
         /* 3. Allocate space for local variables on stack. */
         fprintf(codegen_out, "    subq $%d, %%rsp\n", 8 * d->symbol->n_locals);
         /* 4. Save callee-saved registers. */
-        fprintf(codegen_out, "    pushq %%rbx\n");
-        fprintf(codegen_out, "    pushq %%r12\n");
-        fprintf(codegen_out, "    pushq %%r13\n");
-        fprintf(codegen_out, "    pushq %%r14\n");
-        fprintf(codegen_out, "    pushq %%r15\n");
+        if (strcmp("main", d->symbol->name)) {
+            fprintf(codegen_out, "    pushq %%rbx\n");
+            fprintf(codegen_out, "    pushq %%r12\n");
+            fprintf(codegen_out, "    pushq %%r13\n");
+            fprintf(codegen_out, "    pushq %%r14\n");
+            fprintf(codegen_out, "    pushq %%r15\n");
+        }
+        fprintf(codegen_out, "    andq $-16, %%rsp\n");
         int rbx_before = scratch_check(0); scratch_free(0);
         int r12_before = scratch_check(3); scratch_free(3);
         int r13_before = scratch_check(4); scratch_free(4);
@@ -351,11 +356,13 @@ void decl_codegen(struct decl *d) {
         /* Label the function epilogue to support return statements. */
         fprintf(codegen_out, ".%s_epilogue:\n", d->name);
         /* 6. Restore callee-saved registers. */
-        fprintf(codegen_out, "    popq %%r15\n");
-        fprintf(codegen_out, "    popq %%r14\n");
-        fprintf(codegen_out, "    popq %%r13\n");
-        fprintf(codegen_out, "    popq %%r12\n");
-        fprintf(codegen_out, "    popq %%rbx\n");
+        if (strcmp("main", d->symbol->name)) {
+            fprintf(codegen_out, "    popq %%r15\n");
+            fprintf(codegen_out, "    popq %%r14\n");
+            fprintf(codegen_out, "    popq %%r13\n");
+            fprintf(codegen_out, "    popq %%r12\n");
+            fprintf(codegen_out, "    popq %%rbx\n");
+        }
         scratch_set(0, rbx_before);
         scratch_set(3, r12_before);
         scratch_set(4, r13_before);

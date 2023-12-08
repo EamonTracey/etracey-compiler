@@ -292,25 +292,30 @@ void stmt_codegen(struct stmt *s) {
         break;
     case STMT_EXPR:
         expr_codegen(s->expr);
-        scratch_free(s->expr->reg);
+        if (expr_typecheck(s->expr)->kind == TYPE_FLOAT)
+            scratch_float_free(s->expr->reg);
+        else
+            scratch_free(s->expr->reg);
         break;
     case STMT_PRINT:
         elist = s->expr;
         while (elist != NULL) {
             expr_codegen(elist->left);
             /* call linked print function. */
-            fprintf(codegen_out, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
-            if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
-                codegen_funccall("print_integer");
-            else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
-                codegen_funccall("print_boolean");
-            else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
-                codegen_funccall("print_character");
-            else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
-                codegen_funccall("print_string");
-            else {
-                /* TODO implement printing floats? */
-                exit(1);
+            if (expr_typecheck(elist->left)->kind == TYPE_FLOAT ){
+                fprintf(codegen_out, "    movsd %s, %%xmm0\n", scratch_float_name(elist->left->reg));
+                fprintf(codegen_out, "    movq $1, %%rax\n");
+                codegen_funccall("print_float");
+            } else {
+                fprintf(codegen_out, "    movq %s, %%rdi\n", scratch_name(elist->left->reg));
+                if (expr_typecheck(elist->left)->kind == TYPE_INTEGER)
+                    codegen_funccall("print_integer");
+                else if (expr_typecheck(elist->left)->kind == TYPE_BOOLEAN)
+                    codegen_funccall("print_boolean");
+                else if (expr_typecheck(elist->left)->kind == TYPE_CHARACTER)
+                    codegen_funccall("print_character");
+                else if (expr_typecheck(elist->left)->kind == TYPE_STRING)
+                    codegen_funccall("print_string");
             }
             scratch_free(elist->left->reg);
             elist = elist->right;

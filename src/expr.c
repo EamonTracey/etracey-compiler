@@ -805,15 +805,25 @@ void expr_codegen(struct expr *e) {
     case EXPR_PLUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(codegen_out, "    addq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-        scratch_free(e->left->reg);
+        if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "    addsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            scratch_float_free(e->left->reg);
+        } else {
+            fprintf(codegen_out, "    addq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+            scratch_free(e->left->reg);
+        }
         e->reg = e->right->reg;
         break;
     case EXPR_MINUS:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(codegen_out, "    subq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
-        scratch_free(e->right->reg);
+        if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "    subsd %s, %s\n", scratch_float_name(e->right->reg), scratch_float_name(e->left->reg));
+            scratch_float_free(e->right->reg);
+        } else {
+            fprintf(codegen_out, "    subq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+            scratch_free(e->right->reg);
+        }
         e->reg = e->left->reg;
         break;
     case EXPR_LT:
@@ -872,6 +882,8 @@ void expr_codegen(struct expr *e) {
             fprintf(codegen_out, "    movq %s, 0(%s, %s, 8)\n", scratch_name(e->right->reg), scratch_name(e->left->left->reg), scratch_name(e->left->right->reg));
             scratch_free(e->left->left->reg);
             scratch_free(e->left->right->reg);
+        } else if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "    movsd %s, %s\n", scratch_float_name(e->right->reg), symbol_codegen(e->left->symbol));
         } else
             fprintf(codegen_out, "    movq %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
         e->reg = e->right->reg;
@@ -926,10 +938,11 @@ void expr_codegen(struct expr *e) {
         e->reg = reg;
         break;
     case EXPR_IDENT:
-        /* TODO: string and array? */
         reg = scratch_alloc();
         if (e->symbol->type->kind == TYPE_ARRAY || (e->symbol->type->kind == TYPE_STRING && e->symbol->kind == SYMBOL_GLOBAL))
             fprintf(codegen_out, "    leaq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        else if (expr_typecheck(e)->kind == TYPE_FLOAT)
+            fprintf(codegen_out, "    movsd %s, %s\n", symbol_codegen(e->symbol), scratch_float_name(reg));
         else
             fprintf(codegen_out, "    movq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
         e->reg = reg;
@@ -960,8 +973,14 @@ void expr_codegen(struct expr *e) {
         e->reg = reg;
         break;
     case EXPR_FLOATLIT:
-        fprintf(stdout, "codegen error: missing support for floats.\n");
-        exit(1);
+        reg = scratch_float_alloc();
+        label = label_create();
+        fprintf(codegen_out, ".data\n");
+        fprintf(codegen_out, "%s: .double %lf\n", label_name(label), e->float_value);
+        fprintf(codegen_out, ".text\n");
+        fprintf(codegen_out, "    movsd %s, %s\n", label_name(label), scratch_float_name(reg));
+        e->reg = reg;
+        break;
     case EXPR_ARRLIT:
         fprintf(stdout, "codegen error: missing support for dynamic arrays.\n");
         exit(1);
