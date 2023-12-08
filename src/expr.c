@@ -776,20 +776,30 @@ void expr_codegen(struct expr *e) {
     case EXPR_MULT:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->right->reg));
-        fprintf(codegen_out, "    imulq %s\n", scratch_name(e->left->reg));
-        fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(e->right->reg));
-        scratch_free(e->left->reg);
+        if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "mulsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            scratch_float_free(e->left->reg);
+        } else{
+            fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->right->reg));
+            fprintf(codegen_out, "    imulq %s\n", scratch_name(e->left->reg));
+            fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(e->right->reg));
+            scratch_free(e->left->reg);
+        }
         e->reg = e->right->reg;
         break;
     case EXPR_DIV:
         expr_codegen(e->left);
         expr_codegen(e->right);
-        fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->left->reg));
-        fprintf(codegen_out, "    cqo\n");
-        fprintf(codegen_out, "    idivq %s\n", scratch_name(e->right->reg));
-        fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(e->right->reg));
-        scratch_free(e->left->reg);
+        if (expr_typecheck(e->left)->kind == TYPE_FLOAT) {
+            fprintf(codegen_out, "divsd %s, %s\n", scratch_float_name(e->left->reg), scratch_float_name(e->right->reg));
+            scratch_float_free(e->left->reg);
+        } else{
+            fprintf(codegen_out, "    movq %s, %%rax\n", scratch_name(e->left->reg));
+            fprintf(codegen_out, "    cqo\n");
+            fprintf(codegen_out, "    idivq %s\n", scratch_name(e->right->reg));
+            fprintf(codegen_out, "    movq %%rax, %s\n", scratch_name(e->right->reg));
+            scratch_free(e->left->reg);
+        }
         e->reg = e->right->reg;
         break;
     case EXPR_MOD:
@@ -938,13 +948,17 @@ void expr_codegen(struct expr *e) {
         e->reg = reg;
         break;
     case EXPR_IDENT:
+        if (e->symbol->type->kind == TYPE_ARRAY || (e->symbol->type->kind == TYPE_STRING && e->symbol->kind == SYMBOL_GLOBAL)) {
         reg = scratch_alloc();
-        if (e->symbol->type->kind == TYPE_ARRAY || (e->symbol->type->kind == TYPE_STRING && e->symbol->kind == SYMBOL_GLOBAL))
             fprintf(codegen_out, "    leaq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
-        else if (expr_typecheck(e)->kind == TYPE_FLOAT)
+        } else if (e->symbol->type->kind == TYPE_FLOAT) {
+            reg = scratch_float_alloc();
             fprintf(codegen_out, "    movsd %s, %s\n", symbol_codegen(e->symbol), scratch_float_name(reg));
-        else
+        }
+        else{
+        reg = scratch_alloc();
             fprintf(codegen_out, "    movq %s, %s\n", symbol_codegen(e->symbol), scratch_name(reg));
+        }
         e->reg = reg;
         break;
     case EXPR_INTEGERLIT:
