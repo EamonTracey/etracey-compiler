@@ -1,0 +1,9224 @@
+=====STUDENT TESTS=====
+====Good Tests====
+===[good0.bminor Input]===
+main: function integer () = {
+    return 0;
+}
+
+===[good0.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 0
+
+
+===[good1.bminor Input]===
+main: function integer () = {
+    print "Hello, world!\n";
+    return 0;
+}
+
+===[good1.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "Hello, world!\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+Hello, world!
+
+
+return code: 0
+
+
+===[good10.bminor Input]===
+scanf: function void (format: string, input: string);
+strcmp: function integer (s1: string, s2: string);
+
+input: string = "                                ";
+get_input: function string ();
+
+main: function integer () = {
+    if (false)
+        for (; strcmp(input, "exit") != 0 ;)
+            print get_input(), "\n";
+    return 0;
+}
+
+get_input: function string () = {
+    scanf("%s", input);
+    return input;
+}
+
+===[good10.bminor Output]===
+.data
+input: .string "                                "
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    cmpq $0, %rbx
+    je .L0
+.L2:
+    leaq input, %rbx
+.data
+.L6: .string "exit"
+.text
+    leaq .L6, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call strcmp
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    jne .L4
+    movq $0, %r10
+    jmp .L5
+.L4:
+    movq $-1, %r10
+.L5:
+    cmpq $0, %r10
+    je .L3
+    pushq %r10
+    pushq %r11
+    call get_input
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L7: .string "\n"
+.text
+    leaq .L7, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    jmp .L2
+.L3:
+    jmp .L1
+.L0:
+.L1:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global get_input
+get_input:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L8: .string "%s"
+.text
+    leaq .L8, %rbx
+    leaq input, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call scanf
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    leaq input, %rbx
+    movq %rbx, %rax
+    jmp .get_input_epilogue
+.get_input_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 0
+
+
+===[good11.bminor Input]===
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+main: function integer () = { a(1, true, 'e', "amon"); a(1, false, 'e', "amon"); }
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string) = { if (b) print a; else print c, d; print "\n"; }
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+a: function boolean (a: integer, b: boolean, c: char, d: string);
+
+===[good11.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    movq $-1, %r10
+    movq $101, %r11
+.data
+.L0: .string "amon"
+.text
+    leaq .L0, %r12
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    movq %r11, %rdx
+    movq %r12, %rcx
+    pushq %r10
+    pushq %r11
+    call a
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $1, %rbx
+    movq $0, %r10
+    movq $101, %r11
+.data
+.L1: .string "amon"
+.text
+    leaq .L1, %r12
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    movq %r11, %rdx
+    movq %r12, %rcx
+    pushq %r10
+    pushq %r11
+    call a
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global a
+a:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    pushq %rdx
+    pushq %rcx
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -16(%rbp), %rbx
+    cmpq $0, %rbx
+    je .L2
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    jmp .L3
+.L2:
+    movq -24(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -32(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.L3:
+.data
+.L4: .string "\n"
+.text
+    leaq .L4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.a_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+1
+eamon
+
+
+return code: 1
+
+
+===[good12.bminor Input]===
+triangle: function void (height: integer) = {
+    i: integer;
+    j: integer;
+    for (i = 1; i <= height; i++) {
+        for (j = 0; j < i; j++)
+            print '*';
+        print '\n';
+    }
+    for (i = height; i >= 1; i--) {
+        for (j = i - 1; j >= 0; j--)
+            print '*';
+        print '\n';
+    }
+}
+
+main: function integer () = {
+    i: integer;
+    for (i = 1; i <= 25; i++)
+        triangle(i);
+    return 0;
+}
+
+===[good12.bminor Output]===
+.text
+.global triangle
+triangle:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $16, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    movq %rbx, -16(%rbp)
+.L0:
+    movq -16(%rbp), %rbx
+    movq -8(%rbp), %r10
+    cmpq %r10, %rbx
+    jle .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    movq $0, %rbx
+    movq %rbx, -24(%rbp)
+.L4:
+    movq -24(%rbp), %rbx
+    movq -16(%rbp), %r10
+    cmpq %r10, %rbx
+    jl .L6
+    movq $0, %r10
+    jmp .L7
+.L6:
+    movq $-1, %r10
+.L7:
+    cmpq $0, %r10
+    je .L5
+    movq $42, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -24(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -24(%rbp)
+    decq %rbx
+    jmp .L4
+.L5:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -16(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+    movq -8(%rbp), %rbx
+    movq %rbx, -16(%rbp)
+.L8:
+    movq -16(%rbp), %rbx
+    movq $1, %r10
+    cmpq %r10, %rbx
+    jge .L10
+    movq $0, %r10
+    jmp .L11
+.L10:
+    movq $-1, %r10
+.L11:
+    cmpq $0, %r10
+    je .L9
+    movq -16(%rbp), %rbx
+    movq $1, %r10
+    subq %r10, %rbx
+    movq %rbx, -24(%rbp)
+.L12:
+    movq -24(%rbp), %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    jge .L14
+    movq $0, %r10
+    jmp .L15
+.L14:
+    movq $-1, %r10
+.L15:
+    cmpq $0, %r10
+    je .L13
+    movq $42, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -24(%rbp), %rbx
+    decq %rbx
+    movq %rbx, -24(%rbp)
+    incq %rbx
+    jmp .L12
+.L13:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    decq %rbx
+    movq %rbx, -16(%rbp)
+    incq %rbx
+    jmp .L8
+.L9:
+.triangle_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    movq %rbx, -8(%rbp)
+.L16:
+    movq -8(%rbp), %rbx
+    movq $25, %r10
+    cmpq %r10, %rbx
+    jle .L18
+    movq $0, %r10
+    jmp .L19
+.L18:
+    movq $-1, %r10
+.L19:
+    cmpq $0, %r10
+    je .L17
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call triangle
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L16
+.L17:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+*
+*
+*
+**
+**
+*
+*
+**
+***
+***
+**
+*
+*
+**
+***
+****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+*********************
+*********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+*********************
+**********************
+**********************
+*********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+*********************
+**********************
+***********************
+***********************
+**********************
+*********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+*********************
+**********************
+***********************
+************************
+************************
+***********************
+**********************
+*********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+**********
+***********
+************
+*************
+**************
+***************
+****************
+*****************
+******************
+*******************
+********************
+*********************
+**********************
+***********************
+************************
+*************************
+*************************
+************************
+***********************
+**********************
+*********************
+********************
+*******************
+******************
+*****************
+****************
+***************
+**************
+*************
+************
+***********
+**********
+*********
+********
+*******
+******
+*****
+****
+***
+**
+*
+
+
+return code: 0
+
+
+===[good13.bminor Input]===
+digits_reversed: function integer (n: integer);
+
+a: array [10] integer = {0, 4576, 10101, 9989, 23, 111111, 5454, 1234567654321, -101, 3113};
+
+main: function integer () = {
+    i: integer;
+    reversed: integer;
+
+    for (i = 0; i < 10; i++) {
+        reversed = digits_reversed(a[i]);
+        if (a[i] == reversed)
+            print a[i], " is a palindrome (", reversed, ")\n";
+        else
+            print a[i], " is not a palindrome (", reversed, ")\n";
+    }
+        
+    return 0;
+}
+
+digits_reversed: function integer (n: integer) = {
+    reversed: integer = 0;
+
+    for (; n != 0 ;) {
+        remainder: integer = n % 10;
+        reversed = reversed * 10 + remainder;
+        n = n / 10;
+    }
+
+    return reversed;
+}
+
+===[good13.bminor Output]===
+.data
+a: .quad 0,4576,10101,9989,23,111111,5454,1912040369,-101,3113
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call digits_reversed
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, -16(%rbp)
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq -16(%rbp), %rbx
+    cmpq %rbx, %r10
+    je .L6
+    movq $0, %rbx
+    jmp .L7
+.L6:
+    movq $-1, %rbx
+.L7:
+    cmpq $0, %rbx
+    je .L4
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L8: .string " is a palindrome ("
+.text
+    leaq .L8, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L9: .string ")\n"
+.text
+    leaq .L9, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    jmp .L5
+.L4:
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L10: .string " is not a palindrome ("
+.text
+    leaq .L10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L11: .string ")\n"
+.text
+    leaq .L11, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.L5:
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global digits_reversed
+digits_reversed:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $16, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -16(%rbp)
+.L12:
+    movq -8(%rbp), %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    jne .L14
+    movq $0, %r10
+    jmp .L15
+.L14:
+    movq $-1, %r10
+.L15:
+    cmpq $0, %r10
+    je .L13
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq %r10, -24(%rbp)
+    movq -16(%rbp), %rbx
+    movq $10, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq -24(%rbp), %rbx
+    addq %r10, %rbx
+    movq %rbx, -16(%rbp)
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rax, %r10
+    movq %r10, -8(%rbp)
+    jmp .L12
+.L13:
+    movq -16(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .digits_reversed_epilogue
+.digits_reversed_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+0 is a palindrome (0)
+4576 is not a palindrome (6754)
+10101 is a palindrome (10101)
+9989 is not a palindrome (9899)
+23 is not a palindrome (32)
+111111 is a palindrome (111111)
+5454 is not a palindrome (4545)
+1912040369 is not a palindrome (9630402191)
+-101 is a palindrome (-101)
+3113 is a palindrome (3113)
+
+
+return code: 0
+
+
+===[good14.bminor Input]===
+n: integer = 0;
+
+main: function integer () = {
+    expr: boolean = (
+        (1 * 2 + 3 / 4 - 5 ^ 6 % 2 != 0)
+        ||
+        ("not" == "equal" && 'q' == 'q')
+        ||
+        (1 <= 2 && 2 <= 3 && 3>=4 && 4>5)
+        ||
+        (1 ^ 2 ^ 3 ^ 4 ^ 5 < 99999)
+        ||
+        !(!(!(!(!(!(true))))))
+        ||
+        (n++ == n++)
+    );
+
+    if (expr)
+        return 0;
+    return 1;
+}
+
+===[good14.bminor Output]===
+.data
+n: .quad 0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    movq $2, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq $3, %rbx
+    movq $4, %r11
+    movq %rbx, %rax
+    cqo
+    idivq %r11
+    movq %rax, %r11
+    addq %r10, %r11
+    movq $5, %rbx
+    movq $6, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call integer_power
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq $2, %rbx
+    movq %r10, %rax
+    cqo
+    idivq %rbx
+    movq %rdx, %rbx
+    subq %rbx, %r11
+    movq $0, %rbx
+    cmpq %rbx, %r11
+    jne .L0
+    movq $0, %rbx
+    jmp .L1
+.L0:
+    movq $-1, %rbx
+.L1:
+.data
+.L4: .string "not"
+.text
+    leaq .L4, %r10
+.data
+.L5: .string "equal"
+.text
+    leaq .L5, %r11
+    cmpq %r11, %r10
+    je .L2
+    movq $0, %r11
+    jmp .L3
+.L2:
+    movq $-1, %r11
+.L3:
+    movq $113, %r10
+    movq $113, %r12
+    cmpq %r12, %r10
+    je .L6
+    movq $0, %r12
+    jmp .L7
+.L6:
+    movq $-1, %r12
+.L7:
+    andq %r11, %r12
+    orq %rbx, %r12
+    movq $1, %rbx
+    movq $2, %r10
+    cmpq %r10, %rbx
+    jle .L8
+    movq $0, %r10
+    jmp .L9
+.L8:
+    movq $-1, %r10
+.L9:
+    movq $2, %rbx
+    movq $3, %r11
+    cmpq %r11, %rbx
+    jle .L10
+    movq $0, %r11
+    jmp .L11
+.L10:
+    movq $-1, %r11
+.L11:
+    andq %r10, %r11
+    movq $3, %rbx
+    movq $4, %r10
+    cmpq %r10, %rbx
+    jge .L12
+    movq $0, %r10
+    jmp .L13
+.L12:
+    movq $-1, %r10
+.L13:
+    andq %r11, %r10
+    movq $4, %rbx
+    movq $5, %r11
+    cmpq %r11, %rbx
+    jg .L14
+    movq $0, %r11
+    jmp .L15
+.L14:
+    movq $-1, %r11
+.L15:
+    andq %r10, %r11
+    orq %r12, %r11
+    movq $1, %rbx
+    movq $2, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call integer_power
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq $3, %rbx
+    movq %r10, %rdi
+    movq %rbx, %rsi
+    pushq %r10
+    pushq %r11
+    call integer_power
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $4, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call integer_power
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq $5, %rbx
+    movq %r10, %rdi
+    movq %rbx, %rsi
+    pushq %r10
+    pushq %r11
+    call integer_power
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $99999, %r10
+    cmpq %r10, %rbx
+    jl .L16
+    movq $0, %r10
+    jmp .L17
+.L16:
+    movq $-1, %r10
+.L17:
+    orq %r11, %r10
+    movq $-1, %rbx
+    notq %rbx
+    notq %rbx
+    notq %rbx
+    notq %rbx
+    notq %rbx
+    notq %rbx
+    orq %r10, %rbx
+    movq n, %r10
+    incq %r10
+    movq %r10, n
+    decq %r10
+    movq n, %r11
+    incq %r11
+    movq %r11, n
+    decq %r11
+    cmpq %r11, %r10
+    je .L18
+    movq $0, %r11
+    jmp .L19
+.L18:
+    movq $-1, %r11
+.L19:
+    orq %rbx, %r11
+    movq %r11, -8(%rbp)
+    movq -8(%rbp), %rbx
+    cmpq $0, %rbx
+    je .L20
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L21
+.L20:
+.L21:
+    movq $1, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 0
+
+
+===[good15.bminor Input]===
+main: function integer () = {
+    i: integer;
+    j: integer;
+
+    for (i = 0; i < 13; i++) {
+        for (j = 0; j < 13; j++)
+            print i * j, ' ';
+        print '\n';
+    }
+    
+    return 0;
+}
+
+===[good15.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    movq -8(%rbp), %rbx
+    movq $13, %r10
+    cmpq %r10, %rbx
+    jl .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    movq $0, %rbx
+    movq %rbx, -16(%rbp)
+.L4:
+    movq -16(%rbp), %rbx
+    movq $13, %r10
+    cmpq %r10, %rbx
+    jl .L6
+    movq $0, %r10
+    jmp .L7
+.L6:
+    movq $-1, %r10
+.L7:
+    cmpq $0, %r10
+    je .L5
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -16(%rbp)
+    decq %rbx
+    jmp .L4
+.L5:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 1 2 3 4 5 6 7 8 9 10 11 12 
+0 2 4 6 8 10 12 14 16 18 20 22 24 
+0 3 6 9 12 15 18 21 24 27 30 33 36 
+0 4 8 12 16 20 24 28 32 36 40 44 48 
+0 5 10 15 20 25 30 35 40 45 50 55 60 
+0 6 12 18 24 30 36 42 48 54 60 66 72 
+0 7 14 21 28 35 42 49 56 63 70 77 84 
+0 8 16 24 32 40 48 56 64 72 80 88 96 
+0 9 18 27 36 45 54 63 72 81 90 99 108 
+0 10 20 30 40 50 60 70 80 90 100 110 120 
+0 11 22 33 44 55 66 77 88 99 110 121 132 
+0 12 24 36 48 60 72 84 96 108 120 132 144 
+
+
+return code: 0
+
+
+===[good16.bminor Input]===
+sum: function integer (x: integer, y: integer) = {
+    return x + y;
+}
+
+main: function integer () = {
+    x: integer = sum(sum(5, sum(6 + 7, 8)), sum(1 + 2, 3 + 4));
+
+    return x;
+}
+
+===[good16.bminor Output]===
+.text
+.global sum
+sum:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .sum_epilogue
+.sum_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $5, %rbx
+    movq $6, %r10
+    movq $7, %r11
+    addq %r10, %r11
+    movq $8, %r10
+    movq %r11, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call sum
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call sum
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $1, %r10
+    movq $2, %r11
+    addq %r10, %r11
+    movq $3, %r10
+    movq $4, %r12
+    addq %r10, %r12
+    movq %r11, %rdi
+    movq %r12, %rsi
+    pushq %r10
+    pushq %r11
+    call sum
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call sum
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 36
+
+
+===[good17.bminor Input]===
+main: function integer () = {
+    print 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, "\n";
+    return 0;
+}
+
+===[good17.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $2, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $3, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $5, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $6, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $7, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $8, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $9, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $11, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $12, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $13, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $14, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $15, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $16, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $17, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $18, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $19, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $20, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $21, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $22, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $23, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $24, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $25, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $26, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $27, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $28, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $29, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $30, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $31, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $33, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $34, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $35, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $36, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $37, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $38, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $39, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $40, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $41, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $42, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $43, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $44, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $45, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $46, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $47, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $48, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $49, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $50, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $51, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $52, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $53, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $54, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $55, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $56, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $57, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $58, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $59, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $60, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $61, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $62, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $63, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $64, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $65, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $66, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $67, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $68, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $69, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $70, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $71, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $72, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $73, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $74, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $75, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $76, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $77, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $78, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $79, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $80, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $81, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $82, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $83, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $84, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $85, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $86, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $87, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $88, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $89, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $90, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $91, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $92, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $93, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $94, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $95, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $96, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $97, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $98, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $99, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L0: .string "\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+
+
+return code: 0
+
+
+===[good18.bminor Input]===
+a: array [3] integer = {0, 0, 0};
+
+main: function integer () = {
+    i: integer = 0;
+
+    i = i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i+++i++;
+
+    print i, "\n";
+
+    return i;
+}
+
+===[good18.bminor Output]===
+.data
+a: .quad 0,0,0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    addq %r10, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    addq %rbx, %r10
+    movq %r10, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L0: .string "\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+38503
+
+
+return code: 103
+
+
+===[good19.bminor Input]===
+/* Dance! */
+
+main: function integer () = {
+    print "   ____    __  __              _   _     U  ___ u   ____     \n";
+    print "U | __\")uU|' \\/ '|u   ___     | \\ |\"|     \\/\"_ \\/U |  _\"\\ u  \n";
+    print " \\|  _ \\/\\| |\\/| |/  |_\"_|   <|  \\| |>    | | | | \\| |_) |/  \n";
+    print "  | |_) | | |  | |    | |    U| |\\  |u.-,_| |_| |  |  _ <    \n";
+    print "  |____/  |_|  |_|  U/| |\\u   |_| \\_|  \\_)-\\___/   |_| \\_\\   \n";
+    print " _|| \\\\_ <<,-,,-..-,_|___|_,-.||   \\\\,-.    \\\\     //   \\\\_  \n";
+    print "(__) (__) (./  \\.)\\_)-' '-(_/ (_\")  (_/    (__)   (__)  (__) \n";
+
+    return 0;
+}
+
+===[good19.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "   ____    __  __              _   _     U  ___ u   ____     \n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L1: .string "U | __\")uU|' \\/ '|u   ___     | \\ |\"|     \\/\"_ \\/U |  _\"\\ u  \n"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L2: .string " \\|  _ \\/\\| |\\/| |/  |_\"_|   <|  \\| |>    | | | | \\| |_) |/  \n"
+.text
+    leaq .L2, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L3: .string "  | |_) | | |  | |    | |    U| |\\  |u.-,_| |_| |  |  _ <    \n"
+.text
+    leaq .L3, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L4: .string "  |____/  |_|  |_|  U/| |\\u   |_| \\_|  \\_)-\\___/   |_| \\_\\   \n"
+.text
+    leaq .L4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L5: .string " _|| \\\\_ <<,-,,-..-,_|___|_,-.||   \\\\,-.    \\\\     //   \\\\_  \n"
+.text
+    leaq .L5, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L6: .string "(__) (__) (./  \\.)\\_)-' '-(_/ (_\")  (_/    (__)   (__)  (__) \n"
+.text
+    leaq .L6, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+   ____    __  __              _   _     U  ___ u   ____     
+U | __")uU|' \/ '|u   ___     | \ |"|     \/"_ \/U |  _"\ u  
+ \|  _ \/\| |\/| |/  |_"_|   <|  \| |>    | | | | \| |_) |/  
+  | |_) | | |  | |    | |    U| |\  |u.-,_| |_| |  |  _ <    
+  |____/  |_|  |_|  U/| |\u   |_| \_|  \_)-\___/   |_| \_\   
+ _|| \\_ <<,-,,-..-,_|___|_,-.||   \\,-.    \\     //   \\_  
+(__) (__) (./  \.)\_)-' '-(_/ (_")  (_/    (__)   (__)  (__) 
+
+
+return code: 0
+
+
+===[good7.bminor Input]===
+stack_push: function void (n: integer);
+stack_pop: function integer ();
+stack_is_empty: function boolean ();
+
+stackptr: integer;
+stack: array [100] integer;
+
+main: function integer () = {
+    i: integer;
+
+    // Push numbers to stack.
+    for (i = 0; i < 10; i++) {
+        n: integer = i * 11;
+        stack_push(n);
+        print "PUSH ", n, "\n";
+    }
+
+    // Pop numbers from stack.
+    for (; !stack_is_empty() ;) {
+        n: integer = stack_pop();
+        print "POP ", n, "\n";
+    }
+
+    return 0;
+}
+
+stack_push: function void (n: integer) = {
+    stack[stackptr++] = n;
+}
+
+stack_pop: function integer () = {
+    stackptr--;
+    return stack[stackptr];
+}
+
+stack_is_empty: function boolean () = {
+    return stackptr == 0;
+}
+
+===[good7.bminor Output]===
+.data
+stackptr: .quad 0
+.data
+stack: .quad 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $24, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    movq -8(%rbp), %rbx
+    movq $11, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq %r10, -16(%rbp)
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call stack_push
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.data
+.L4: .string "PUSH "
+.text
+    leaq .L4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L5: .string "\n"
+.text
+    leaq .L5, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+.L6:
+    pushq %r10
+    pushq %r11
+    call stack_is_empty
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    notq %rbx
+    cmpq $0, %rbx
+    je .L7
+    pushq %r10
+    pushq %r11
+    call stack_pop
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, -24(%rbp)
+.data
+.L8: .string "POP "
+.text
+    leaq .L8, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -24(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L9: .string "\n"
+.text
+    leaq .L9, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    jmp .L6
+.L7:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global stack_push
+stack_push:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    leaq stack, %r10
+    movq stackptr, %r11
+    incq %r11
+    movq %r11, stackptr
+    decq %r11
+    movq %rbx, 0(%r10, %r11, 8)
+.stack_push_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global stack_pop
+stack_pop:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq stackptr, %rbx
+    decq %rbx
+    movq %rbx, stackptr
+    incq %rbx
+    leaq stack, %rbx
+    movq stackptr, %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rax
+    jmp .stack_pop_epilogue
+.stack_pop_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global stack_is_empty
+stack_is_empty:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq stackptr, %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    je .L10
+    movq $0, %r10
+    jmp .L11
+.L10:
+    movq $-1, %r10
+.L11:
+    movq %r10, %rax
+    jmp .stack_is_empty_epilogue
+.stack_is_empty_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+PUSH 0
+PUSH 11
+PUSH 22
+PUSH 33
+PUSH 44
+PUSH 55
+PUSH 66
+PUSH 77
+PUSH 88
+PUSH 99
+POP 99
+POP 88
+POP 77
+POP 66
+POP 55
+POP 44
+POP 33
+POP 22
+POP 11
+POP 0
+
+
+return code: 0
+
+
+===[good8.bminor Input]===
+a: array [10] integer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+main: function integer () = {
+    i: integer;
+    for (i = 0; i < 10; i++)
+        print a[i]++, "\n";
+    for (i = 0; i < 10; i++)
+        print a[i]--, "\n";
+    for (i = 0; i < 10; i++)
+        print a[i], "\n";
+
+    return 0;
+}
+
+===[good8.bminor Output]===
+.data
+a: .quad 0,1,2,3,4,5,6,7,8,9
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    incq %r10
+    leaq a, %rbx
+    movq -8(%rbp), %r11
+    movq %r10, 0(%rbx, %r11, 8)
+    decq %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L4: .string "\n"
+.text
+    leaq .L4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L5:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L7
+    movq $0, %r10
+    jmp .L8
+.L7:
+    movq $-1, %r10
+.L8:
+    cmpq $0, %r10
+    je .L6
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    decq %r10
+    leaq a, %rbx
+    movq -8(%rbp), %r11
+    movq %r10, 0(%rbx, %r11, 8)
+    incq %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L9: .string "\n"
+.text
+    leaq .L9, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L5
+.L6:
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L10:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L12
+    movq $0, %r10
+    jmp .L13
+.L12:
+    movq $-1, %r10
+.L13:
+    cmpq $0, %r10
+    je .L11
+    leaq a, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L14: .string "\n"
+.text
+    leaq .L14, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L10
+.L11:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+return code: 0
+
+
+===[good2.bminor Input]===
+main: function integer (argc: integer) = {
+    print "argc = ", argc, "\n";
+    return 0;
+}
+
+===[good2.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "argc = "
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L1: .string "\n"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+argc = 1
+
+
+return code: 0
+
+
+===[good4.bminor Input]===
+factorial: function integer (n: integer) = {
+    if (n <= 1)
+        return 1;
+    return n * factorial(n - 1);
+}
+
+fibonacci: function integer (n: integer) =  {
+    if (n <= 1)
+        return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+main: function integer () = {
+    i: integer;
+
+    print "Factorial\n";
+    for (i = 0; i < 10; i++)
+        print factorial(i), '\n';
+
+    print "Fibonacci\n";
+    for (i = 0; i < 10; i++)
+        print fibonacci(i), '\n';
+
+    return 0;
+}
+
+===[good4.bminor Output]===
+.text
+.global factorial
+factorial:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    cmpq %r10, %rbx
+    jle .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L0
+    movq $1, %rbx
+    movq %rbx, %rax
+    jmp .factorial_epilogue
+    jmp .L1
+.L0:
+.L1:
+    movq -8(%rbp), %rbx
+    movq -8(%rbp), %r10
+    movq $1, %r11
+    subq %r11, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call factorial
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq %r10, %rax
+    jmp .factorial_epilogue
+.factorial_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global fibonacci
+fibonacci:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    cmpq %r10, %rbx
+    jle .L6
+    movq $0, %r10
+    jmp .L7
+.L6:
+    movq $-1, %r10
+.L7:
+    cmpq $0, %r10
+    je .L4
+    movq -8(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .fibonacci_epilogue
+    jmp .L5
+.L4:
+.L5:
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    subq %r10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call fibonacci
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq -8(%rbp), %r10
+    movq $2, %r11
+    subq %r11, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call fibonacci
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .fibonacci_epilogue
+.fibonacci_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L8: .string "Factorial\n"
+.text
+    leaq .L8, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L9:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L11
+    movq $0, %r10
+    jmp .L12
+.L11:
+    movq $-1, %r10
+.L12:
+    cmpq $0, %r10
+    je .L10
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call factorial
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L9
+.L10:
+.data
+.L13: .string "Fibonacci\n"
+.text
+    leaq .L13, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L14:
+    movq -8(%rbp), %rbx
+    movq $10, %r10
+    cmpq %r10, %rbx
+    jl .L16
+    movq $0, %r10
+    jmp .L17
+.L16:
+    movq $-1, %r10
+.L17:
+    cmpq $0, %r10
+    je .L15
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call fibonacci
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L14
+.L15:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+Factorial
+1
+1
+2
+6
+24
+120
+720
+5040
+40320
+362880
+Fibonacci
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+
+
+return code: 0
+
+
+===[good9.bminor Input]===
+f0: function integer ();
+f1: function integer ();
+f2: function integer ();
+f3: function integer ();
+f4: function integer ();
+f5: function integer ();
+f6: function integer ();
+f7: function integer ();
+f8: function integer ();
+f9: function integer ();
+
+main: function integer () = {
+    print ( f0() ), ( "\n" );
+    return 0;
+}
+
+f0: function integer () = {
+    return 1 + f1();
+}
+
+f1: function integer () = {
+    return 1 + f2();
+}
+
+f2: function integer () = {
+    return 1 + f3();
+}
+
+f3: function integer () = {
+    return 1 + f4();
+}
+
+f4: function integer () = {
+    return 1 + f5();
+}
+
+f5: function integer () = {
+    return 1 + f6();
+}
+
+f6: function integer () = {
+    return 1 + f7();
+}
+
+f7: function integer () = {
+    return 1 + f8();
+}
+
+f8: function integer () = {
+    return 1 + f9();
+}
+
+f9: function integer () = {
+    return 0;
+}
+
+===[good9.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call f0
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L0: .string "\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f0
+f0:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f1
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f0_epilogue
+.f0_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f1
+f1:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f2
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f1_epilogue
+.f1_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f2
+f2:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f3
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f2_epilogue
+.f2_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f3
+f3:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f4
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f3_epilogue
+.f3_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f4
+f4:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f5
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f4_epilogue
+.f4_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f5
+f5:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f6
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f5_epilogue
+.f5_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f6
+f6:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f7
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f6_epilogue
+.f6_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f7
+f7:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f8
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f7_epilogue
+.f7_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f8
+f8:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call f9
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .f8_epilogue
+.f8_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f9
+f9:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .f9_epilogue
+.f9_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+9
+
+
+return code: 0
+
+
+===[good3.bminor Input]===
+EXIT_SUCCESS: integer = 0;
+
+is_prime: function boolean (n: integer) = {
+    if (n < 2)
+        return false;
+
+    if (n == 2)
+        return true;
+
+    i: integer;
+    for (i = 2; i < n; i++)
+        if (n % i == 0)
+            return false;
+
+    return true;
+}
+
+main: function integer () = {
+    i: integer = 0;
+    for (i = 0; i < 1000; i++)
+        if (is_prime(i))
+            print i, '\n';
+
+    return 0;
+}
+
+===[good3.bminor Output]===
+.data
+EXIT_SUCCESS: .quad 0
+.text
+.global is_prime
+is_prime:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $2, %r10
+    cmpq %r10, %rbx
+    jl .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L0
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .is_prime_epilogue
+    jmp .L1
+.L0:
+.L1:
+    movq -8(%rbp), %rbx
+    movq $2, %r10
+    cmpq %r10, %rbx
+    je .L6
+    movq $0, %r10
+    jmp .L7
+.L6:
+    movq $-1, %r10
+.L7:
+    cmpq $0, %r10
+    je .L4
+    movq $-1, %rbx
+    movq %rbx, %rax
+    jmp .is_prime_epilogue
+    jmp .L5
+.L4:
+.L5:
+    movq $2, %rbx
+    movq %rbx, -16(%rbp)
+.L8:
+    movq -16(%rbp), %rbx
+    movq -8(%rbp), %r10
+    cmpq %r10, %rbx
+    jl .L10
+    movq $0, %r10
+    jmp .L11
+.L10:
+    movq $-1, %r10
+.L11:
+    cmpq $0, %r10
+    je .L9
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L14
+    movq $0, %rbx
+    jmp .L15
+.L14:
+    movq $-1, %rbx
+.L15:
+    cmpq $0, %rbx
+    je .L12
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .is_prime_epilogue
+    jmp .L13
+.L12:
+.L13:
+    movq -16(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -16(%rbp)
+    decq %rbx
+    jmp .L8
+.L9:
+    movq $-1, %rbx
+    movq %rbx, %rax
+    jmp .is_prime_epilogue
+.is_prime_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L16:
+    movq -8(%rbp), %rbx
+    movq $1000, %r10
+    cmpq %r10, %rbx
+    jl .L18
+    movq $0, %r10
+    jmp .L19
+.L18:
+    movq $-1, %r10
+.L19:
+    cmpq $0, %r10
+    je .L17
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call is_prime
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    cmpq $0, %rbx
+    je .L20
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    jmp .L21
+.L20:
+.L21:
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L16
+.L17:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+101
+103
+107
+109
+113
+127
+131
+137
+139
+149
+151
+157
+163
+167
+173
+179
+181
+191
+193
+197
+199
+211
+223
+227
+229
+233
+239
+241
+251
+257
+263
+269
+271
+277
+281
+283
+293
+307
+311
+313
+317
+331
+337
+347
+349
+353
+359
+367
+373
+379
+383
+389
+397
+401
+409
+419
+421
+431
+433
+439
+443
+449
+457
+461
+463
+467
+479
+487
+491
+499
+503
+509
+521
+523
+541
+547
+557
+563
+569
+571
+577
+587
+593
+599
+601
+607
+613
+617
+619
+631
+641
+643
+647
+653
+659
+661
+673
+677
+683
+691
+701
+709
+719
+727
+733
+739
+743
+751
+757
+761
+769
+773
+787
+797
+809
+811
+821
+823
+827
+829
+839
+853
+857
+859
+863
+877
+881
+883
+887
+907
+911
+919
+929
+937
+941
+947
+953
+967
+971
+977
+983
+991
+997
+
+
+return code: 0
+
+
+===[good5.bminor Input]===
+snprintf: function integer (str: string, size: integer, format: string, number: integer);
+
+s: string = "     ";
+fizzbuzz: function string (n: integer) = {
+    if (n % 3 == 0 && n % 5 == 0)
+        return "FizzBuzz";
+    if (n % 3 == 0)
+        return "Fizz";
+    if (n % 5 == 0)
+        return "Buzz";
+    snprintf(s, 5, "%d", n);
+    return s;
+}
+
+main: function integer () = {
+    i: integer;
+    for (i = 0; i <= 100; i++)
+        print fizzbuzz(i), ' ';
+    print '\n';
+
+    return 0;
+}
+
+===[good5.bminor Output]===
+.data
+s: .string "     "
+.text
+.global fizzbuzz
+fizzbuzz:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $3, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L2
+    movq $0, %rbx
+    jmp .L3
+.L2:
+    movq $-1, %rbx
+.L3:
+    movq -8(%rbp), %r10
+    movq $5, %r11
+    movq %r10, %rax
+    cqo
+    idivq %r11
+    movq %rdx, %r11
+    movq $0, %r10
+    cmpq %r10, %r11
+    je .L4
+    movq $0, %r10
+    jmp .L5
+.L4:
+    movq $-1, %r10
+.L5:
+    andq %rbx, %r10
+    cmpq $0, %r10
+    je .L0
+.data
+.L6: .string "FizzBuzz"
+.text
+    leaq .L6, %rbx
+    movq %rbx, %rax
+    jmp .fizzbuzz_epilogue
+    jmp .L1
+.L0:
+.L1:
+    movq -8(%rbp), %rbx
+    movq $3, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L9
+    movq $0, %rbx
+    jmp .L10
+.L9:
+    movq $-1, %rbx
+.L10:
+    cmpq $0, %rbx
+    je .L7
+.data
+.L11: .string "Fizz"
+.text
+    leaq .L11, %rbx
+    movq %rbx, %rax
+    jmp .fizzbuzz_epilogue
+    jmp .L8
+.L7:
+.L8:
+    movq -8(%rbp), %rbx
+    movq $5, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L14
+    movq $0, %rbx
+    jmp .L15
+.L14:
+    movq $-1, %rbx
+.L15:
+    cmpq $0, %rbx
+    je .L12
+.data
+.L16: .string "Buzz"
+.text
+    leaq .L16, %rbx
+    movq %rbx, %rax
+    jmp .fizzbuzz_epilogue
+    jmp .L13
+.L12:
+.L13:
+    leaq s, %rbx
+    movq $5, %r10
+.data
+.L17: .string "%d"
+.text
+    leaq .L17, %r11
+    movq -8(%rbp), %r12
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    movq %r11, %rdx
+    movq %r12, %rcx
+    pushq %r10
+    pushq %r11
+    call snprintf
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    leaq s, %rbx
+    movq %rbx, %rax
+    jmp .fizzbuzz_epilogue
+.fizzbuzz_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L18:
+    movq -8(%rbp), %rbx
+    movq $100, %r10
+    cmpq %r10, %rbx
+    jle .L20
+    movq $0, %r10
+    jmp .L21
+.L20:
+    movq $-1, %r10
+.L21:
+    cmpq $0, %r10
+    je .L19
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call fizzbuzz
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L18
+.L19:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+FizzBuzz 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz 
+
+
+return code: 0
+
+
+===[good6.bminor Input]===
+/* C standard library functions.*/
+rand: function integer ();
+srand: function void (seed: integer);
+time: function integer (zero: integer);
+
+/* Internal functions. */
+bubble_sort: function void ();
+randomize_array: function void ();
+
+arrlen: integer = 100;
+arr: array [100] integer;
+
+main: function integer () = {
+    i: integer;
+
+    srand(time(0));
+
+    randomize_array();
+    print "Random numbers:\n";
+    for (i = 0; i < arrlen; i++)
+        print arr[i], ' ';
+    print '\n';
+
+    bubble_sort();
+    print "Sorted numbers:\n";
+    for (i = 0; i < arrlen; i++)
+        print arr[i], ' ';
+    print '\n';
+}
+
+bubble_sort: function void () = {
+    i: integer;
+    j: integer;
+    swapped: boolean = true;
+
+    for (i = 0; i < arrlen - 1 && swapped; i++) {
+        swapped = false;
+        for (j = 0; j < arrlen - i - 1; j++)
+            if (arr[j] > arr[j + 1]) {
+                tmp: integer = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+                swapped = true;
+            }
+    }
+}
+
+randomize_array: function void () = {
+    i: integer;
+    for (i = 0; i < arrlen; i++)
+        arr[i] = 1 + (rand() % arrlen);
+}
+
+===[good6.bminor Output]===
+.data
+arrlen: .quad 100
+.data
+arr: .quad 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call time
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call srand
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    pushq %r10
+    pushq %r11
+    call randomize_array
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.data
+.L0: .string "Random numbers:\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L1:
+    movq -8(%rbp), %rbx
+    movq arrlen, %r10
+    cmpq %r10, %rbx
+    jl .L3
+    movq $0, %r10
+    jmp .L4
+.L3:
+    movq $-1, %r10
+.L4:
+    cmpq $0, %r10
+    je .L2
+    leaq arr, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L1
+.L2:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    pushq %r10
+    pushq %r11
+    call bubble_sort
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.data
+.L5: .string "Sorted numbers:\n"
+.text
+    leaq .L5, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L6:
+    movq -8(%rbp), %rbx
+    movq arrlen, %r10
+    cmpq %r10, %rbx
+    jl .L8
+    movq $0, %r10
+    jmp .L9
+.L8:
+    movq $-1, %r10
+.L9:
+    cmpq $0, %r10
+    je .L7
+    leaq arr, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L6
+.L7:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global bubble_sort
+bubble_sort:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $32, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $-1, %rbx
+    movq %rbx, -24(%rbp)
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L10:
+    movq -8(%rbp), %rbx
+    movq arrlen, %r10
+    movq $1, %r11
+    subq %r11, %r10
+    cmpq %r10, %rbx
+    jl .L12
+    movq $0, %r10
+    jmp .L13
+.L12:
+    movq $-1, %r10
+.L13:
+    movq -24(%rbp), %rbx
+    andq %r10, %rbx
+    cmpq $0, %rbx
+    je .L11
+    movq $0, %rbx
+    movq %rbx, -24(%rbp)
+    movq $0, %rbx
+    movq %rbx, -16(%rbp)
+.L14:
+    movq -16(%rbp), %rbx
+    movq arrlen, %r10
+    movq -8(%rbp), %r11
+    subq %r11, %r10
+    movq $1, %r11
+    subq %r11, %r10
+    cmpq %r10, %rbx
+    jl .L16
+    movq $0, %r10
+    jmp .L17
+.L16:
+    movq $-1, %r10
+.L17:
+    cmpq $0, %r10
+    je .L15
+    leaq arr, %rbx
+    movq -16(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    leaq arr, %rbx
+    movq -16(%rbp), %r11
+    movq $1, %r12
+    addq %r11, %r12
+    movq 0(%rbx, %r12, 8), %r12
+    cmpq %r12, %r10
+    jg .L20
+    movq $0, %r12
+    jmp .L21
+.L20:
+    movq $-1, %r12
+.L21:
+    cmpq $0, %r12
+    je .L18
+    leaq arr, %rbx
+    movq -16(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, -32(%rbp)
+    leaq arr, %rbx
+    movq -16(%rbp), %r10
+    movq $1, %r11
+    addq %r10, %r11
+    movq 0(%rbx, %r11, 8), %r11
+    leaq arr, %rbx
+    movq -16(%rbp), %r10
+    movq %r11, 0(%rbx, %r10, 8)
+    movq -32(%rbp), %rbx
+    leaq arr, %r10
+    movq -16(%rbp), %r11
+    movq $1, %r12
+    addq %r11, %r12
+    movq %rbx, 0(%r10, %r12, 8)
+    movq $-1, %rbx
+    movq %rbx, -24(%rbp)
+    jmp .L19
+.L18:
+.L19:
+    movq -16(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -16(%rbp)
+    decq %rbx
+    jmp .L14
+.L15:
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L10
+.L11:
+.bubble_sort_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global randomize_array
+randomize_array:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L22:
+    movq -8(%rbp), %rbx
+    movq arrlen, %r10
+    cmpq %r10, %rbx
+    jl .L24
+    movq $0, %r10
+    jmp .L25
+.L24:
+    movq $-1, %r10
+.L25:
+    cmpq $0, %r10
+    je .L23
+    movq $1, %rbx
+    pushq %r10
+    pushq %r11
+    call rand
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq arrlen, %r11
+    movq %r10, %rax
+    cqo
+    idivq %r11
+    movq %rdx, %r11
+    addq %rbx, %r11
+    leaq arr, %rbx
+    movq -8(%rbp), %r10
+    movq %r11, 0(%rbx, %r10, 8)
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L22
+.L23:
+.randomize_array_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+Random numbers:
+24 71 21 55 23 46 11 44 58 23 7 6 30 70 31 58 10 7 5 77 18 24 100 19 93 94 94 51 65 85 93 40 7 65 46 29 10 56 72 67 78 79 24 60 48 54 69 10 13 73 86 82 48 86 52 41 31 45 91 47 81 83 38 88 99 83 68 8 39 92 26 68 22 2 79 21 7 48 30 19 72 68 100 20 5 52 12 35 48 2 33 29 37 70 16 35 52 35 95 42 
+Sorted numbers:
+2 2 5 5 6 7 7 7 7 8 10 10 10 11 12 13 16 18 19 19 20 21 21 22 23 23 24 24 24 26 29 29 30 30 31 31 33 35 35 35 37 38 39 40 41 42 44 45 46 46 47 48 48 48 48 51 52 52 52 54 55 56 58 58 60 65 65 67 68 68 68 69 70 70 71 72 72 73 77 78 79 79 81 82 83 83 85 86 86 88 91 92 93 93 94 94 95 99 100 100 
+
+
+return code: 10
+
+
+====Bad Tests====
+=====HIDDEN TESTS=====
+====Good Tests====
+===[good1.bminor Input]===
+strlen: function integer(s: string);
+f: function integer(i: integer);
+
+main: function integer () = {
+	if (f(strlen("hi")) > strlen("there")) {print "no\n";}
+	if (f(f(strlen("hi"))) > strlen("there")) print "ok\n";
+
+	return 0;
+}
+
+f: function integer(i: integer) = {
+	return i*2;
+}
+
+===[good1.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L4: .string "hi"
+.text
+    leaq .L4, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call strlen
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.data
+.L5: .string "there"
+.text
+    leaq .L5, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call strlen
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    cmpq %r10, %rbx
+    jg .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L0
+.data
+.L6: .string "no\n"
+.text
+    leaq .L6, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    jmp .L1
+.L0:
+.L1:
+.data
+.L11: .string "hi"
+.text
+    leaq .L11, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call strlen
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+.data
+.L12: .string "there"
+.text
+    leaq .L12, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call strlen
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    cmpq %r10, %rbx
+    jg .L9
+    movq $0, %r10
+    jmp .L10
+.L9:
+    movq $-1, %r10
+.L10:
+    cmpq $0, %r10
+    je .L7
+.data
+.L13: .string "ok\n"
+.text
+    leaq .L13, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    jmp .L8
+.L7:
+.L8:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global f
+f:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $2, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq %r10, %rax
+    jmp .f_epilogue
+.f_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+ok
+
+
+return code: 0
+
+
+===[good11.bminor Input]===
+main: function integer () = {
+	x: integer = 20;
+	y: integer = x;
+	{
+		x: integer = 10;
+		y = y + x;
+	}
+
+	{
+		{
+			y = y + x;
+			x: integer = 2;
+			y = y + x;
+		}
+		y = y + x;
+		x: integer = 3;
+		y = y + x;
+	}
+	return y + x;
+}
+
+===[good11.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $40, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $20, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, -16(%rbp)
+    movq $10, %rbx
+    movq %rbx, -24(%rbp)
+    movq -16(%rbp), %rbx
+    movq -24(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq -16(%rbp), %rbx
+    movq -8(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq $2, %rbx
+    movq %rbx, -32(%rbp)
+    movq -16(%rbp), %rbx
+    movq -32(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq -16(%rbp), %rbx
+    movq -8(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq $3, %rbx
+    movq %rbx, -40(%rbp)
+    movq -16(%rbp), %rbx
+    movq -40(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq -16(%rbp), %rbx
+    movq -8(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 95
+
+
+===[good8.bminor Input]===
+abs: function integer(n: integer);
+
+digits: array [6] integer = {
+	14,
+	8,
+	6168,
+	42,
+	0,
+	74546
+};
+
+main:function integer () = {
+	digits[4] = -468;
+	i: integer = 0;
+	for (; abs(digits[i]) == digits[i];) {
+		print digits[i];
+		i = i + 1;
+		print ' ';
+	}
+	print '\n';
+
+	return 0;
+}
+
+===[good8.bminor Output]===
+.data
+digits: .quad 14,8,6168,42,0,74546
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $468, %rbx
+    movq $-468, %rbx
+    leaq digits, %r10
+    movq $4, %r11
+    movq %rbx, 0(%r10, %r11, 8)
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    leaq digits, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call abs
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    leaq digits, %r10
+    movq -8(%rbp), %r11
+    movq 0(%r10, %r11, 8), %r11
+    cmpq %r11, %rbx
+    je .L2
+    movq $0, %r11
+    jmp .L3
+.L2:
+    movq $-1, %r11
+.L3:
+    cmpq $0, %r11
+    je .L1
+    leaq digits, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    addq %rbx, %r10
+    movq %r10, -8(%rbp)
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    jmp .L0
+.L1:
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+14 8 6168 42 
+
+
+return code: 0
+
+
+===[good13.bminor Input]===
+foo_epilogue: function integer () = {
+	return 2;
+}
+
+foo: function integer ();
+
+main: function integer () = {
+	return foo() * 11;
+}
+
+main_epilogue: function integer () = {
+	return foo_epilogue() + 3;
+}
+
+foo: function integer () = {
+	return main_epilogue() - 1;
+}
+
+===[good13.bminor Output]===
+.text
+.global foo_epilogue
+foo_epilogue:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $2, %rbx
+    movq %rbx, %rax
+    jmp .foo_epilogue_epilogue
+.foo_epilogue_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call foo
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $11, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq %r10, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main_epilogue
+main_epilogue:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call foo_epilogue
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $3, %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .main_epilogue_epilogue
+.main_epilogue_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global foo
+foo:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call main_epilogue
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $1, %r10
+    subq %r10, %rbx
+    movq %rbx, %rax
+    jmp .foo_epilogue
+.foo_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 44
+
+
+===[good12.bminor Input]===
+main: function integer () = {
+	return 4 + 9 / (-2 - (-5)) + (((2 + 1) * 4) - 1) % 3 * 7 - 8;
+}
+
+===[good12.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $4, %rbx
+    movq $9, %r10
+    movq $2, %r11
+    movq $-2, %r11
+    movq $5, %r12
+    movq $-5, %r12
+    subq %r12, %r11
+    movq %r10, %rax
+    cqo
+    idivq %r11
+    movq %rax, %r11
+    addq %rbx, %r11
+    movq $2, %rbx
+    movq $1, %r10
+    addq %rbx, %r10
+    movq $4, %rbx
+    movq %rbx, %rax
+    imulq %r10
+    movq %rax, %rbx
+    movq $1, %r10
+    subq %r10, %rbx
+    movq $3, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $7, %rbx
+    movq %rbx, %rax
+    imulq %r10
+    movq %rax, %rbx
+    addq %r11, %rbx
+    movq $8, %r10
+    subq %r10, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 13
+
+
+===[good15.bminor Input]===
+// https://piazza.com/class/jziupd2lzpm7cy?cid=179
+
+strdup: function string (s: string);
+
+main: function integer () = {
+	a: string = "sssss";
+	b: string = strdup(a);
+	if (a==b) return 22; else return 11;
+}
+
+===[good15.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "sssss"
+.text
+    leaq .L0, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call strdup
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, -16(%rbp)
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    cmpq %r10, %rbx
+    je .L3
+    movq $0, %r10
+    jmp .L4
+.L3:
+    movq $-1, %r10
+.L4:
+    cmpq $0, %r10
+    je .L1
+    movq $22, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L2
+.L1:
+    movq $11, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.L2:
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 11
+
+
+===[good17.bminor Input]===
+a1: integer;
+a2: integer = 111;
+a3: boolean = false;
+
+A: function integer() = {
+	if (a3) return a1 * a2;
+	a2: integer = 3;
+	if (!!!a3) return a1 + a2;
+	return 0;
+}
+
+main: function integer() = { return A(); }
+
+===[good17.bminor Output]===
+TEST NOT PASSED - CODEGEN ERROR
+
+
+parse error: syntax error.
+
+return code: 1
+
+
+===[good18.bminor Input]===
+b1: integer = 3;
+b2: integer = 6;
+b3: integer = 9;
+
+B: function integer(b3: integer, b4: integer) = {
+	print b1 * b2 + b3 % b4;
+	print '\n';
+	b3 = 37;
+	return b3;
+}
+
+main: function integer () = {
+	print B(5, 3);
+	return b3;
+}
+
+===[good18.bminor Output]===
+.data
+b1: .quad 3
+.data
+b2: .quad 6
+.data
+b3: .quad 9
+.text
+.global B
+B:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq b1, %rbx
+    movq b2, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r11
+    movq %rbx, %rax
+    cqo
+    idivq %r11
+    movq %rdx, %r11
+    addq %r10, %r11
+    movq %r11, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq $37, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .B_epilogue
+.B_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $5, %rbx
+    movq $3, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call B
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq b3, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+20
+37
+
+return code: 9
+
+
+===[good4.bminor Input]===
+collatz: function integer(n: integer, acc: integer) = {
+	print n, " ", acc, "\n";
+	if (n == 1) return acc;
+
+	if (n % 2 == 0) return collatz(n/2, acc + 1);
+	else return collatz(3*n + 1, acc + 1);
+}
+
+main:function integer ()=
+{
+	return collatz(27, 0);
+}
+
+===[good4.bminor Output]===
+.text
+.global collatz
+collatz:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L0: .string " "
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L1: .string "\n"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    cmpq %r10, %rbx
+    je .L4
+    movq $0, %r10
+    jmp .L5
+.L4:
+    movq $-1, %r10
+.L5:
+    cmpq $0, %r10
+    je .L2
+    movq -16(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .collatz_epilogue
+    jmp .L3
+.L2:
+.L3:
+    movq -8(%rbp), %rbx
+    movq $2, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L8
+    movq $0, %rbx
+    jmp .L9
+.L8:
+    movq $-1, %rbx
+.L9:
+    cmpq $0, %rbx
+    je .L6
+    movq -8(%rbp), %rbx
+    movq $2, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rax, %r10
+    movq -16(%rbp), %rbx
+    movq $1, %r11
+    addq %rbx, %r11
+    movq %r10, %rdi
+    movq %r11, %rsi
+    pushq %r10
+    pushq %r11
+    call collatz
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rax
+    jmp .collatz_epilogue
+    jmp .L7
+.L6:
+    movq $3, %rbx
+    movq -8(%rbp), %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq $1, %rbx
+    addq %r10, %rbx
+    movq -16(%rbp), %r10
+    movq $1, %r11
+    addq %r10, %r11
+    movq %rbx, %rdi
+    movq %r11, %rsi
+    pushq %r10
+    pushq %r11
+    call collatz
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rax
+    jmp .collatz_epilogue
+.L7:
+.collatz_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $27, %rbx
+    movq $0, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call collatz
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+27 0
+82 1
+41 2
+124 3
+62 4
+31 5
+94 6
+47 7
+142 8
+71 9
+214 10
+107 11
+322 12
+161 13
+484 14
+242 15
+121 16
+364 17
+182 18
+91 19
+274 20
+137 21
+412 22
+206 23
+103 24
+310 25
+155 26
+466 27
+233 28
+700 29
+350 30
+175 31
+526 32
+263 33
+790 34
+395 35
+1186 36
+593 37
+1780 38
+890 39
+445 40
+1336 41
+668 42
+334 43
+167 44
+502 45
+251 46
+754 47
+377 48
+1132 49
+566 50
+283 51
+850 52
+425 53
+1276 54
+638 55
+319 56
+958 57
+479 58
+1438 59
+719 60
+2158 61
+1079 62
+3238 63
+1619 64
+4858 65
+2429 66
+7288 67
+3644 68
+1822 69
+911 70
+2734 71
+1367 72
+4102 73
+2051 74
+6154 75
+3077 76
+9232 77
+4616 78
+2308 79
+1154 80
+577 81
+1732 82
+866 83
+433 84
+1300 85
+650 86
+325 87
+976 88
+488 89
+244 90
+122 91
+61 92
+184 93
+92 94
+46 95
+23 96
+70 97
+35 98
+106 99
+53 100
+160 101
+80 102
+40 103
+20 104
+10 105
+5 106
+16 107
+8 108
+4 109
+2 110
+1 111
+
+
+return code: 111
+
+
+===[good20.bminor Input]===
+D: function integer() = {
+	d1: integer = 5;
+	d2: integer = d1 + 1; //6
+	{
+		d3: integer = 9;
+		d2: integer = d3 + d1 - 3; //11
+		d4: integer = -1;
+		d2 = d2 + d3; //20
+		print d2 - d4, "\n";
+	}
+	d4: integer = 16;
+	print d2 - d4, '\n';
+	{
+		d4: integer = -2;
+		d3: integer = 1000;
+		print d3 + 10;
+		print "\n";
+		print d4;
+		print '\n';
+	}
+	print d4;
+	return 3;
+}
+
+main: function integer () = {
+	return D();
+}
+
+===[good20.bminor Output]===
+.text
+.global D
+D:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $64, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $5, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq $1, %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq $9, %rbx
+    movq %rbx, -24(%rbp)
+    movq -24(%rbp), %rbx
+    movq -8(%rbp), %r10
+    addq %rbx, %r10
+    movq $3, %rbx
+    subq %rbx, %r10
+    movq %r10, -32(%rbp)
+    movq $1, %rbx
+    movq $-1, %rbx
+    movq %rbx, -40(%rbp)
+    movq -32(%rbp), %rbx
+    movq -24(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, -32(%rbp)
+    movq -32(%rbp), %rbx
+    movq -40(%rbp), %r10
+    subq %r10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L0: .string "\n"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $16, %rbx
+    movq %rbx, -48(%rbp)
+    movq -16(%rbp), %rbx
+    movq -48(%rbp), %r10
+    subq %r10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq $2, %rbx
+    movq $-2, %rbx
+    movq %rbx, -56(%rbp)
+    movq $1000, %rbx
+    movq %rbx, -64(%rbp)
+    movq -64(%rbp), %rbx
+    movq $10, %r10
+    addq %rbx, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L1: .string "\n"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq -56(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -48(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $3, %rbx
+    movq %rbx, %rax
+    jmp .D_epilogue
+.D_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call D
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+21
+-10
+1010
+-2
+16
+
+return code: 3
+
+
+===[good3.bminor Input]===
+T: array [8] integer = {2, 1, 1, 2, 1, 2, 0, 3};
+
+main:function integer ()=
+{
+	i: integer = 0;
+        for (;;) {
+		if (T[i] == 0) return T[5] + 10;
+		else if (T[i] == 1) i++;
+		else if (T[i] == 2) T[i++]--;
+		else return 1;
+	}
+
+	return 0;
+}
+
+===[good3.bminor Output]===
+.data
+T: .quad 2,1,1,2,1,2,0,3
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    leaq T, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    je .L4
+    movq $0, %rbx
+    jmp .L5
+.L4:
+    movq $-1, %rbx
+.L5:
+    cmpq $0, %rbx
+    je .L2
+    leaq T, %rbx
+    movq $5, %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $10, %rbx
+    addq %r10, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L3
+.L2:
+    leaq T, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $1, %rbx
+    cmpq %rbx, %r10
+    je .L8
+    movq $0, %rbx
+    jmp .L9
+.L8:
+    movq $-1, %rbx
+.L9:
+    cmpq $0, %rbx
+    je .L6
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L7
+.L6:
+    leaq T, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $2, %rbx
+    cmpq %rbx, %r10
+    je .L12
+    movq $0, %rbx
+    jmp .L13
+.L12:
+    movq $-1, %rbx
+.L13:
+    cmpq $0, %rbx
+    je .L10
+    leaq T, %rbx
+    movq -8(%rbp), %r10
+    incq %r10
+    movq %r10, -8(%rbp)
+    decq %r10
+    movq 0(%rbx, %r10, 8), %r10
+    decq %r10
+    leaq T, %rbx
+    movq -8(%rbp), %r11
+    incq %r11
+    movq %r11, -8(%rbp)
+    decq %r11
+    movq %r10, 0(%rbx, %r11, 8)
+    incq %r10
+    jmp .L11
+.L10:
+    movq $1, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.L11:
+.L7:
+.L3:
+    jmp .L0
+.L1:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 1
+
+
+===[good5.bminor Input]===
+A: function boolean(x: integer, y: integer);
+B: function integer(x: char);
+C: function char(a: string);
+
+main: function integer() = {
+	if (A(B('d') - 1, 10)) {
+		x: integer = 3;
+		return 2 * B('!') + x;
+	}
+	return B(C("hello")) % 3;
+}
+
+A: function boolean(x: integer, y: integer) = {
+	return x == y;
+}
+
+B: function integer(c: char) = {
+	if (c == '!')
+		return 10;
+	else {return 11;}
+}
+
+C: function char(a: string) = {
+	return '!';
+}
+
+===[good5.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $100, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call B
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $1, %r10
+    subq %r10, %rbx
+    movq $10, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call A
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    cmpq $0, %rbx
+    je .L0
+    movq $3, %rbx
+    movq %rbx, -8(%rbp)
+    movq $2, %rbx
+    movq $33, %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call B
+    popq %r11
+    popq %r10
+    movq %rax, %r10
+    movq %r10, %rax
+    imulq %rbx
+    movq %rax, %r10
+    movq -8(%rbp), %rbx
+    addq %r10, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L1
+.L0:
+.L1:
+.data
+.L2: .string "hello"
+.text
+    leaq .L2, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call C
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call B
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $3, %r10
+    movq %rbx, %rax
+    cqo
+    idivq %r10
+    movq %rdx, %r10
+    movq %r10, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global A
+A:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    cmpq %r10, %rbx
+    je .L3
+    movq $0, %r10
+    jmp .L4
+.L3:
+    movq $-1, %r10
+.L4:
+    movq %r10, %rax
+    jmp .A_epilogue
+.A_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global B
+B:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    movq $33, %r10
+    cmpq %r10, %rbx
+    je .L7
+    movq $0, %r10
+    jmp .L8
+.L7:
+    movq $-1, %r10
+.L8:
+    cmpq $0, %r10
+    je .L5
+    movq $10, %rbx
+    movq %rbx, %rax
+    jmp .B_epilogue
+    jmp .L6
+.L5:
+    movq $11, %rbx
+    movq %rbx, %rax
+    jmp .B_epilogue
+.L6:
+.B_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global C
+C:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $33, %rbx
+    movq %rbx, %rax
+    jmp .C_epilogue
+.C_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 23
+
+
+===[good6.bminor Input]===
+f: function boolean(b: boolean) = {
+	return !b;
+}
+
+x: integer = -4;
+
+main:function integer ()=
+{
+	y: integer = 10;
+	if (f(f(f(f(f(x <= y)))))) return 1;
+	else if (x < y - x*y) {
+		return 4;
+	} else return 2;
+}
+
+===[good6.bminor Output]===
+.text
+.global f
+f:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq -8(%rbp), %rbx
+    notq %rbx
+    movq %rbx, %rax
+    jmp .f_epilogue
+.f_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.data
+x: .quad -4
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $10, %rbx
+    movq %rbx, -8(%rbp)
+    movq x, %rbx
+    movq -8(%rbp), %r10
+    cmpq %r10, %rbx
+    jle .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    cmpq $0, %rbx
+    je .L0
+    movq $1, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L1
+.L0:
+    movq x, %rbx
+    movq -8(%rbp), %r10
+    movq x, %r11
+    movq -8(%rbp), %r12
+    movq %r12, %rax
+    imulq %r11
+    movq %rax, %r12
+    subq %r12, %r10
+    cmpq %r10, %rbx
+    jl .L6
+    movq $0, %r10
+    jmp .L7
+.L6:
+    movq $-1, %r10
+.L7:
+    cmpq $0, %r10
+    je .L4
+    movq $4, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L5
+.L4:
+    movq $2, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.L5:
+.L1:
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 4
+
+
+===[good7.bminor Input]===
+f: function void (i: integer) = {
+	N: integer;
+	for (N = 0; i > 0; i--) {
+		print N;
+		N = N + 1;
+	}
+}
+
+main:function integer () = {
+	N: integer = 6;
+	for (;;N--) {
+		f(N);
+		print '\n';
+		if (N == 0) return 0;
+	}
+
+	return 1;
+}
+
+===[good7.bminor Output]===
+.text
+.global f
+f:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -16(%rbp)
+.L0:
+    movq -8(%rbp), %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    jg .L2
+    movq $0, %r10
+    jmp .L3
+.L2:
+    movq $-1, %r10
+.L3:
+    cmpq $0, %r10
+    je .L1
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq -16(%rbp), %rbx
+    movq $1, %r10
+    addq %rbx, %r10
+    movq %r10, -16(%rbp)
+    movq -8(%rbp), %rbx
+    decq %rbx
+    movq %rbx, -8(%rbp)
+    incq %rbx
+    jmp .L0
+.L1:
+.f_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $6, %rbx
+    movq %rbx, -8(%rbp)
+.L4:
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    movq $0, %r10
+    cmpq %r10, %rbx
+    je .L8
+    movq $0, %r10
+    jmp .L9
+.L8:
+    movq $-1, %r10
+.L9:
+    cmpq $0, %r10
+    je .L6
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+    jmp .L7
+.L6:
+.L7:
+    movq -8(%rbp), %rbx
+    decq %rbx
+    movq %rbx, -8(%rbp)
+    incq %rbx
+    jmp .L4
+.L5:
+    movq $1, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+012345
+01234
+0123
+012
+01
+0
+
+
+
+return code: 0
+
+
+===[good9.bminor Input]===
+a: array[4] integer;
+main: function integer() = {
+	a[2] = 60;
+	return a[2] + a[2] / 20 * 3 - a[1];
+}
+
+===[good9.bminor Output]===
+.data
+a: .quad 0,0,0,0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $60, %rbx
+    leaq a, %r10
+    movq $2, %r11
+    movq %rbx, 0(%r10, %r11, 8)
+    leaq a, %rbx
+    movq $2, %r10
+    movq 0(%rbx, %r10, 8), %r10
+    leaq a, %rbx
+    movq $2, %r11
+    movq 0(%rbx, %r11, 8), %r11
+    movq $20, %rbx
+    movq %r11, %rax
+    cqo
+    idivq %rbx
+    movq %rax, %rbx
+    movq $3, %r11
+    movq %r11, %rax
+    imulq %rbx
+    movq %rax, %r11
+    addq %r10, %r11
+    leaq a, %rbx
+    movq $1, %r10
+    movq 0(%rbx, %r10, 8), %r10
+    subq %r10, %r11
+    movq %r11, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 69
+
+
+===[good2.bminor Input]===
+
+
+X: array [4] integer = {11, 30, 22, 0};
+
+main: function integer () = {
+	i: integer;
+	for (i = 0; X[i] != 0; i++)
+		print X[i], ' ', X[i] % 3, '\n';
+
+	return 0;
+}
+
+===[good2.bminor Output]===
+.data
+X: .quad 11,30,22,0
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $0, %rbx
+    movq %rbx, -8(%rbp)
+.L0:
+    leaq X, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $0, %rbx
+    cmpq %rbx, %r10
+    jne .L2
+    movq $0, %rbx
+    jmp .L3
+.L2:
+    movq $-1, %rbx
+.L3:
+    cmpq $0, %rbx
+    je .L1
+    leaq X, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq %r10, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    leaq X, %rbx
+    movq -8(%rbp), %r10
+    movq 0(%rbx, %r10, 8), %r10
+    movq $3, %rbx
+    movq %r10, %rax
+    cqo
+    idivq %rbx
+    movq %rdx, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq -8(%rbp), %rbx
+    incq %rbx
+    movq %rbx, -8(%rbp)
+    decq %rbx
+    jmp .L0
+.L1:
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+11 2
+30 0
+22 1
+
+
+return code: 0
+
+
+===[good19.bminor Input]===
+c1: integer = -1;
+c3: integer = 100;
+
+d1: integer = 1;
+d2: integer = 2;
+
+C: function integer(c1: integer, c2: integer) = {
+	c3: integer = 11;
+	c4: integer = 12;
+	c5: integer = 13;
+	return c1 + c2 + c3 + c4;
+}
+
+D: function integer(d1: integer, d2: integer) = {
+	d3: integer = -3;
+	d4: integer = 4;
+	d5: integer = 5;
+	return d1 + d2 + d3 - d4;
+}
+
+main: function integer() = {
+	f: integer = D(6, 7);
+	return C(1, 2);
+}
+
+===[good19.bminor Output]===
+.data
+c1: .quad -1
+.data
+c3: .quad 100
+.data
+d1: .quad 1
+.data
+d2: .quad 2
+.text
+.global C
+C:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $24, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $11, %rbx
+    movq %rbx, -24(%rbp)
+    movq $12, %rbx
+    movq %rbx, -32(%rbp)
+    movq $13, %rbx
+    movq %rbx, -40(%rbp)
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    addq %rbx, %r10
+    movq -24(%rbp), %rbx
+    addq %r10, %rbx
+    movq -32(%rbp), %r10
+    addq %rbx, %r10
+    movq %r10, %rax
+    jmp .C_epilogue
+.C_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global D
+D:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    pushq %rsi
+    subq $24, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $3, %rbx
+    movq $-3, %rbx
+    movq %rbx, -24(%rbp)
+    movq $4, %rbx
+    movq %rbx, -32(%rbp)
+    movq $5, %rbx
+    movq %rbx, -40(%rbp)
+    movq -8(%rbp), %rbx
+    movq -16(%rbp), %r10
+    addq %rbx, %r10
+    movq -24(%rbp), %rbx
+    addq %r10, %rbx
+    movq -32(%rbp), %r10
+    subq %r10, %rbx
+    movq %rbx, %rax
+    jmp .D_epilogue
+.D_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    movq $6, %rbx
+    movq $7, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call D
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, -8(%rbp)
+    movq $1, %rbx
+    movq $2, %r10
+    movq %rbx, %rdi
+    movq %r10, %rsi
+    pushq %r10
+    pushq %r11
+    call C
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+
+
+return code: 26
+
+
+===[good10.bminor Input]===
+w: string = "no";
+
+f: function void (s: string) = {
+	{
+		w: string = "ok";
+		print w, "\n";
+		w = "bad!\n";
+	}
+	print s, ' ', w;
+	print " ";
+	s = "changed\n";
+	print s;
+}
+
+main:function integer ()= {
+	s: string = "good";
+	f(s);
+	print s;
+
+	return 0;
+}
+
+===[good10.bminor Output]===
+.data
+w: .string "no"
+.text
+.global f
+f:
+    pushq %rbp
+    movq %rsp, %rbp
+    pushq %rdi
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "ok"
+.text
+    leaq .L0, %rbx
+    movq %rbx, -16(%rbp)
+    movq -16(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L1: .string "\n"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L2: .string "bad!\n"
+.text
+    leaq .L2, %rbx
+    movq %rbx, -16(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $32, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    leaq w, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L3: .string " "
+.text
+    leaq .L3, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.data
+.L4: .string "changed\n"
+.text
+    leaq .L4, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+.f_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L5: .string "good"
+.text
+    leaq .L5, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq -8(%rbp), %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+ok
+good no changed
+good
+
+return code: 0
+
+
+===[good14.bminor Input]===
+/*
+Return pointer to (constant) global
+string which is valid to display.
+*/
+
+s: string = "ok\n";
+
+f: function string() = {
+	t: string = s;
+	return t;
+}
+
+main: function integer () = {
+	print f();
+	return 0;
+}
+
+===[good14.bminor Output]===
+.data
+s: .string "ok\n"
+.text
+.global f
+f:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $8, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    leaq s, %rbx
+    movq %rbx, -8(%rbp)
+    movq -8(%rbp), %rbx
+    movq %rbx, %rax
+    jmp .f_epilogue
+.f_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %r10
+    pushq %r11
+    call f
+    popq %r11
+    popq %r10
+    movq %rax, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+ok
+
+
+return code: 0
+
+
+===[good16.bminor Input]===
+// https://piazza.com/class/jziupd2lzpm7cy?cid=176
+
+main: function integer() = {
+	print "Testing printing literals", '\n', 123, "abc", true, false, 5;
+	return 0;
+}
+
+
+===[good16.bminor Output]===
+.text
+.global main
+main:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $0, %rsp
+    pushq %rbx
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+.data
+.L0: .string "Testing printing literals"
+.text
+    leaq .L0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $10, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_character
+    popq %r11
+    popq %r10
+    movq $123, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+.data
+.L1: .string "abc"
+.text
+    leaq .L1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_string
+    popq %r11
+    popq %r10
+    movq $-1, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_boolean
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_boolean
+    popq %r11
+    popq %r10
+    movq $5, %rbx
+    movq %rbx, %rdi
+    pushq %r10
+    pushq %r11
+    call print_integer
+    popq %r11
+    popq %r10
+    movq $0, %rbx
+    movq %rbx, %rax
+    jmp .main_epilogue
+.main_epilogue:
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+Testing printing literals
+123abctruefalse5
+
+return code: 0
+
+
+====Bad Tests====
+===== SUMMARIZED CODEGEN RESULTS =====
+{
+  "student_tests": {
+    "Good": {
+      "correct": 20,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 0,
+      "incorrect": 0
+    }
+  },
+  "hidden_tests": {
+    "Good": {
+      "correct": 19,
+      "incorrect": 1
+    },
+    "Bad": {
+      "correct": 0,
+      "incorrect": 0
+    }
+  }
+}
+
+Codegen Project Grade
+-------------------
+
+General Structure: 23/25
+---------------------------------
+Overall structure is correct. Small issue
+generating the multiple negation
+
+Codegen - Functionality 15/15 
+--------------------------------------------
+Compiled code runs without issue
+
+Codegen - Assembly Structure 10/10 
+--------------------------------------------
+Assembly looks good
+
+Student Tests: 20/20
+---------------------------
+Passes all your tests.
+
+Hidden Tests: 19/20
+---------------------------
+Fails one hidden test. No more infinite loops!
+
+Code Style: 10/10
+------------------------
+Looks good. Nice work
+
+Extra Credit: 0/10
+------------------------
+
+Total: 97/100
+------------------------------------------
